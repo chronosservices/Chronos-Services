@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Catalogue CV Premium - Modèles Professionnels</title>
-    <meta name="description" content="Découvrez notre catalogue de modèles CV premium. Plus de 43 templates professionnels pour Word, PowerPoint et PDF.">
+    <meta name="description" content="Découvrez notre catalogue de modèles CV premium. Plus de 43 templates professionnels pour Word et PowerPoint.">
     
     <style>
         :root {
@@ -833,7 +833,7 @@
         <!-- Header -->
         <header class="header">
             <div class="header-content">
-                <h1>Catalogue CV Premium</h1>
+                <h1>Catalogue CV</h1>
                 <p class="header-subtitle">Découvrez notre collection exclusive de modèles CV professionnels conçus pour vous démarquer</p>
             </div>
         </header>
@@ -867,8 +867,6 @@
                     <option value="">Tous les formats</option>
                     <option value="word">Word</option>
                     <option value="powerpoint">PowerPoint</option>
-                    <option value="pdf">PDF</option>
-                    <option value="canva">Canva</option>
                 </select>
                 <select class="filter-select" id="styleFilter" aria-label="Filtrer par style">
                     <option value="">Tous les styles</option>
@@ -1224,9 +1222,7 @@
             getFormatLabel(format) {
                 const labels = {
                     word: 'Word',
-                    powerpoint: 'PowerPoint',
-                    pdf: 'PDF',
-                    canva: 'Canva'
+                    powerpoint: 'PowerPoint'
                 };
                 return labels[format] || format;
             }
