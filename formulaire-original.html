@@ -6,6 +6,21 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Formulaire CV</title>
     <style>
+        #btnCatalogueCV {
+            background: linear-gradient(90deg, #094102 0%, #FF5700 100%);
+            color: #fff;
+            font-weight: bold;
+            font-size: 1rem;
+            border: none;
+            border-radius: 6px;
+            padding: 0.5rem 1rem;
+            cursor: pointer;
+            box-shadow: 0 2px 8px rgba(255, 87, 0, 0.10);
+            transition: background 0.3s;
+        }
+        #btnCatalogueCV:hover {
+            background: linear-gradient(90deg, #FF5700 0%, #094102 100%);
+        }
         /* Styles spécifiques pour le modal de paiement */
         .payment-methods {
             margin-bottom: 20px;
@@ -914,7 +929,10 @@
                     N° du modèle de CV & la formule
                     <span class="help-icon">?</span>
                     <span class="help-tooltip">Référence pour le style de CV souhaité.</span>
-                    <input type="text" name="modele_cv_formule" placeholder="Ex : N°030 - Formule N°1">
+                    <div style="display: flex; gap: 1rem; align-items: center;">
+                        <input type="text" id="modeleCvFormule" name="modele_cv_formule" placeholder="Ex : N°030 - Formule N°1">
+                        <button type="button" id="btnCatalogueCV">Consulter le catalogue</button>
+                    </div>
                 </label>
 
                 <label>
@@ -1747,6 +1765,42 @@
                         showStep(currentStep);
                     }
                 });
+            });
+        });
+        // Remplissage automatique du champ si retour du catalogue
+        document.addEventListener('DOMContentLoaded', function() {
+            var modeleInput = document.getElementById('modeleCvFormule');
+            var btnCatalogue = document.getElementById('btnCatalogueCV');
+            var form = document.getElementById('mainForm');
+
+            // Restauration des champs si retour du catalogue
+            var chosenModel = localStorage.getItem('chosenCvModel');
+            var backup = localStorage.getItem('formDataBackup');
+            if (backup) {
+                var data = JSON.parse(backup);
+                Object.keys(data).forEach(function(key) {
+                    var field = form.querySelector('[name="' + key + '"]');
+                    if (field) {
+                        field.value = data[key];
+                    }
+                });
+                localStorage.removeItem('formDataBackup');
+            }
+            if (chosenModel && modeleInput) {
+                modeleInput.value = chosenModel;
+                localStorage.removeItem('chosenCvModel');
+            }
+
+            // Sauvegarde des champs avant d'aller au catalogue
+            btnCatalogue.addEventListener('click', function() {
+                var formData = new FormData(form);
+                var data = {};
+                formData.forEach((value, key) => {
+                    data[key] = value;
+                });
+                localStorage.setItem('formDataBackup', JSON.stringify(data));
+                localStorage.setItem('returnToForm', 'true');
+                window.location.href = 'catalogue de CV.html';
             });
         });
     </script>
