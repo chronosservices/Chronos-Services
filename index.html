@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Choix de service - Chronos Services</title>
+    <title>Chronos Services</title>
     <style>
         /* Reset */
         * {
@@ -19,13 +19,95 @@
             animation: gradientMove 15s ease infinite;
             color: white;
             min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        /* Menu de navigation */
+        .nav-container {
+            position: fixed;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 1000;
+            width: 100%;
+            max-width: 500px;
+            margin-bottom: 0;
+        }
+
+        .nav-menu {
+            background: #18181b;
+            border-radius: 32px 32px 0 0;
+            padding: 18px 24px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border: none;
+            box-shadow: 0 -2px 25px rgba(0,0,0,0.25);
+        }
+
+        .nav-item {
+            background: transparent;
+            border: none;
+            color: #a1a1aa;
+            padding: 8px 12px;
+            border-radius: 18px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 1rem;
+            min-width: 70px;
+            justify-content: center;
+            position: relative;
+        }
+
+        .nav-item.active {
+            background: linear-gradient(90deg, #FF5700 0%, #094102 100%);
+            color: #fff;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.12);
+            transform: scale(1.05);
+        }
+
+        .nav-item:hover:not(.active) {
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+        }
+
+        .nav-icon {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.6rem;
+            margin-right: 0.5em;
+        }
+
+        /* Contenu principal */
+        .main-content {
+            margin-top: 100px;
+            min-height: calc(100vh - 100px);
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            text-align: center;
             padding: 20px;
-            overflow: hidden;
+            text-align: center;
+        }
+
+        /* Interface cachée par défaut */
+        .interface {
+            display: none;
+            width: 100%;
+            max-width: 800px;
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 0.5s ease;
+        }
+
+        .interface.active {
+            display: block;
+            opacity: 1;
+            transform: translateY(0);
         }
 
         h1 {
@@ -37,7 +119,7 @@
             animation: fadeUp 0.8s ease forwards;
         }
 
-        p {
+        .subtitle {
             font-size: 1.1rem;
             margin-bottom: 40px;
             max-width: 600px;
@@ -45,16 +127,11 @@
             transform: translateY(30px);
             animation: fadeUp 0.8s ease forwards;
             animation-delay: 0.3s;
+            margin-left: auto;
+            margin-right: auto;
         }
 
-        .button-container {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 20px;
-            justify-content: center;
-        }
-
-        .choice-btn {
+        .service-btn {
             background: white;
             color: #094102;
             border: none;
@@ -67,22 +144,63 @@
             min-width: 250px;
             opacity: 0;
             transform: translateY(30px);
-        }
-
-        .choice-btn:nth-child(1) {
             animation: fadeUp 0.8s ease forwards;
             animation-delay: 0.6s;
+            margin: 20px auto;
+            display: block;
         }
 
-        .choice-btn:nth-child(2) {
+        .service-btn:hover {
+            background: #FF5700;
+            color: white;
+            transform: scale(1.05);
+        }
+
+        .description-box {
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(15px);
+            border-radius: 12px;
+            padding: 25px;
+            margin-top: 30px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
+            opacity: 0;
+            transform: translateY(30px);
             animation: fadeUp 0.8s ease forwards;
             animation-delay: 0.9s;
         }
 
-        .choice-btn:hover {
-            background: #FF5700;
-            color: white;
-            transform: scale(1.05);
+        .description-box h3 {
+            font-size: 1.5rem;
+            margin-bottom: 15px;
+            color: #FFD700;
+        }
+
+        .description-box p {
+            line-height: 1.6;
+            color: rgba(255, 255, 255, 0.9);
+            font-size: 1rem;
+        }
+
+        .features-list {
+            list-style: none;
+            margin-top: 20px;
+            text-align: left;
+        }
+
+        .features-list li {
+            padding: 8px 0;
+            color: rgba(255, 255, 255, 0.9);
+            position: relative;
+            padding-left: 25px;
+        }
+
+        .features-list li:before {
+            content: "✓";
+            position: absolute;
+            left: 0;
+            color: #FFD700;
+            font-weight: bold;
         }
 
         @keyframes fadeUp {
@@ -98,26 +216,154 @@
             100% { background-position: 0% 50%; }
         }
 
-        @media (max-width: 600px) {
-            h1 {
-                font-size: 2rem;
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .nav-container {
+                width: 100%;
+                max-width: 100vw;
+                left: 50%;
+                transform: translateX(-50%);
+                bottom: 0;
+                top: auto;
             }
-            .choice-btn {
+            .nav-menu {
+                padding: 16px 10px;
+            }
+            .nav-item {
+                padding: 10px 10px;
+                font-size: 1.1rem;
+                min-width: 70px;
+                gap: 6px;
+            }
+            .nav-icon {
+                font-size: 1.4rem;
+                margin-right: 0.3em;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .nav-container {
+                bottom: 0;
+                top: auto;
+                width: 100vw;
+                left: 50%;
+                transform: translateX(-50%);
+            }
+            .nav-menu {
+                padding: 14px 4px;
+            }
+            .nav-item {
+                padding: 10px 6px;
                 font-size: 1rem;
-                padding: 12px 20px;
+                min-width: 55px;
+                gap: 4px;
+            }
+            .nav-icon {
+                font-size: 1.2rem;
+                margin-right: 0.2em;
             }
         }
     </style>
 </head>
 <body>
 
-    <h1>Bienvenue chez Chronos Services</h1>
-    <p>Choisissez le service que vous souhaitez afin de commencer votre expérience personnalisée.</p>
-
-    <div class="button-container">
-        <button class="choice-btn" onclick="window.location.href='interface-new.html'">Je veux un CV</button>
-        <button class="choice-btn" onclick="window.location.href='formulaire-lettre.html'">Je veux une lettre de motivation</button>
+    <!-- Menu de navigation -->
+    <div class="nav-container">
+        <nav class="nav-menu">
+                        <button class="nav-item active" data-target="home">
+                                            <span class="nav-icon">
+                                                <svg width="24" height="24" fill="none" stroke="#FF5700" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11.5L12 4l9 7.5"/><path d="M4 10v8a2 2 0 002 2h3m6 0h3a2 2 0 002-2v-8"/><path d="M9 22V12h6v10"/></svg>
+                                            </span>
+                                            <span>Accueil</span>
+                                    </button>
+                                    <button class="nav-item" data-target="cv">
+                                            <span class="nav-icon">
+                                                <svg width="24" height="24" fill="none" stroke="#FF5700" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M7 8h10M7 12h6"/></svg>
+                                            </span>
+                                            <span>CV</span>
+                                    </button>
+                                    <button class="nav-item" data-target="lettre">
+                                            <span class="nav-icon">
+                                                <svg width="24" height="24" fill="none" stroke="#FF5700" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="2"/><polyline points="3,7 12,13 21,7"/></svg>
+                                            </span>
+                                            <span>Lettre</span>
+                                    </button>
+                                    <button class="nav-item" data-target="catalogue">
+                                            <span class="nav-icon">
+                                                <svg width="24" height="24" fill="none" stroke="#FF5700" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="4" width="16" height="16" rx="4"/><path d="M8 8h8v8H8z"/></svg>
+                                            </span>
+                                            <span>Catalogue</span>
+                                    </button>
+        </nav>
     </div>
+
+    <!-- Contenu principal -->
+    <main class="main-content">
+
+        <!-- Interface Accueil -->
+        <div class="interface active" id="home">
+            <h1>Bienvenue chez Chronos Services</h1>
+            <p class="subtitle">Découvrez nos services professionnels pour vous accompagner dans votre recherche d'emploi. Utilisez le menu ci-dessus pour naviguer entre nos différentes offres.</p>
+        </div>
+
+        <!-- Interface Menu CV -->
+        <div class="interface" id="cv">
+            <h1>CV Professionnel</h1>
+            <p class="subtitle">Avant de remplir le formulaire, vous pourrez choisir le profil qui vous correspond : Débutant (guide étape par étape), Ancien client (modification ciblée), ou Expert (accès direct et complet). Nous rédigerons ensuite votre CV professionnel selon votre choix.</p>
+            <button class="service-btn" onclick="window.location.href='interface-new.html'">Je veux un CV</button>
+        </div>
+
+        <!-- Interface Menu Lettre de Motivation -->
+        <div class="interface" id="lettre">
+            <h1>Lettre de Motivation</h1>
+            <p class="subtitle">Remplissez le formulaire pour nous communiquer les informations nécessaires. Nous rédigerons ensuite votre lettre de motivation sur mesure.</p>
+            <button class="service-btn" onclick="window.location.href='formulaire-lettre.html'">Je veux une lettre de motivation</button>
+        </div>
+
+        <!-- Interface Catalogue de CV -->
+        <div class="interface" id="catalogue">
+            <h1>Catalogue de modèles de CV</h1>
+            <p class="subtitle">Parcourez notre catalogue de modèles de CV pour choisir le style qui vous correspond. Visualisez, comparez et sélectionnez facilement votre modèle préféré.</p>
+            <button class="service-btn" onclick="window.location.href='catalogue de CV.html'">Voir le catalogue</button>
+        </div>
+
+    </main>
+
+    <script>
+        // Gestion de la navigation
+        document.querySelectorAll('.nav-item').forEach(button => {
+            button.addEventListener('click', function() {
+                const target = this.getAttribute('data-target');
+                
+                // Retirer la classe active de tous les boutons et interfaces
+                document.querySelectorAll('.nav-item').forEach(btn => btn.classList.remove('active'));
+                document.querySelectorAll('.interface').forEach(interface => interface.classList.remove('active'));
+                
+                // Ajouter la classe active au bouton cliqué et à l'interface correspondante
+                this.classList.add('active');
+                document.getElementById(target).classList.add('active');
+                
+                // Réinitialiser les animations
+                const activeInterface = document.getElementById(target);
+                activeInterface.style.opacity = '0';
+                activeInterface.style.transform = 'translateY(30px)';
+                
+                setTimeout(() => {
+                    activeInterface.style.opacity = '1';
+                    activeInterface.style.transform = 'translateY(0)';
+                }, 100);
+            });
+        });
+
+        // Animation au chargement de la page
+        window.addEventListener('load', function() {
+            const activeInterface = document.querySelector('.interface.active');
+            if (activeInterface) {
+                activeInterface.style.opacity = '1';
+                activeInterface.style.transform = 'translateY(0)';
+            }
+        });
+    </script>
 
 </body>
 </html>
