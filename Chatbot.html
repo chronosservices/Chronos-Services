@@ -817,22 +817,18 @@
                     <small>Conseiller CV Expert</small>
                 </div>
             </div>
-            <button class="close-btn" id="closeBtn" aria-label="Fermer">&times;</button>
+            <!-- Bouton de fermeture interne supprimé, fermeture uniquement via le widget -->
         </div>
 
         <div class="chat-messages" id="chatMessages">
             <div class="message bot">
-                <div class="message-avatar bot-avatar">C</div>
                 <div class="message-bubble bot-message">
                     <div class="info-source">👋 Équipe Chronos Services</div>
-                    Bonjour ! Je suis votre conseiller CV personnel. Je peux vous aider à créer un CV ou une lettre de motivation professionnels.<br><br>
-                    <strong>Nos tarifs :</strong><br>
-                    • <span class="price-highlight">2050 FCFA</span> - Livraison sous 48h<br>
-                    • <span class="price-highlight">3100 FCFA</span> - Service Premium (priorité)<br><br>
+                    Bonjour ! Je suis votre conseiller CV personnel. Je peux vous aider à créer un CV ou une lettre de motivation professionnels.<br>
+                    <span style="display:block;margin:8px 0 0 0;color:#d48806;font-size:0.82em;">⚠️ Ce chatbot peut se tromper ou faire des erreurs. Veuillez vérifier les informations importantes.</span><br>
                     Comment puis-je vous aider aujourd'hui ?
                 </div>
             </div>
-            
             <div class="quick-suggestions" id="quickSuggestions">
                 <button class="suggestion-btn" data-suggestion="Je veux créer un CV">Créer un CV</button>
                 <button class="suggestion-btn" data-suggestion="C'est rapide ?">Délais ?</button>
@@ -841,6 +837,8 @@
                 <button class="suggestion-btn" data-suggestion="Prix">Tarifs</button>
             </div>
         </div>
+
+    <div class="chatbot-disclaimer" style="text-align:center;font-size:0.95em;color:#888;padding:6px 12px 8px 12px;background:#fff;box-shadow:0 -2px 8px rgba(0,0,0,0.04);flex-shrink:0;white-space:nowrap;overflow-x:auto;">⚠️ Ce chatbot peut se tromper ou faire des erreurs. Veuillez vérifier les informations importantes.</div>
 
         <div class="chat-input">
             <div class="input-container">
@@ -879,7 +877,7 @@
             initElements() {
                 this.chatContainer = document.getElementById('chatContainer');
                 this.chatbotIcon = document.getElementById('chatbotIcon');
-                this.closeBtn = document.getElementById('closeBtn');
+                this.closeBtn = null;
                 this.messagesContainer = document.getElementById('chatMessages');
                 this.messageInput = document.getElementById('messageInput');
                 this.sendBtn = document.getElementById('sendBtn');
@@ -998,9 +996,7 @@
                     this.chatbotIcon.addEventListener('click', () => this.toggleChat());
                 }
                 
-                if (this.closeBtn) {
-                    this.closeBtn.addEventListener('click', () => this.toggleChat());
-                }
+                // Suppression de l'écouteur sur le bouton de fermeture interne
                 
                 if (this.sendBtn) {
                     this.sendBtn.addEventListener('click', () => this.sendMessage());
@@ -1483,10 +1479,6 @@
                     const messageDiv = document.createElement('div');
                     messageDiv.className = `message ${sender}`;
 
-                    const avatar = document.createElement('div');
-                    avatar.className = `message-avatar ${sender === 'bot' ? 'bot-avatar' : 'user-avatar'}`;
-                    avatar.textContent = sender === 'bot' ? 'C' : 'U';
-
                     const bubble = document.createElement('div');
                     bubble.className = `message-bubble ${sender === 'bot' ? 'bot-message' : 'user-message'}`;
                     
@@ -1494,27 +1486,24 @@
                     if (sender === 'bot') {
                         const sourceIndicator = document.createElement('div');
                         sourceIndicator.className = 'info-source';
-                        
                         switch (sourceType) {
                             case 'local':
-                                sourceIndicator.innerHTML = '👤 Conseiller Chronos';
+                                sourceIndicator.innerHTML = 'Conseiller Chronos';
                                 break;
                             case 'web':
-                                sourceIndicator.innerHTML = '🌐 Recherche web récente';
+                                sourceIndicator.innerHTML = 'Recherche web récente';
                                 break;
                             case 'cache':
-                                sourceIndicator.innerHTML = '📋 Informations mises en cache';
+                                sourceIndicator.innerHTML = 'Informations mises en cache';
                                 break;
                             case 'error':
-                                sourceIndicator.innerHTML = '⚠️ Mode dégradé (hors ligne)';
+                                sourceIndicator.innerHTML = 'Mode dégradé (hors ligne)';
                                 break;
                             default:
-                                sourceIndicator.innerHTML = '👤 Assistant Chronos';
+                                sourceIndicator.innerHTML = 'Assistant Chronos';
                         }
-                        
                         bubble.appendChild(sourceIndicator);
                     }
-                    
                     const content = document.createElement('div');
                     content.innerHTML = this.sanitizeHTML(text);
                     bubble.appendChild(content);
@@ -1532,13 +1521,11 @@
                     if (sender === 'bot' && sourceType === 'error' && !this.apiAvailable) {
                         const statusDiv = document.createElement('div');
                         statusDiv.className = 'api-status offline';
-                        statusDiv.innerHTML = '🔴 Recherche web temporairement indisponible';
+                        statusDiv.innerHTML = 'Recherche web temporairement indisponible';
                         bubble.appendChild(statusDiv);
                     }
 
-                    messageDiv.appendChild(avatar);
                     messageDiv.appendChild(bubble);
-
                     this.messagesContainer.appendChild(messageDiv);
                     this.scrollToBottom();
 
