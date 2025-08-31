@@ -12,8 +12,17 @@ window.addEventListener('DOMContentLoaded', function() {
     };
 
     // Variables pour l'assistance interactive
-    var formStep = null;
-    var formData = {};
+        var formStep = null;
+        var formData = {};
+        // Ajout pour gestion étape par étape
+        var formSteps = [
+            "Étape 1 : Veuillez saisir vos informations personnelles (nom, prénom, téléphone, email).",
+            "Étape 2 : Indiquez l'entreprise ou le poste ciblé.",
+            "Étape 3 : Décrivez vos expériences et formations.",
+            "Étape 4 : Listez vos compétences principales.",
+            "Étape 5 : Vérifiez vos informations. Le tarif s'affichera et vous recevrez la facture."
+        ];
+        var currentStep = null;
 
     // Affichage/fermeture du chat
     icon.onclick = function() {
@@ -33,6 +42,36 @@ window.addEventListener('DOMContentLoaded', function() {
     // Réponse du bot enrichie
     function botReply(userText) {
         var t = userText.trim().toLowerCase();
+
+        // Détection de la demande d'accompagnement étape par étape
+        if ((t.includes("aide") && t.includes("étape")) || t.includes("guide-moi") || t.includes("accompagne-moi") || t.includes("étape par étape")) {
+            currentStep = 0;
+            return formSteps[0];
+        }
+
+        // Gestion du scénario étape par étape
+        if (currentStep !== null) {
+            // Passage à l'étape suivante sur mot clé
+            if (t.includes("suivant") || t.includes("ok") || t.includes("fait") || t.includes("continue")) {
+                currentStep++;
+                if (currentStep < formSteps.length) {
+                    return formSteps[currentStep];
+                } else {
+                    currentStep = null;
+                    return "Bravo ! Vous avez terminé le formulaire. Vous recevrez la facture et les instructions de paiement.";
+                }
+            }
+            // Si l'utilisateur donne une info, on avance aussi
+            else if (t.length > 2) {
+                currentStep++;
+                if (currentStep < formSteps.length) {
+                    return formSteps[currentStep];
+                } else {
+                    currentStep = null;
+                    return "Bravo ! Vous avez terminé le formulaire. Vous recevrez la facture et les instructions de paiement.";
+                }
+            }
+        }
 
         // Démarrage de l'assistance formulaire
         if ((t.includes('remplir') && t.includes('formulaire')) || (t.includes('aide') && t.includes('formulaire'))) {
