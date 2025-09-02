@@ -3,415 +3,1826 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Chronos Services</title>
+    <title>Chronos Services - Tableau de Bord</title>
     <style>
-        /* Reset */
+        /* Animation défilement automatique gauche vers droite pour la galerie */
+        .carousel-container, .carrousel-wrapper {
+            overflow: hidden;
+            position: relative;
+        }
+        .carrousel-track {
+            display: flex;
+            gap: 20px;
+            animation: scroll-right 20s linear infinite;
+            will-change: transform;
+        }
+        @keyframes scroll-right {
+            0% { transform: translateX(0); }
+            100% { transform: translateX(calc(-100% + 100vw)); }
+        }
+        /* 1. CSS de base */
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
         }
 
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(270deg, #094102, #FF5700, #094102);
-            background-size: 600% 600%;
-            animation: gradientMove 15s ease infinite;
-            color: white;
-            min-height: 100vh;
+        html {
+            font-size: 16px;
             overflow-x: hidden;
         }
 
-        /* Menu de navigation */
-        .nav-container {
-            position: fixed;
-            bottom: 0;
-            left: 50%;
-            transform: translateX(-50%);
-            z-index: 1000;
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #f5f5f7;
+            color: #333;
+            overflow-x: hidden;
             width: 100%;
+            max-width: 100vw;
+            min-width: 320px;
+        }
+
+        /* 2. Header */
+        .header {
+            background: linear-gradient(135deg, #094102 0%, #FF5700 100%);
+            color: white;
+            padding: 1rem;
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            justify-content: space-between;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            gap: 1rem;
+            min-height: 70px;
+            width: 100%;
+            position: relative;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-weight: bold;
+            font-size: 1.2rem;
+            flex-shrink: 0;
+            min-width: 0;
+        }
+        .logo svg {
+            width: 32px;
+            height: 32px;
+            flex-shrink: 0;
+        }
+
+        .search-container {
+            flex: 1;
             max-width: 500px;
-            margin-bottom: 0;
+            min-width: 200px;
+            position: relative;
+            order: 0;
+        }
+
+        .search-input {
+            width: 100%;
+            padding: 12px 16px 12px 45px;
+            border: none;
+            border-radius: 25px;
+            background: rgba(255,255,255,0.15);
+            backdrop-filter: blur(10px);
+            color: white;
+            font-size: 14px;
+            outline: none;
+            transition: all 0.3s ease;
+            box-sizing: border-box;
+        }
+
+        .search-input::placeholder {
+            color: rgba(255,255,255,0.7);
+        }
+
+        .search-input:focus {
+            background: rgba(255,255,255,0.25);
+            transform: scale(1.02);
+        }
+
+        .search-icon {
+            position: absolute;
+            left: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: rgba(255,255,255,0.7);
+        }
+
+        .header-actions {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            flex-shrink: 0;
+        }
+
+        .notification-btn, .help-btn {
+            background: rgba(255,255,255,0.15);
+            border: none;
+            border-radius: 50%;
+            width: 44px;
+            height: 44px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            flex-shrink: 0;
+        }
+
+        .notification-btn:hover, .help-btn:hover {
+            background: rgba(255,255,255,0.25);
+            transform: scale(1.1);
+        }
+
+        .notification-badge {
+            position: absolute;
+            top: -5px;
+            right: -5px;
+            background: #FF5700;
+            color: white;
+            border-radius: 50%;
+            width: 18px;
+            height: 18px;
+            font-size: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* Main Container */
+        .main-container {
+            display: flex;
+            min-height: calc(100vh - 70px);
+            width: 100%;
+            overflow-x: hidden;
+        }
+
+        /* Sidebar */
+        .sidebar {
+            width: 250px;
+            background: linear-gradient(180deg, #094102 0%, #0a4503 100%);
+            color: white;
+            padding: 2rem 0;
+            transition: all 0.3s ease;
+            position: relative;
+            flex-shrink: 0;
+        }
+
+        .sidebar-header {
+            padding: 0 2rem 2rem;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .dashboard-title {
+            font-size: 1.4rem;
+            font-weight: bold;
+            margin-bottom: 0.5rem;
         }
 
         .nav-menu {
-            background: #18181b;
-            border-radius: 32px 32px 0 0;
-            padding: 18px 24px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            border: none;
-            box-shadow: 0 -2px 25px rgba(0,0,0,0.25);
+            list-style: none;
+            padding: 2rem 0;
         }
 
         .nav-item {
-            background: transparent;
-            border: none;
-            color: #a1a1aa;
-            padding: 8px 12px;
-            border-radius: 18px;
-            cursor: pointer;
-            transition: all 0.3s ease;
+            margin-bottom: 0.5rem;
+        }
+
+        .nav-link {
             display: flex;
             align-items: center;
-            gap: 8px;
-            font-size: 1rem;
-            min-width: 70px;
-            justify-content: center;
-            position: relative;
+            gap: 12px;
+            padding: 12px 2rem;
+            color: rgba(255,255,255,0.8);
+            text-decoration: none;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            border-left: 3px solid transparent;
         }
 
-        .nav-item.active {
-            background: linear-gradient(90deg, #FF5700 0%, #094102 100%);
-            color: #fff;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.12);
-            transform: scale(1.05);
-        }
-
-        .nav-item:hover:not(.active) {
-            background: rgba(255, 255, 255, 0.1);
+        .nav-link:hover {
+            background: rgba(255,255,255,0.1);
             color: white;
+            border-left-color: #FF5700;
+        }
+
+        .nav-link.active {
+            background: rgba(255,87,0,0.2);
+            color: white;
+            border-left-color: #FF5700;
+            font-weight: 600;
         }
 
         .nav-icon {
+            width: 20px;
+            height: 20px;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 1.6rem;
-            margin-right: 0.5em;
         }
 
-        /* Ajout : icône blanche sur bouton actif */
-        .nav-item.active .nav-icon svg {
-            stroke: #fff !important;
+        /* Content Area */
+        .content-area {
+            flex: 1;
+            padding: 2rem;
+            background: #f5f5f7;
+            min-width: 0;
+            overflow-x: hidden;
         }
 
-        /* Contenu principal */
-        .main-content {
-            margin-top: 60px;
-            min-height: calc(100vh - 220px);
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: flex-start;
-            padding: 20px;
-            text-align: center;
-        }
-
-        /* Interface cachée par défaut */
-        .interface {
-            display: none;
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 2rem;
+            margin-bottom: 2rem;
             width: 100%;
-            max-width: 800px;
-            opacity: 0;
-            transform: translateY(30px);
-            transition: all 0.5s ease;
         }
 
-        .interface.active {
-            display: block;
-            opacity: 1;
-            transform: translateY(0);
-        }
-
-        h1 {
-            font-size: 2.5rem;
-            margin-bottom: 10px;
-            font-weight: bold;
-            opacity: 0;
-            transform: translateY(30px);
-            animation: fadeUp 0.8s ease forwards;
-        }
-
-        .subtitle {
-            font-size: 1.1rem;
-            margin-bottom: 40px;
-            max-width: 600px;
-            opacity: 0;
-            transform: translateY(30px);
-            animation: fadeUp 0.8s ease forwards;
-            animation-delay: 0.3s;
-            margin-left: auto;
-            margin-right: auto;
-        }
-
-        .service-btn {
-            background: white;
-            color: #094102;
-            border: none;
-            padding: 15px 30px;
-            font-size: 1.2rem;
-            font-weight: bold;
-            border-radius: 8px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            min-width: 250px;
-            opacity: 0;
-            transform: translateY(30px);
-            animation: fadeUp 0.8s ease forwards;
-            animation-delay: 0.6s;
-            margin: 20px auto;
-            display: block;
-        }
-
-        .service-btn:hover {
-            background: #FF5700;
-            color: white;
-            transform: scale(1.05);
-        }
-
-        .description-box {
-            background: rgba(255, 255, 255, 0.15);
-            backdrop-filter: blur(15px);
-            border-radius: 12px;
-            padding: 25px;
-            margin-top: 30px;
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
-            opacity: 0;
-            transform: translateY(30px);
-            animation: fadeUp 0.8s ease forwards;
-            animation-delay: 0.9s;
-        }
-
-        .description-box h3 {
-            font-size: 1.5rem;
-            margin-bottom: 15px;
-            color: #FFD700;
-        }
-
-        .description-box p {
-            line-height: 1.6;
-            color: rgba(255, 255, 255, 0.9);
-            font-size: 1rem;
-        }
-
-        .features-list {
-            list-style: none;
-            margin-top: 20px;
-            text-align: left;
-        }
-
-        .features-list li {
-            padding: 8px 0;
-            color: rgba(255, 255, 255, 0.9);
-            position: relative;
-            padding-left: 25px;
-        }
-
-        .features-list li:before {
-            content: "✓";
-            position: absolute;
-            left: 0;
-            color: #FFD700;
-            font-weight: bold;
-        }
-
-        @keyframes fadeUp {
-            to {
-                opacity: 1;
-                transform: translateY(0);
+        @media (max-width: 1024px) {
+            .dashboard-grid {
+                grid-template-columns: 1fr;
+                gap: 1.5rem;
             }
         }
 
-        @keyframes gradientMove {
-            0% { background-position: 0% 50%; }
-            50% { background-position: 100% 50%; }
-            100% { background-position: 0% 50%; }
-        }
-
-        /* Responsive Design */
         @media (max-width: 768px) {
-            .nav-container {
+            body {
+                width: 100vw;
+                max-width: 100vw;
+                overflow-x: hidden;
+            }
+
+            .main-container {
                 width: 100%;
                 max-width: 100vw;
-                left: 50%;
-                transform: translateX(-50%);
-                bottom: 0;
-                top: auto;
+                overflow-x: hidden;
             }
-            .nav-menu {
-                padding: 16px 10px;
+
+            * {
+                max-width: 100%;
+                box-sizing: border-box;
             }
-            .nav-item {
-                padding: 10px 10px;
-                font-size: 1.1rem;
-                min-width: 70px;
-                gap: 6px;
+
+            .content-area {
+                padding: 1rem 0.5rem;
+                width: 100%;
+                max-width: 100vw;
+                overflow-x: hidden;
             }
-            .nav-icon {
-                font-size: 1.4rem;
-                margin-right: 0.3em;
+
+            .dashboard-grid {
+                grid-template-columns: 1fr;
+                gap: 1rem;
+                width: 100%;
+                max-width: 100%;
+                margin: 0;
+                padding: 0;
+            }
+
+            .main-widget, .side-widget {
+                padding: 1rem;
+                width: 100%;
+                max-width: 100%;
+                margin: 0;
+                box-sizing: border-box;
+            }
+
+            .announcements-grid {
+                grid-template-columns: 1fr;
+                gap: 1rem;
+                width: 100%;
+                max-width: 100%;
+                margin-top: 1rem;
+            }
+
+            .announcement-card {
+                padding: 1rem;
+                width: 100%;
+                max-width: 100%;
+                box-sizing: border-box;
+                word-wrap: break-word;
+            }
+
+            .service-button {
+                width: 100%;
+                max-width: 100%;
+                padding: 12px 16px;
+                font-size: 0.9rem;
+                box-sizing: border-box;
+                text-align: center;
+                white-space: nowrap;
+                overflow: hidden;
+                text-overflow: ellipsis;
+            }
+
+            .side-widget .service-button {
+                width: 100%;
+                max-width: 100%;
+                padding: 10px 8px;
+                font-size: 0.85rem;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                gap: 8px;
+                box-sizing: border-box;
+            }
+
+            .side-widget .service-button svg {
+                width: 16px;
+                height: 16px;
+                flex-shrink: 0;
             }
         }
 
         @media (max-width: 480px) {
-            .main-content {
-                margin-top: 0;
-                min-height: 100vh;
-                padding: 0;
-                display: flex;
-                flex-direction: column;
-                align-items: center;
-                justify-content: center;
+            .content-area {
+                padding: 0.5rem 0.3rem;
             }
-            .nav-container {
-                bottom: 0;
-                top: auto;
-                width: 100vw;
-                left: 50%;
-                transform: translateX(-50%);
+
+            .main-widget, .side-widget {
+                padding: 0.8rem;
             }
-            .nav-menu {
-                padding: 14px 4px;
+
+            .service-button {
+                padding: 8px 12px;
+                font-size: 0.8rem;
             }
-            .nav-item {
-                padding: 10px 6px;
+
+            .widget-title {
+                font-size: 1.1rem;
+                word-wrap: break-word;
+            }
+
+            .announcement-title {
                 font-size: 1rem;
-                min-width: 55px;
-                gap: 4px;
+                word-wrap: break-word;
             }
-            .nav-icon {
-                font-size: 1.2rem;
-                margin-right: 0.2em;
-            }
-            .service-btn {
-                width: 90%;
-                max-width: 220px;
-                font-size: 0.95rem;
-                padding: 10px 8px;
+
+            .announcement-content {
+                font-size: 0.85rem;
+                line-height: 1.4;
+                word-wrap: break-word;
             }
         }
 
         @media (max-width: 360px) {
-            .nav-menu {
-                padding: 6px 1px;
+            .header {
+                padding: 0.5rem;
+                min-height: 55px;
             }
-            .nav-item {
-                font-size: 0.75rem;
-                min-width: 35px;
-                padding: 6px 1px;
-                gap: 2px;
-            }
-            .nav-item.active {
-                padding: 6px 1px;
+
+            .logo span {
                 font-size: 0.8rem;
             }
-            .nav-icon {
-                font-size: 0.85rem;
-                margin-right: 0.05em;
+
+            .logo svg {
+                width: 18px;
             }
-            .service-btn {
-                max-width: 160px;
+
+            .search-input {
+                padding: 6px 10px 6px 30px;
+                font-size: 12px;
+            }
+
+            .search-icon {
+                left: 10px;
+                width: 12px;
+                height: 12px;
+            }
+
+            .notification-btn, .help-btn {
+                width: 32px;
+                height: 32px;
+                min-width: 32px;
+                min-height: 32px;
+            }
+
+            .content-area {
+                padding: 0.5rem;
+            }
+
+            .main-widget, .side-widget {
+                padding: 0.8rem;
+            }
+
+            .widget-title {
+                font-size: 1rem;
+            }
+
+            .widget-subtitle {
                 font-size: 0.85rem;
-                padding: 8px 4px;
+            }
+
+            .announcement-card {
+                padding: 1rem;
+            }
+
+            .announcement-title {
+                font-size: 1rem;
+            }
+
+            .announcement-content {
+                font-size: 0.85rem;
+            }
+
+            .service-button {
+                font-size: 0.85rem;
+                padding: 8px 12px;
+            }
+
+            .carousel-item {
+                flex: 0 0 120px;
+                height: 85px;
+                margin-right: 8px;
+            }
+
+            .carousel-track {
+                width: calc(120px * 8 + 8px * 8);
+            }
+
+            .nav-link {
+                padding: 8px 1.2rem;
+                font-size: 0.85rem;
+            }
+
+            .sidebar {
+                width: 220px;
+            }
+
+            .sidebar.open {
+                left: 0;
+            }
+
+            .sidebar {
+                left: -220px;
+            }
+
+            .modal-content {
+                width: 98%;
+                padding: 1.2rem;
             }
         }
 
+        /* Header */
+        .header {
+            background: linear-gradient(135deg, #094102 0%, #FF5700 100%);
+            color: white;
+            padding: 1rem 2rem;
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            justify-content: space-between;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            gap: 1rem;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-weight: bold;
+            font-size: 1.2rem;
+            max-width: 100%;
+        }
+        .logo svg {
+            width: 32px;
+            height: auto;
+            max-width: 100%;
+        }
+
+        .search-container {
+            flex: 1;
+            max-width: 500px;
+            margin: 0 2rem;
+            position: relative;
+            min-width: 200px;
+        }
+
+        .search-input {
+            width: 100%;
+            padding: 12px 16px 12px 45px;
+            border: none;
+            border-radius: 25px;
+            background: rgba(255,255,255,0.15);
+            backdrop-filter: blur(10px);
+            color: white;
+            font-size: 14px;
+            outline: none;
+            transition: all 0.3s ease;
+        }
+
+        .search-input::placeholder {
+            color: rgba(255,255,255,0.7);
+        }
+
+        .search-input:focus {
+            background: rgba(255,255,255,0.25);
+            transform: scale(1.02);
+        }
+
+        .search-icon {
+            position: absolute;
+            left: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: rgba(255,255,255,0.7);
+        }
+
+        .header-actions {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .notification-btn, .help-btn {
+            background: rgba(255,255,255,0.15);
+            border: none;
+            border-radius: 50%;
+            width: 2.5em;
+            height: 2.5em;
+            min-width: 44px;
+            min-height: 44px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .notification-btn:hover, .help-btn:hover {
+            background: rgba(255,255,255,0.25);
+            transform: scale(1.1);
+        }
+
+        .notification-badge {
+            position: absolute;
+            top: -5px;
+            right: -5px;
+            background: #FF5700;
+            color: white;
+            border-radius: 50%;
+            width: 18px;
+            height: 18px;
+            font-size: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* Main Container */
+        .main-container {
+            display: flex;
+            min-height: calc(100vh - 80px);
+        }
+
+        /* Sidebar */
+        .sidebar {
+            width: 250px;
+            background: linear-gradient(180deg, #094102 0%, #0a4503 100%);
+            color: white;
+            padding: 2rem 0;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .sidebar-header {
+            padding: 0 2rem 2rem;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .dashboard-title {
+            font-size: 1.4rem;
+            font-weight: bold;
+            margin-bottom: 0.5rem;
+        }
+
+        .nav-menu {
+            list-style: none;
+            padding: 2rem 0;
+        }
+
+        .nav-item {
+            margin-bottom: 0.5rem;
+        }
+
+        .nav-link {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px 2rem;
+            color: rgba(255,255,255,0.8);
+            text-decoration: none;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            border-left: 3px solid transparent;
+        }
+
+        .nav-link:hover {
+            background: rgba(255,255,255,0.1);
+            color: white;
+            border-left-color: #FF5700;
+        }
+
+        .nav-link.active {
+            background: rgba(255,87,0,0.2);
+            color: white;
+            border-left-color: #FF5700;
+            font-weight: 600;
+        }
+
+        .nav-icon {
+            width: 20px;
+            height: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* Content Area */
+        .content-area {
+            flex: 1;
+            padding: 2rem;
+            background: #f5f5f7;
+        }
+
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        @media (max-width: 480px) {
+            .dashboard-grid {
+                gap: 1rem;
+                margin-bottom: 1.5rem;
+            }
+        }
+
+        @media (max-width: 360px) {
+            .dashboard-grid {
+                gap: 0.8rem;
+                margin-bottom: 1.2rem;
+            }
+        }
+
+        .main-widget, .side-widget {
+            background: white;
+            border-radius: 16px;
+            padding: 2rem;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+            transition: all 0.3s ease;
+        }
+
+        .main-widget:hover, .side-widget:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 30px rgba(0,0,0,0.12);
+        }
+
+        .widget-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 2rem;
+        }
+
+        .widget-title {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #094102;
+        }
+
+        .widget-subtitle {
+            color: #666;
+            margin-bottom: 2rem;
+            line-height: 1.6;
+        }
+
+        .service-button {
+            background: linear-gradient(135deg, #094102 0%, #FF5700 100%);
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            text-decoration: none;
+        }
+
+        .service-button:hover {
+            transform: scale(1.05);
+            box-shadow: 0 8px 25px rgba(255,87,0,0.3);
+        }
+
+        /* Interface Sections */
+        .interface {
+            display: none;
+            animation: fadeIn 0.5s ease;
+        }
+
+        .interface.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Home Interface Specific */
+        /* Remplacement de .announcements-grid et ajout des media queries */
+        .announcements-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.5rem;
+            margin-top: 2rem;
+        }
+
+        @media (max-width: 480px) {
+            .announcements-grid {
+                grid-template-columns: 1fr;
+                gap: 1rem;
+                margin-top: 1.5rem;
+            }
+        }
+
+        @media (max-width: 360px) {
+            .announcements-grid {
+                gap: 0.8rem;
+                margin-top: 1.2rem;
+            }
+        }
+
+        .announcement-card {
+            background: linear-gradient(135deg, #094102 0%, #FF5700 100%);
+            color: white;
+            padding: 2rem;
+            border-radius: 12px;
+            position: relative;
+            overflow: hidden;
+            width: 100%;
+            min-width: 0;
+        }
+
+        .announcement-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="grain" width="100" height="100" patternUnits="userSpaceOnUse"><circle cx="25" cy="25" r="1" fill="white" opacity="0.1"/><circle cx="75" cy="75" r="1" fill="white" opacity="0.1"/><circle cx="50" cy="10" r="0.5" fill="white" opacity="0.1"/></pattern></defs><rect width="100" height="100" fill="url(%23grain)"/></svg>');
+            pointer-events: none;
+        }
+
+        .announcement-title {
+            font-size: 1.3rem;
+            font-weight: bold;
+            margin-bottom: 1rem;
+            position: relative;
+            z-index: 1;
+        }
+
+        .announcement-content {
+            position: relative;
+            z-index: 1;
+            line-height: 1.6;
+        }
+
+        /* Features List */
+        .features-list {
+            list-style: none;
+            margin-top: 1.5rem;
+        }
+
+        .features-list li {
+            padding: 8px 0;
+            color: #666;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .features-list li::before {
+            content: "✓";
+            background: linear-gradient(135deg, #094102 0%, #FF5700 100%);
+            color: white;
+            border-radius: 50%;
+            width: 20px;
+            height: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            font-weight: bold;
+        }
+
+        /* Search Results */
+        .search-results {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            right: 0;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+            max-height: 300px;
+            overflow-y: auto;
+            z-index: 1000;
+            display: none;
+        }
+
+        .search-result {
+            padding: 12px 16px;
+            cursor: pointer;
+            border-bottom: 1px solid #eee;
+            transition: background 0.2s ease;
+        }
+
+        .search-result:hover {
+            background: #f8f9fa;
+        }
+
+        .search-result:last-child {
+            border-bottom: none;
+        }
+
+        /* Mobile Sidebar */
+        .mobile-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            z-index: 998;
+        }
+
+        .mobile-menu-btn {
+            display: none;
+            background: rgba(255,255,255,0.15);
+            border: none;
+            border-radius: 8px;
+            padding: 8px;
+            color: white;
+            cursor: pointer;
+        }
+
+        /* Carousel Gallery */
+        .carousel-container {
+            width: 100%;
+            margin: 2rem 0;
+            overflow: hidden;
+            position: relative;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+        }
+
+        .carousel-track {
+            display: flex;
+            animation: scroll 20s linear infinite;
+            width: calc(300px * 8); /* Adjust based on number of images */
+        }
+
+        .carousel-item {
+            flex: 0 0 300px;
+            height: 200px;
+            margin-right: 1rem;
+            border-radius: 8px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .carousel-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+        }
+        .carousel-item {
+            margin-right: 20px;
+        }
+        .carousel-item:last-child {
+            margin-right: 0;
+        }
+
+        .carousel-container:hover .carousel-track {
+            animation-play-state: paused;
+        }
+
+        @keyframes scroll {
+            0% {
+                transform: translateX(0);
+            }
+            100% {
+                transform: translateX(-50%);
+            }
+        }
+
+        /* Responsive Design */
+        @media (max-width: 1200px) {
+            .dashboard-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .carousel-item {
+                flex: 0 0 250px;
+            }
+        }
+
+        @media (max-width: 968px) {
+            .mobile-menu-btn {
+                display: block;
+            }
+
+            .sidebar {
+                position: fixed;
+                top: 0;
+                left: -250px;
+                height: 100vh;
+                z-index: 999;
+                transition: left 0.3s ease;
+            }
+
+            .sidebar.open {
+                left: 0;
+            }
+
+            .mobile-overlay.open {
+                display: block;
+            }
+
+            .main-container {
+                min-height: calc(100vh - 70px);
+            }
+
+            .content-area {
+                padding: 1rem;
+            }
+
+            .nav-link .nav-text {
+                display: block;
+            }
+            
+            .carousel-item {
+                flex: 0 0 200px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .header {
+                padding: 1rem;
+                flex-wrap: wrap;
+                gap: 1rem;
+            }
+            .search-container {
+                order: 3;
+                flex-basis: 100%;
+                margin: 0;
+                max-width: 100%;
+            }
+            .search-input {
+                width: 100%;
+            }
+            .logo {
+                font-size: 1rem;
+                max-width: 100%;
+            }
+            .logo svg {
+                width: 24px;
+            }
+            .notification-btn, .help-btn {
+                min-width: 44px;
+                min-height: 44px;
+                width: 2.2em;
+                height: 2.2em;
+            }
+            .main-widget, .side-widget {
+                padding: 1.5rem;
+            }
+            .widget-title {
+                font-size: 1.3rem;
+            }
+            .service-button {
+                width: 100%;
+                justify-content: center;
+                padding: 12px 20px;
+            }
+            .carousel-container {
+                margin: 1rem -0.5rem;
+                border-radius: 8px;
+            }
+            .carousel-item {
+                flex: 0 0 180px;
+                height: 150px;
+            }
+            .announcements-grid {
+                grid-template-columns: 1fr;
+                gap: 1rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .header {
+                padding: 0.6rem 0.8rem;
+                min-height: 60px;
+            }
+
+            .logo {
+                font-size: 0.85rem;
+                gap: 6px;
+            }
+
+            .logo svg {
+                width: 20px;
+                min-width: 20px;
+            }
+
+            .search-container {
+                margin: 0.5rem 0 0 0;
+            }
+
+            .search-input {
+                padding: 8px 12px 8px 35px;
+                font-size: 13px;
+            }
+
+            .search-icon {
+                left: 12px;
+                width: 14px;
+                height: 14px;
+            }
+
+            .notification-btn, .help-btn {
+                width: 36px;
+                height: 36px;
+                min-width: 36px;
+                min-height: 36px;
+            }
+
+            .notification-badge {
+                width: 14px;
+                height: 14px;
+                font-size: 8px;
+                top: -3px;
+                right: -3px;
+            }
+
+            .content-area {
+                padding: 0.6rem;
+            }
+
+            .main-widget, .side-widget {
+                padding: 1rem;
+            }
+
+            .widget-title {
+                font-size: 1.1rem;
+                line-height: 1.3;
+            }
+
+            .widget-subtitle {
+                font-size: 0.9rem;
+                line-height: 1.4;
+                margin-bottom: 1.5rem;
+            }
+
+            .announcement-card {
+                padding: 1.2rem;
+            }
+
+            .announcement-title {
+                font-size: 1.1rem;
+                margin-bottom: 0.8rem;
+            }
+
+            .announcement-content {
+                font-size: 0.9rem;
+                line-height: 1.4;
+            }
+
+            .service-button {
+                font-size: 0.9rem;
+                padding: 10px 14px;
+                gap: 6px;
+            }
+
+            .features-list li {
+                font-size: 0.9rem;
+                padding: 6px 0;
+            }
+
+            .carousel-item {
+                flex: 0 0 140px;
+                height: 100px;
+                margin-right: 10px;
+            }
+
+            .carousel-track {
+                width: calc(140px * 8 + 10px * 8);
+            }
+
+            .carrousel-wrapper {
+                margin-top: 30px;
+            }
+
+            .nav-link {
+                padding: 10px 1.5rem;
+                font-size: 0.9rem;
+            }
+
+            .nav-icon {
+                width: 18px;
+                height: 18px;
+            }
+
+            .dashboard-title {
+                font-size: 1.2rem;
+            }
+
+            .sidebar-header {
+                padding: 0 1.5rem 1.5rem;
+            }
+
+            .modal-content {
+                width: 95%;
+                padding: 1.5rem;
+                max-height: 85vh;
+            }
+
+            /* Nouvelle media query pour les très petits écrans */
+            @media (max-width: 375px) {
+                .header {
+                    padding: 0.4rem 0.6rem;
+                    min-height: 60px;
+                }
+                .logo {
+                    font-size: 0.85rem;
+                    gap: 6px;
+                }
+                .logo svg {
+                    width: 18px;
+                    height: 18px;
+                }
+                .search-input {
+                    padding: 6px 10px 6px 30px;
+                    font-size: 12px;
+                }
+                .search-icon {
+                    left: 8px;
+                    width: 14px;
+                    height: 14px;
+                }
+                .notification-btn, .help-btn {
+                    width: 34px;
+                    height: 34px;
+                }
+                .content-area {
+                    padding: 0.4rem 0.2rem;
+                }
+                .main-widget, .side-widget {
+                    padding: 0.8rem 0.6rem;
+                    margin-bottom: 0.8rem;
+                }
+                .widget-title {
+                    font-size: 1rem;
+                    line-height: 1.2;
+                }
+                .widget-subtitle {
+                    font-size: 0.8rem;
+                    line-height: 1.3;
+                    margin-bottom: 1rem;
+                }
+                .announcement-card {
+                    padding: 0.8rem;
+                    margin-bottom: 0.6rem;
+                }
+                .announcement-title {
+                    font-size: 0.95rem;
+                    margin-bottom: 0.6rem;
+                }
+                .announcement-content {
+                    font-size: 0.8rem;
+                    line-height: 1.3;
+                }
+                .service-button {
+                    padding: 8px 10px;
+                    font-size: 0.75rem;
+                    gap: 4px;
+                }
+                .service-button svg {
+                    width: 14px;
+                    height: 14px;
+                }
+                .carousel-item {
+                    flex: 0 0 140px;
+                    height: 90px;
+                    margin-right: 8px;
+                }
+                .sidebar {
+                    width: 200px;
+                    left: -200px;
+                }
+                .nav-link {
+                    padding: 8px 1rem;
+                    font-size: 0.8rem;
+                }
+                .nav-icon {
+                    width: 16px;
+                    height: 16px;
+                }
+            }
+
+            @media (max-width: 320px) {
+                .content-area {
+                    padding: 0.3rem 0.1rem;
+                }
+                .main-widget, .side-widget {
+                    padding: 0.6rem 0.4rem;
+                }
+                .widget-title {
+                    font-size: 0.9rem;
+                }
+                .service-button {
+                    font-size: 0.7rem;
+                    padding: 6px 8px;
+                }
+            }
+        }
+
+        /* Modal Styles */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.7);
+            z-index: 1002;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .modal-content {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: white;
+            border-radius: 16px;
+            padding: 2rem;
+            max-width: 500px;
+            width: 90%;
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .modal-title {
+            font-size: 1.5rem;
+            color: #094102;
+        }
+
+        .close-btn {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: #666;
+        }
+
+        .close-btn:hover {
+            color: #FF5700;
+        }
     </style>
 </head>
 <body>
+    <!-- Header -->
+    <header class="header">
+        <button class="mobile-menu-btn" onclick="toggleSidebar()">
+            <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M3 12h18M3 6h18M3 18h18"/>
+            </svg>
+        </button>
+        
+        <div class="logo">
+            <svg width="32" height="32" viewBox="0 0 32 32" fill="none">
+                <circle cx="16" cy="16" r="14" stroke="white" stroke-width="2"/>
+                <path d="M16 8v8l4 4" stroke="white" stroke-width="2" stroke-linecap="round"/>
+            </svg>
+            <span>Chronos Services</span>
+        </div>
 
-    <!-- Menu de navigation -->
-    <div class="nav-container">
-        <nav class="nav-menu">
-                        <button class="nav-item active" data-target="home">
-                                            <span class="nav-icon">
-                                                <svg width="24" height="24" fill="none" stroke="#FF5700" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11.5L12 4l9 7.5"/><path d="M4 10v8a2 2 0 002 2h3m6 0h3a2 2 0 002-2v-8"/><path d="M9 22V12h6v10"/></svg>
-                                            </span>
-                                            <span>Accueil</span>
-                                    </button>
-                                    <button class="nav-item" data-target="cv">
-                                            <span class="nav-icon">
-                                                <svg width="24" height="24" fill="none" stroke="#FF5700" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M7 8h10M7 12h6"/></svg>
-                                            </span>
-                                            <span>CV</span>
-                                    </button>
-                                    <button class="nav-item" data-target="lettre">
-                                            <span class="nav-icon">
-                                                <svg width="24" height="24" fill="none" stroke="#FF5700" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="2"/><polyline points="3,7 12,13 21,7"/></svg>
-                                            </span>
-                                            <span>Lettre</span>
-                                    </button>
-                                    <button class="nav-item" data-target="catalogue">
-                                            <span class="nav-icon">
-                                                <svg width="24" height="24" fill="none" stroke="#FF5700" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="4" width="16" height="16" rx="4"/><path d="M8 8h8v8H8z"/></svg>
-                                            </span>
-                                            <span>Catalogue</span>
-                                    </button>
-        </nav>
+        <div class="search-container">
+            <svg class="search-icon" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/>
+            </svg>
+            <input type="text" class="search-input" placeholder="Lancer une recherche..." oninput="performSearch(this.value)">
+            <div class="search-results" id="searchResults"></div>
+        </div>
+
+        <div class="header-actions">
+            <a href="https://web.facebook.com/Chronos.Services/" target="_blank" rel="noopener" class="notification-btn" title="Facebook" style="margin-right: 0;">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <circle cx="12" cy="12" r="10" fill="none"/>
+                    <path d="M15.5 8.5h-2a.5.5 0 0 0-.5.5v1.5h2.5l-.3 2H13v6h-2v-6H9.5v-2H11V9a2 2 0 0 1 2-2h2.5v1.5z" fill="currentColor" stroke="none"/>
+                </svg>
+            </a>
+            <button class="notification-btn" onclick="showNotifications()">
+                <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/>
+                    <path d="M13.73 21a2 2 0 0 1-3.46 0"/>
+                </svg>
+                <span class="notification-badge">3</span>
+            </button>
+            <button class="help-btn" onclick="showHelp()">
+                <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2">
+                    <circle cx="12" cy="12" r="10"/>
+                    <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/>
+                    <line x1="12" y1="17" x2="12.01" y2="17"/>
+                </svg>
+            </button>
+        </div>
+    </header>
+
+    <!-- Mobile Overlay -->
+    <div class="mobile-overlay" id="mobileOverlay" onclick="toggleSidebar()"></div>
+
+    <!-- Main Container -->
+    <div class="main-container">
+        <!-- Sidebar -->
+        <aside class="sidebar" id="sidebar">
+            <div class="sidebar-header">
+                <h2 class="dashboard-title">Tableau de Bord</h2>
+            </div>
+            
+            <nav>
+                <ul class="nav-menu">
+                    <li class="nav-item">
+                        <a href="#" class="nav-link active" data-target="home">
+                            <span class="nav-icon">
+                                <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
+                                    <polyline points="9,22 9,12 15,12 15,22"/>
+                                </svg>
+                            </span>
+                            <span class="nav-text">Accueil</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="#" class="nav-link" data-target="cv">
+                            <span class="nav-icon">
+                                <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                                    <polyline points="14,2 14,8 20,8"/>
+                                    <line x1="16" y1="13" x2="8" y2="13"/>
+                                    <line x1="16" y1="17" x2="8" y2="17"/>
+                                    <polyline points="10,9 9,9 8,9"/>
+                                </svg>
+                            </span>
+                            <span class="nav-text">Conception de CV</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="#" class="nav-link" data-target="lettre">
+                            <span class="nav-icon">
+                                <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2">
+                                    <rect x="3" y="5" width="18" height="14" rx="2"/>
+                                    <polyline points="3,7 12,13 21,7"/>
+                                </svg>
+                            </span>
+                            <span class="nav-text">Lettre de Motivation</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="#" class="nav-link" data-target="catalogue">
+                            <span class="nav-icon">
+                                <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2">
+                                    <rect x="3" y="3" width="18" height="18" rx="2" ry="2"/>
+                                    <rect x="7" y="7" width="10" height="10"/>
+                                </svg>
+                            </span>
+                            <span class="nav-text">Catalogue de CV</span>
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+        </aside>
+
+        <!-- Content Area -->
+        <main class="content-area">
+            <!-- Interface Accueil -->
+            <div class="interface active" id="home">
+                <div class="dashboard-grid">
+                    <div class="main-widget">
+                        <div class="widget-header">
+                            <h1 class="widget-title">Bienvenue chez Chronos Services</h1>
+                        </div>
+                        <p class="widget-subtitle">
+                            Découvrez nos services professionnels pour vous accompagner dans votre recherche d'emploi. 
+                            Utilisez le menu à gauche pour naviguer entre nos différentes offres et outils.
+                        </p>
+                        
+                        <div class="announcements-grid">
+                            <div class="announcement-card">
+                                <h3 class="announcement-title"> Notre Service</h3>
+                                <p class="announcement-content">
+                                    Découvrez notre service de révision de CV.<p></p> 
+                                    Obtenez des conseils personnalisés pour maximiser vos chances !
+                                </p>
+                            </div>
+                            
+                            <div class="announcement-card">
+                                <h3 class="announcement-title"> Résultats</h3>
+                                <p class="announcement-content">
+                                    562 CV Mise à jour...Depuis 2021 <p>
+                                    Si vous aussi pensez qu'un bon CV peut changer une candidature. 
+                                    Nous sommes là pour vous aider. !
+                                </p>
+                            </div>
+                            
+                            <div class="announcement-card">
+                                <h3 class="announcement-title"> Affiche publicitaire</h3>
+                                <p class="announcement-content">
+                                    Vous avez quelque chose à dire? <p></p>
+                                    Nous en faisons une affiche qui attire l'oeil.
+                                </p>
+                            </div>
+                        </div>
+
+                        <!-- Galerie d'images -->
+                        <div class="carrousel-wrapper gallery mt-10 mx-auto" style="margin-top: 40px; display: flex; justify-content: center; align-items: center; width: 100%;">
+                                                    <div class="carrousel">
+                                                        <div class="carrousel-track">
+                                                            <img src="Galleries/Adobe Express - file.jpg" alt="Image 1">
+                                                            <img src="Galleries/Adobe Express - file (1).jpg" alt="Image 2">
+                                                            <img src="Galleries/Adobe Express - file (2).jpg" alt="Image 3">
+                                                            <img src="Galleries/Adobe Express - file (3).jpg" alt="Image 4">
+                                                            <!-- Ajoute d’autres images si nécessaire -->
+                                                        </div>
+                                                    </div>
+                                                </div>
+                    </div>
+                    
+                    <div class="side-widget">
+                        <h3 class="widget-title">Accès Rapide</h3>
+                        <div style="display: flex; flex-direction: column; gap: 1rem; margin-top: 1rem; width: 100%;">
+                            <a href="#" class="service-button" onclick="switchInterface('cv')">
+                                <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                                    <polyline points="14,2 14,8 20,8"/>
+                                </svg>
+                                Créer mon CV
+                            </a>
+                            <a href="#" class="service-button" onclick="switchInterface('lettre')">
+                                <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2">
+                                    <rect x="3" y="5" width="18" height="14" rx="2"/>
+                                    <polyline points="3,7 12,13 21,7"/>
+                                </svg>
+                                Rédiger ma lettre
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Interface CV -->
+            <div class="interface" id="cv">
+                <div class="main-widget">
+                    <div class="widget-header">
+                        <h1 class="widget-title">CV Professionnel</h1>
+                    </div>
+                    <p class="widget-subtitle">
+                        Avant de remplir le formulaire, vous pourrez choisir le profil qui vous correspond : 
+                        Débutant (guide étape par étape), Ancien client (modification ciblée), ou Expert 
+                        (accès direct et complet). Nous rédigerons ensuite votre CV professionnel selon votre choix.
+                    </p>
+                    
+                    <ul class="features-list">
+                        <li>Guide étape par étape pour débutants</li>
+                        <li>Notre formulaires 5 étapes simples</li>
+                        <li>Optimisation ATS (Applicant Tracking System)</li>
+                        <li>Choix du format de votre CV ( Word ou PowerPoint.)</li>
+                    </ul>
+                    
+                    <a href="interface-new.html" class="service-button" style="margin-top: 2rem;">
+                        <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                            <polyline points="14,2 14,8 20,8"/>
+                        </svg>
+                        Je veux un CV
+                    </a>
+                </div>
+            </div>
+
+            <!-- Interface Lettre de Motivation -->
+            <div class="interface" id="lettre">
+                <div class="main-widget">
+                    <div class="widget-header">
+                        <h1 class="widget-title">Lettre de Motivation</h1>
+                    </div>
+                    <p class="widget-subtitle">
+                        Remplissez le formulaire pour nous communiquer les informations nécessaires. 
+                        Nous rédigerons ensuite votre lettre de motivation sur mesure.
+                    </p>
+                    
+                    <ul class="features-list">
+                        <li>Personnalisation selon le poste visé</li>
+                        <li>Structure professionnelle optimisée</li>
+                        <li>Mise en valeur de vos compétences</li>
+                        <li>Adaptation au secteur d'activité</li>
+                        <li>Révision et corrections incluses</li>
+                    </ul>
+                    
+                    <a href="formulaire-lettre.html" class="service-button" style="margin-top: 2rem;">
+                        <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2">
+                            <rect x="3" y="5" width="18" height="14" rx="2"/>
+                            <polyline points="3,7 12,13 21,7"/>
+                        </svg>
+                        Je veux une lettre de motivation
+                    </a>
+                </div>
+            </div>
+
+            <!-- Interface Catalogue -->
+            <div class="interface" id="catalogue">
+                <div class="main-widget">
+                    <div class="widget-header">
+                        <h1 class="widget-title">Catalogue de modèles de CV</h1>
+                    </div>
+                    <p class="widget-subtitle">
+                        Parcourez notre catalogue de modèles de CV pour choisir le style qui vous correspond. 
+                        Visualisez, comparez et sélectionnez facilement votre modèle préféré.
+                    </p>
+                    
+                    <ul class="features-list">
+                        <li>Plus de 40 modèles professionnels</li>
+                        <li>Styles variés</li>
+                        <li>Prévisualisation en temps réel</li>
+                        <li>Modèles créatifs et classiques</li>
+                        <li>Compatibilité tous secteurs</li>
+                    </ul>
+                    
+                    <a href="catalogue de CV.html" class="service-button" style="margin-top: 2rem;">
+                        <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2">
+                            <rect x="3" y="3" width="18" height="18" rx="2" ry="2"/>
+                            <rect x="7" y="7" width="10" height="10"/>
+                        </svg>
+                        Voir le catalogue
+                    </a>
+                </div>
+            </div>
+        </main>
     </div>
 
-    <!-- Contenu principal -->
-    <main class="main-content">
-
-        <!-- Interface Accueil -->
-        <div class="interface active" id="home">
-            <h1>Bienvenue chez Chronos Services</h1>
-            <p class="subtitle">Découvrez nos services professionnels pour vous accompagner dans votre recherche d'emploi. Utilisez le menu <b>ci-dessous</b> pour naviguer entre nos différentes offres.</p>
+    <!-- Modal pour Notifications -->
+    <div class="modal" id="notificationModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">🔔 Notifications</h3>
+                <button class="close-btn" onclick="closeModal('notificationModal')">&times;</button>
+            </div>
+            <div>
+                <div style="padding: 1rem; border-bottom: 1px solid #eee;">
+                    <strong>Nouveau modèle de CV disponible !</strong>
+                    <p style="margin: 0.5rem 0 0 0; color: #666;">Un nouveau modèle moderne a été ajouté au catalogue.</p>
+                    <small style="color: #999;">Il y a 2 heures</small>
+                </div>
+                <div style="padding: 1rem; border-bottom: 1px solid #eee;">
+                    <strong>Autres services</strong>
+                    <p style="margin: 0.5rem 0 0 0; color: #666;">Rédaction de document, Gestions des réseaux sociaux</p>
+                    <small style="color: #999;">Il y a 1 jour</small>
+                </div>
+                <div style="padding: 1rem;">
+                    <strong>Mise à jour du site</strong>
+                    <p style="margin: 0.5rem 0 0 0; color: #666;">Changement du design de l'interface d'accueil.</p>
+                    <small style="color: #999;">Il y a 3 jours</small>
+                </div>
+            </div>
         </div>
+    </div>
 
-        <!-- Interface Menu CV -->
-        <div class="interface" id="cv">
-            <h1>CV Professionnel</h1>
-            <p class="subtitle">Avant de remplir le formulaire, vous pourrez choisir le profil qui vous correspond : Débutant (guide étape par étape), Ancien client (modification ciblée), ou Expert (accès direct et complet). Nous rédigerons ensuite votre CV professionnel selon votre choix.</p>
-            <button class="service-btn" onclick="window.location.href='interface-new.html'">Je veux un CV</button>
+    <!-- Modal pour Aide -->
+    <div class="modal" id="helpModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">❓ Centre d'aide</h3>
+                <button class="close-btn" onclick="closeModal('helpModal')">&times;</button>
+            </div>
+            <div>
+                <h4 style="color: #094102; margin-bottom: 1rem;">Comment utiliser Chronos Services ?</h4>
+                
+                <div style="margin-bottom: 1.5rem;">
+                    <h5 style="color: #FF5700;">1. Conception de CV</h5>
+                    <p>Cliquez sur "Conception de CV" dans le menu pour accéder au formulaire de CV. Choisissez votre profil (Débutant, Ancien client, Expert) pour une expérience personnalisée.</p>
+                </div>
+                
+                <div style="margin-bottom: 1.5rem;">
+                    <h5 style="color: #FF5700;">2. Lettre de motivation</h5>
+                    <p>Utilisez notre formulaire dédié pour une lettre de motivation personnalisée selon le poste et l'entreprise visés.</p>
+                </div>
+                
+                <div style="margin-bottom: 1.5rem;">
+                    <h5 style="color: #FF5700;">3. Catalogue de modèles</h5>
+                    <p>Parcourez notre collection de plus de 40 modèles professionnels adaptés à tous les secteurs d'activité.</p>
+                </div>
+                
+                <div style="margin-top: 1.5rem; padding: 1rem; background: #f8f9fa; border-radius: 8px;">
+                    <strong>Besoin d'aide supplémentaire ?</strong>
+                    <p style="margin: 0.5rem 0 0 0;">Contactez notre équipe support à <strong>chronosservices241@gmail.com</strong> ou au <strong>065.37.08.82</strong></p>
+                </div>
+            </div>
         </div>
-
-        <!-- Interface Menu Lettre de Motivation -->
-        <div class="interface" id="lettre">
-            <h1>Lettre de Motivation</h1>
-            <p class="subtitle">Remplissez le formulaire pour nous communiquer les informations nécessaires. Nous rédigerons ensuite votre lettre de motivation sur mesure.</p>
-            <button class="service-btn" onclick="window.location.href='formulaire-lettre.html'">Je veux une lettre de motivation</button>
-        </div>
-
-        <!-- Interface Catalogue de CV -->
-        <div class="interface" id="catalogue">
-            <h1>Catalogue de modèles de CV</h1>
-            <p class="subtitle">Parcourez notre catalogue de modèles de CV pour choisir le style qui vous correspond. Visualisez, comparez et sélectionnez facilement votre modèle préféré.</p>
-            <button class="service-btn" onclick="window.location.href='catalogue de CV.html'">Voir le catalogue</button>
-        </div>
-
-    </main>
+    </div>
 
     <script>
-        // Gestion de la navigation
-        document.querySelectorAll('.nav-item').forEach(button => {
-            button.addEventListener('click', function() {
+        // Navigation
+        function switchInterface(targetId) {
+            // Remove active class from all nav links and interfaces
+            document.querySelectorAll('.nav-link').forEach(link => link.classList.remove('active'));
+            document.querySelectorAll('.interface').forEach(interface => interface.classList.remove('active'));
+            
+            // Add active class to target
+            document.querySelector(`[data-target="${targetId}"]`).classList.add('active');
+            document.getElementById(targetId).classList.add('active');
+            
+            // Close sidebar on mobile after selection
+            if (window.innerWidth <= 968) {
+                toggleSidebar();
+            }
+        }
+
+        // Event listeners for navigation
+        document.querySelectorAll('.nav-link').forEach(link => {
+            link.addEventListener('click', function(e) {
+                e.preventDefault();
                 const target = this.getAttribute('data-target');
-                
-                // Retirer la classe active de tous les boutons et interfaces
-                document.querySelectorAll('.nav-item').forEach(btn => btn.classList.remove('active'));
-                document.querySelectorAll('.interface').forEach(interface => interface.classList.remove('active'));
-                
-                // Ajouter la classe active au bouton cliqué et à l'interface correspondante
-                this.classList.add('active');
-                document.getElementById(target).classList.add('active');
-                
-                // Réinitialiser les animations
-                const activeInterface = document.getElementById(target);
-                activeInterface.style.opacity = '0';
-                activeInterface.style.transform = 'translateY(30px)';
-                
-                setTimeout(() => {
-                    activeInterface.style.opacity = '1';
-                    activeInterface.style.transform = 'translateY(0)';
-                }, 100);
+                switchInterface(target);
             });
         });
 
-        // Animation au chargement de la page
-        window.addEventListener('load', function() {
-            const activeInterface = document.querySelector('.interface.active');
-            if (activeInterface) {
-                activeInterface.style.opacity = '1';
-                activeInterface.style.transform = 'translateY(0)';
+        // Mobile sidebar toggle
+        function toggleSidebar() {
+            const sidebar = document.getElementById('sidebar');
+            const overlay = document.getElementById('mobileOverlay');
+            
+            sidebar.classList.toggle('open');
+            overlay.classList.toggle('open');
+        }
+
+        // Search functionality
+        const searchData = [
+            { title: 'CV Professionnel', description: 'Créer un CV personnalisé', target: 'cv' },
+            { title: 'Lettre de Motivation', description: 'Rédiger une lettre sur mesure', target: 'lettre' },
+            { title: 'Catalogue de CV', description: 'Parcourir nos modèles', target: 'catalogue' },
+            { title: 'Services', description: 'Nos offres et tarifs', target: 'home' },
+            { title: 'Débutant', description: 'Guide pour nouveaux utilisateurs', target: 'cv' },
+            { title: 'Expert', description: 'Accès complet aux outils', target: 'cv' },
+            { title: 'Modèles CV', description: 'Templates professionnels', target: 'catalogue' }
+        ];
+
+        function performSearch(query) {
+            const searchResults = document.getElementById('searchResults');
+            
+            if (!query.trim()) {
+                searchResults.style.display = 'none';
+                return;
+            }
+            
+            const filtered = searchData.filter(item => 
+                item.title.toLowerCase().includes(query.toLowerCase()) ||
+                item.description.toLowerCase().includes(query.toLowerCase())
+            );
+            
+            if (filtered.length > 0) {
+                searchResults.innerHTML = filtered.map(item => 
+                    `<div class="search-result" onclick="searchSelect('${item.target}')">
+                        <strong>${item.title}</strong><br>
+                        <small style="color: #666;">${item.description}</small>
+                    </div>`
+                ).join('');
+                searchResults.style.display = 'block';
+            } else {
+                searchResults.innerHTML = '<div class="search-result">Aucun résultat trouvé</div>';
+                searchResults.style.display = 'block';
+            }
+        }
+
+        function searchSelect(target) {
+            switchInterface(target);
+            document.querySelector('.search-input').value = '';
+            document.getElementById('searchResults').style.display = 'none';
+        }
+
+        // Modal functions
+        function showNotifications() {
+            document.getElementById('notificationModal').style.display = 'block';
+        }
+
+        function showHelp() {
+            document.getElementById('helpModal').style.display = 'block';
+        }
+
+        function closeModal(modalId) {
+            document.getElementById(modalId).style.display = 'none';
+        }
+
+        // Close modal when clicking outside
+        window.onclick = function(event) {
+            const modals = document.querySelectorAll('.modal');
+            modals.forEach(modal => {
+                if (event.target == modal) {
+                    modal.style.display = 'none';
+                }
+            });
+        }
+
+        // Hide search results when clicking outside
+        document.addEventListener('click', function(e) {
+            if (!e.target.closest('.search-container')) {
+                document.getElementById('searchResults').style.display = 'none';
             }
         });
+
+        // Handle window resize
+        window.addEventListener('resize', function() {
+            if (window.innerWidth > 968) {
+                document.getElementById('sidebar').classList.remove('open');
+                document.getElementById('mobileOverlay').classList.remove('open');
+            }
+        });
+
+        // Notification system
+        function showNotification(message, type = 'info') {
+            const notification = document.createElement('div');
+            notification.innerHTML = `
+                <div style="position: fixed; top: 100px; right: 20px; z-index: 1001; 
+                           background: white; color: #333; padding: 1rem 1.5rem; border-radius: 8px; 
+                           box-shadow: 0 4px 12px rgba(0,0,0,0.15); margin: 1rem; 
+                           border-left: 4px solid ${type === 'success' ? '#094102' : '#FF5700'};
+                           animation: slideIn 0.3s ease forwards;">
+                    ${message}
+                    <button onclick="this.parentElement.parentElement.remove()" 
+                            style="float: right; background: none; border: none; font-size: 1.2rem; cursor: pointer; margin-left: 1rem;">×</button>
+                </div>
+            `;
+            
+            document.body.appendChild(notification);
+            
+            // Auto remove after 5 seconds
+            setTimeout(() => {
+                if (notification.parentElement) {
+                    notification.style.animation = 'slideOut 0.3s ease forwards';
+                    setTimeout(() => notification.remove(), 300);
+                }
+            }, 5000);
+        }
+
+        // Add slide animations for notifications
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes slideIn {
+                from { transform: translateX(100%); opacity: 0; }
+                to { transform: translateX(0); opacity: 1; }
+            }
+            @keyframes slideOut {
+                from { transform: translateX(0); opacity: 1; }
+                to { transform: translateX(100%); opacity: 0; }
+            }
+        `;
+        document.head.appendChild(style);
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', function() {
+            // Set initial active state
+            switchInterface('home');
+            
+            // Welcome message
+            setTimeout(() => {
+                showNotification('Bienvenue sur Chronos Services ! Explorez nos outils pour booster votre carrière.', 'success');
+            }, 1000);
+        });
     </script>
-
-
 
 </body>
 </html>
