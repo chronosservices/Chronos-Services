@@ -216,13 +216,6 @@
             gap: 10px;
             margin: 20px 0;
             flex-wrap: wrap;
-            .step-title {
-    font-size: clamp(20px, 3vw, 26px);
-    color: #094102;
-    margin-bottom: 20px;
-    font-weight: 600;
-    margin-top: clamp(1rem, 5vh, 3rem); /* AJOUTE cette ligne */
-}
         }
 
         .progress-step {
@@ -284,6 +277,7 @@
             color: #094102;
             margin-bottom: 20px;
             font-weight: 600;
+            margin-top: clamp(1rem, 5vh, 3rem);
         }
 
         .step-definition {
@@ -393,7 +387,7 @@
             color: #094102;
         }
 
-        /* ===== FORMULAIRE ANCIEN CLIENT ===== */
+        /* ===== FORMULAIRE ANCIEN CLIENT AMÉLIORÉ ===== */
         .ancien-client-section {
             display: none;
             background: linear-gradient(145deg, #ffffff, #f7f7f7);
@@ -450,6 +444,120 @@
             min-height: 120px;
         }
 
+        /* ===== CHAMPS DYNAMIQUES ===== */
+        .dynamic-fields-container {
+            background: #f8f9fa;
+            padding: 25px;
+            border-radius: 12px;
+            border: 2px solid #e9ecef;
+            margin: 25px 0;
+            display: none;
+            animation: slideIn 0.5s ease;
+        }
+
+        .dynamic-fields-container.show {
+            display: block;
+        }
+
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateY(-20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .dynamic-section-title {
+            color: #094102;
+            font-size: clamp(18px, 3vw, 22px);
+            font-weight: 600;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #ff5700;
+        }
+
+        .dynamic-field-group {
+            background: white;
+            border: 2px solid #e9ecef;
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 20px;
+            position: relative;
+            transition: all 0.3s ease;
+        }
+
+        .dynamic-field-group:hover {
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            border-color: #ff5700;
+        }
+
+        .field-group-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .field-group-title {
+            color: #094102;
+            font-weight: 600;
+            font-size: clamp(16px, 2.5vw, 18px);
+        }
+
+        .remove-field-btn {
+            background: #dc3545;
+            color: white;
+            border: none;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            transition: all 0.3s ease;
+        }
+
+        .remove-field-btn:hover {
+            background: #c82333;
+            transform: scale(1.1);
+        }
+
+        .add-field-btn {
+            background: linear-gradient(90deg, #094102, #ff5700);
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 8px;
+            font-size: clamp(14px, 2vw, 16px);
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 15px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .add-field-btn:hover {
+            background: linear-gradient(90deg, #076301, #e64a00);
+            transform: translateY(-2px);
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+
+        .form-row.single {
+            grid-template-columns: 1fr;
+        }
+
+        .form-row.triple {
+            grid-template-columns: 1fr 1fr 1fr;
+        }
+
+        /* ===== STYLES COMMUNS ===== */
         .submit-btn {
             width: 100%;
             background: linear-gradient(90deg, #094102, #ff5700);
@@ -544,6 +652,14 @@
             .progress-line {
                 width: 25px;
             }
+
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+
+            .form-row.triple {
+                grid-template-columns: 1fr;
+            }
         }
 
         @media (max-width: 480px) {
@@ -582,6 +698,14 @@
             .tutorial-navigation .nav-btn {
                 width: 100%;
                 max-width: 320px;
+            }
+
+            .dynamic-fields-container {
+                padding: 15px;
+            }
+
+            .dynamic-field-group {
+                padding: 15px;
             }
         }
 
@@ -714,7 +838,7 @@
                     </div>
                     <div class="step-example">
                         <h4>Exemple concret :</h4>
-                        <div class="example-content">Un CV bien présenté peut te permettre d’obtenir un entretien même si tu n’as pas beaucoup d’expérience.</div>
+                        <div class="example-content">Un CV bien présenté peut te permettre d'obtenir un entretien même si tu n'as pas beaucoup d'expérience.</div>
                     </div>
                     <div class="step-tips">
                         <h4>Conseils :</h4>
@@ -730,7 +854,7 @@
                     <h3 class="step-title">2. Informations Personnelles</h3>
                     <div class="step-definition">
                         <h4>Définition</h4>
-                        <p>Ce sont les infos de base pour que l’employeur puisse te contacter.</p>
+                        <p>Ce sont les infos de base pour que l'employeur puisse te contacter.</p>
                     </div>
                     <div class="step-example">
                         <h4>Exemple concret :</h4>
@@ -762,8 +886,8 @@
                     <div class="step-tips">
                         <h4>Conseils :</h4>
                         <ul>
-                            <li>Donne le nom du diplôme, l’établissement, et l’année.</li>
-                            <li>Sois honnête, n’invente rien.</li>
+                            <li>Donne le nom du diplôme, l'établissement, et l'année.</li>
+                            <li>Sois honnête, n'invente rien.</li>
                             <li>Ne mélange pas les formations avec les expériences.</li>
                         </ul>
                     </div>
@@ -783,8 +907,8 @@
                     <div class="step-tips">
                         <h4>Conseils :</h4>
                         <ul>
-                            <li>Mets des verbes d’action : gérer, accueillir, rédiger…</li>
-                            <li>Mentionne les dates, l’entreprise et les tâches effectuées.</li>
+                            <li>Mets des verbes d'action : gérer, accueillir, rédiger…</li>
+                            <li>Mentionne les dates, l'entreprise et les tâches effectuées.</li>
                             <li>Même un bénévolat ou stage compte.</li>
                         </ul>
                     </div>
@@ -804,7 +928,7 @@
                     <div class="step-tips">
                         <h4>Conseils :</h4>
                         <ul>
-                            <li>Ne dis pas juste « maîtrise de l’outil informatique », sois précis.</li>
+                            <li>Ne dis pas juste « maîtrise de l'outil informatique », sois précis.</li>
                             <li>Classe-les par type : techniques, informatiques, humaines.</li>
                         </ul>
                     </div>
@@ -845,29 +969,29 @@
                         <h4>Conseils :</h4>
                         <ul>
                             <li>Sois honnête sur ton niveau.</li>
-                            <li>Tu peux indiquer « langue maternelle » si c’est pertinent.</li>
+                            <li>Tu peux indiquer « langue maternelle » si c'est pertinent.</li>
                         </ul>
                     </div>
                 </div>
 
-                <!-- Slide 8: Centres d’intérêt -->
+                <!-- Slide 8: Centres d'intérêt -->
                 <div class="tutorial-step" id="tutorialStep8">
-                    <h3 class="step-title">8. Centres d’intérêt</h3>
+                    <h3 class="step-title">8. Centres d'intérêt</h3>
                     <div class="step-definition">
                         <h4>Définition</h4>
-                        <p>Les centres d’intérêt sont les activités personnelles, loisirs ou passions que tu pratiques en dehors du cadre scolaire ou professionnel. Ils permettent de montrer ta personnalité, tes valeurs et parfois des compétences utiles pour le poste visé.</p>
+                        <p>Les centres d'intérêt sont les activités personnelles, loisirs ou passions que tu pratiques en dehors du cadre scolaire ou professionnel. Ils permettent de montrer ta personnalité, tes valeurs et parfois des compétences utiles pour le poste visé.</p>
                     </div>
                     <div class="step-example">
                         <h4>Exemple concret :</h4>
-                        <div class="example-content">- Lecture de romans policiers<br>- Football (défenseur en club amateur)<br>- Bénévolat dans une association d’aide aux devoirs<br>- Photographie<br>- Jardinage</div>
+                        <div class="example-content">- Lecture de romans policiers<br>- Football (défenseur en club amateur)<br>- Bénévolat dans une association d'aide aux devoirs<br>- Photographie<br>- Jardinage</div>
                     </div>
                     <div class="step-tips">
                         <h4>Conseils :</h4>
                         <ul>
-                            <li>Choisis 2 à 4 centres d’intérêt qui te représentent vraiment.</li>
-                            <li>Privilégie les activités qui montrent ton sérieux, ton engagement ou des qualités utiles (ex : sport d’équipe = esprit d’équipe).</li>
-                            <li>Sois précis : préfère « lecture de romans policiers » à « lecture » ou « football en club » à « sport ».</li>
-                            <li>Si tu fais du bénévolat, indique-le : cela valorise ton engagement.</li>
+                            <li>Choisis 2 à 4 centres d'intérêt qui te représentent vraiment.</li>
+                            <li>Privilégie les activités qui montrent ton sérieux, ton engagement ou des qualités utiles (ex : sport d'équipe = esprit d'équipe).</li>
+                            <li>Sois précis : préfère « lecture de romans policiers » à « lecture » ou « football en club » à « sport ».</li>
+                            <li>Si tu fais du bénévolat, indique-le : cela valorise ton engagement.</li>
                         </ul>
                     </div>
                 </div>
@@ -881,7 +1005,7 @@
                     </div>
                     <div class="step-example">
                         <h4>Exemple de checklist :</h4>
-                        <div class="example-content">Est-ce qu’il y a des fautes d’orthographe ?<br>Est-ce que toutes les infos sont à jour ?<br>Est-ce que la mise en page est propre et lisible ?</div>
+                        <div class="example-content">Est-ce qu'il y a des fautes d'orthographe ?<br>Est-ce que toutes les infos sont à jour ?<br>Est-ce que la mise en page est propre et lisible ?</div>
                     </div>
                     <div class="step-tips">
                         <h4>Conseils :</h4>
@@ -899,16 +1023,16 @@
                         <strong>Mini-FAQ Débutants</strong>
                         <ul style="margin:14px 0 0 0;padding-left:18px;">
                             <li>
-                                <strong>Et si je n’ai aucune expérience&nbsp;?</strong><br>
+                                <strong>Et si je n'ai aucune expérience&nbsp;?</strong><br>
                                 <span style="color:#444;">Pas de souci, nous mettrons en avant vos qualités, formations et vos points forts personnels.</span>
                             </li>
                             <li style="margin-top:12px;">
-                                <strong>Je ne sais pas quoi écrire dans certaines rubriques, c’est grave&nbsp;?</strong><br>
+                                <strong>Je ne sais pas quoi écrire dans certaines rubriques, c'est grave&nbsp;?</strong><br>
                                 <span style="color:#444;">Non. Remplissez ce que vous pouvez, et nous vous contacterons si besoin de précisions.</span>
                             </li>
                             <li style="margin-top:12px;">
-                                <strong>Et si je n’ai pas de formation professionnelle, et que mes expériences sont juste des petits boulots ou bricolages&nbsp;?</strong><br>
-                                <span style="color:#444;">Ce n’est pas un problème. Nous savons mettre en valeur toutes les expériences utiles, même les plus simples. Ce qui compte, ce sont vos compétences et votre motivation, pas seulement les diplômes.</span>
+                                <strong>Et si je n'ai pas de formation professionnelle, et que mes expériences sont juste des petits boulots ou bricolages&nbsp;?</strong><br>
+                                <span style="color:#444;">Ce n'est pas un problème. Nous savons mettre en valeur toutes les expériences utiles, même les plus simples. Ce qui compte, ce sont vos compétences et votre motivation, pas seulement les diplômes.</span>
                             </li>
                         </ul>
                     </div>
@@ -924,7 +1048,7 @@
             </div>
         </section>
 
-        <!-- FORMULAIRE ANCIEN CLIENT -->
+        <!-- FORMULAIRE ANCIEN CLIENT AMÉLIORÉ -->
         <section id="ancienClientSection" class="ancien-client-section">
             <button class="back-btn" onclick="showWelcome()">← Retour à l'accueil</button>
             
@@ -953,8 +1077,8 @@
                             <option value="">Sélectionnez le délai souhaité</option>
                             <option value="Normal - 48h">Normal - Sous 48 heures</option>
                             <option value="Premium - Priorité absolue (+50% de frais)">Premium - Priorité absolue (+50% de frais)</option>
-                <div class="urgence-info" id="urgenceInfoAncien"></div>
                         </select>
+                        <div class="urgence-info" id="urgenceInfoAncien"></div>
                     </div>
                 </div>
 
@@ -975,8 +1099,11 @@
                     </select>
                 </div>
 
+                <!-- CONTENEUR POUR CHAMPS DYNAMIQUES -->
+                <div id="dynamicFieldsContainer" class="dynamic-fields-container"></div>
+
                 <div class="form-group">
-                    <label for="modifications_demandees">Décrivez précisément les modifications souhaitées *</label>
+                    <label for="modifications_demandees">Description générale des modifications souhaitées *</label>
                     <textarea id="modifications_demandees" name="modifications_demandees" required 
                               placeholder="Décrivez clairement ce que vous souhaitez modifier, ajouter ou supprimer. Soyez le plus précis possible pour un traitement rapide de votre demande.
 
@@ -1000,8 +1127,267 @@ Exemple :
 
     <script>
         // Variables globales
-let currentStep = 1;
-const totalSteps = 10;
+        let currentStep = 1;
+        const totalSteps = 10;
+        let dynamicFieldCounters = {};
+
+        // Templates pour champs dynamiques par section
+        const dynamicFieldTemplates = {
+            "Informations personnelles": `
+                <div class="dynamic-field-group">
+                    <div class="field-group-header">
+                        <span class="field-group-title">Information personnelle #{counter}</span>
+                        <button type="button" class="remove-field-btn" onclick="removeFieldGroup(this)">×</button>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Type d'information</label>
+                            <select name="info_type_{counter}" required>
+                                <option value="">Choisissez le type</option>
+                                <option value="Nom">Nom</option>
+                                <option value="Prénom">Prénom</option>
+                                <option value="Téléphone">Téléphone</option>
+                                <option value="Email">Email</option>
+                                <option value="Adresse">Adresse</option>
+                                <option value="Date de naissance">Date de naissance</option>
+                                <option value="N° PNPE/ONE">N° PNPE/ONE</option>
+                                <option value="Autre">Autre</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Action</label>
+                            <select name="info_action_{counter}" required>
+                                <option value="">Sélectionnez l'action</option>
+                                <option value="Modifier">Modifier</option>
+                                <option value="Ajouter">Ajouter</option>
+                                <option value="Supprimer">Supprimer</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-row single">
+                        <div class="form-group">
+                            <label>Nouvelle valeur / Précision</label>
+                            <input type="text" name="info_valeur_{counter}" placeholder="Ex: +241 XX XX XX XX pour un téléphone">
+                        </div>
+                    </div>
+                </div>
+            `,
+            "Formation et diplômes": `
+                <div class="dynamic-field-group">
+                    <div class="field-group-header">
+                        <span class="field-group-title">Formation #{counter}</span>
+                        <button type="button" class="remove-field-btn" onclick="removeFieldGroup(this)">×</button>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Diplôme / Formation</label>
+                            <input type="text" name="formation_diplome_{counter}" placeholder="Ex: Licence en Gestion" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Établissement</label>
+                            <input type="text" name="formation_etablissement_{counter}" placeholder="Ex: Université Omar Bongo">
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Période</label>
+                            <input type="text" name="formation_periode_{counter}" placeholder="Ex: 2020-2023">
+                        </div>
+                        <div class="form-group">
+                            <label>Action</label>
+                            <select name="formation_action_{counter}" required>
+                                <option value="">Sélectionnez l'action</option>
+                                <option value="Ajouter">Ajouter cette formation</option>
+                                <option value="Modifier">Modifier une formation existante</option>
+                                <option value="Supprimer">Supprimer une formation</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-row single">
+                        <div class="form-group">
+                            <label>Détails complémentaires</label>
+                            <textarea name="formation_details_{counter}" placeholder="Mention obtenue, spécialisation, etc."></textarea>
+                        </div>
+                    </div>
+                </div>
+            `,
+            "Expériences professionnelles": `
+                <div class="dynamic-field-group">
+                    <div class="field-group-header">
+                        <span class="field-group-title">Expérience #{counter}</span>
+                        <button type="button" class="remove-field-btn" onclick="removeFieldGroup(this)">×</button>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Poste occupé</label>
+                            <input type="text" name="exp_poste_{counter}" placeholder="Ex: Assistant comptable" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Entreprise</label>
+                            <input type="text" name="exp_entreprise_{counter}" placeholder="Ex: ABC Sarl">
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Période</label>
+                            <input type="text" name="exp_periode_{counter}" placeholder="Ex: Jan 2024 - Aujourd'hui">
+                        </div>
+                        <div class="form-group">
+                            <label>Action</label>
+                            <select name="exp_action_{counter}" required>
+                                <option value="">Sélectionnez l'action</option>
+                                <option value="Ajouter">Ajouter cette expérience</option>
+                                <option value="Modifier">Modifier une expérience existante</option>
+                                <option value="Supprimer">Supprimer une expérience</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-row single">
+                        <div class="form-group">
+                            <label>Missions et réalisations</label>
+                            <textarea name="exp_missions_{counter}" placeholder="- Gestion des dossiers clients
+- Saisie comptable
+- Préparation des déclarations"></textarea>
+                        </div>
+                    </div>
+                </div>
+            `,
+            "Compétences": `
+                <div class="dynamic-field-group">
+                    <div class="field-group-header">
+                        <span class="field-group-title">Compétence #{counter}</span>
+                        <button type="button" class="remove-field-btn" onclick="removeFieldGroup(this)">×</button>
+                    </div>
+                    <div class="form-row triple">
+                        <div class="form-group">
+                            <label>Type de compétence</label>
+                            <select name="comp_type_{counter}" required>
+                                <option value="">Choisissez le type</option>
+                                <option value="Informatique">Informatique</option>
+                                <option value="Linguistique">Linguistique</option>
+                                <option value="Technique">Technique</option>
+                                <option value="Relationnelle">Relationnelle</option>
+                                <option value="Organisationnelle">Organisationnelle</option>
+                                <option value="Autre">Autre</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Niveau</label>
+                            <select name="comp_niveau_{counter}">
+                                <option value="">Niveau (optionnel)</option>
+                                <option value="Débutant">Débutant</option>
+                                <option value="Intermédiaire">Intermédiaire</option>
+                                <option value="Avancé">Avancé</option>
+                                <option value="Expert">Expert</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Action</label>
+                            <select name="comp_action_{counter}" required>
+                                <option value="">Sélectionnez l'action</option>
+                                <option value="Ajouter">Ajouter</option>
+                                <option value="Modifier">Modifier</option>
+                                <option value="Supprimer">Supprimer</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-row single">
+                        <div class="form-group">
+                            <label>Nom de la compétence</label>
+                            <input type="text" name="comp_nom_{counter}" placeholder="Ex: Microsoft Excel, Négociation commerciale..." required>
+                        </div>
+                    </div>
+                </div>
+            `,
+            "Langues": `
+                <div class="dynamic-field-group">
+                    <div class="field-group-header">
+                        <span class="field-group-title">Langue #{counter}</span>
+                        <button type="button" class="remove-field-btn" onclick="removeFieldGroup(this)">×</button>
+                    </div>
+                    <div class="form-row triple">
+                        <div class="form-group">
+                            <label>Nom de la langue</label>
+                            <input type="text" name="langue_nom_{counter}" placeholder="Ex: Anglais, Fang..." required>
+                        </div>
+                        <div class="form-group">
+                            <label>Niveau</label>
+                            <select name="langue_niveau_{counter}" required>
+                                <option value="">Sélectionnez le niveau</option>
+                                <option value="Langue maternelle">Langue maternelle</option>
+                                <option value="Courant">Courant</option>
+                                <option value="Intermédiaire">Intermédiaire</option>
+                                <option value="Débutant">Débutant</option>
+                                <option value="Notions de base">Notions de base</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Action</label>
+                            <select name="langue_action_{counter}" required>
+                                <option value="">Sélectionnez l'action</option>
+                                <option value="Ajouter">Ajouter</option>
+                                <option value="Modifier">Modifier</option>
+                                <option value="Supprimer">Supprimer</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+            `,
+            "Centres d'intérêts": `
+                <div class="dynamic-field-group">
+                    <div class="field-group-header">
+                        <span class="field-group-title">Centre d'intérêt #{counter}</span>
+                        <button type="button" class="remove-field-btn" onclick="removeFieldGroup(this)">×</button>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Nom du centre d'intérêt</label>
+                            <input type="text" name="interet_nom_{counter}" placeholder="Ex: Football, Lecture, Photographie..." required>
+                        </div>
+                        <div class="form-group">
+                            <label>Action</label>
+                            <select name="interet_action_{counter}" required>
+                                <option value="">Sélectionnez l'action</option>
+                                <option value="Ajouter">Ajouter</option>
+                                <option value="Modifier">Modifier</option>
+                                <option value="Supprimer">Supprimer</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-row single">
+                        <div class="form-group">
+                            <label>Précisions (optionnel)</label>
+                            <input type="text" name="interet_precision_{counter}" placeholder="Ex: Défenseur en club amateur, Romans policiers...">
+                        </div>
+                    </div>
+                </div>
+            `,
+            "Objectifs professionnels": `
+                <div class="dynamic-field-group">
+                    <div class="field-group-header">
+                        <span class="field-group-title">Objectif professionnel #{counter}</span>
+                        <button type="button" class="remove-field-btn" onclick="removeFieldGroup(this)">×</button>
+                    </div>
+                    <div class="form-row single">
+                        <div class="form-group">
+                            <label>Action</label>
+                            <select name="objectif_action_{counter}" required>
+                                <option value="">Sélectionnez l'action</option>
+                                <option value="Remplacer">Remplacer l'objectif actuel</option>
+                                <option value="Modifier">Modifier l'objectif existant</option>
+                                <option value="Supprimer">Supprimer l'objectif</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-row single">
+                        <div class="form-group">
+                            <label>Nouvel objectif professionnel</label>
+                            <textarea name="objectif_contenu_{counter}" placeholder="Ex: Obtenir un poste d'assistant comptable dans une entreprise dynamique pour développer mes compétences en gestion financière..." rows="4"></textarea>
+                        </div>
+                    </div>
+                </div>
+            `
+        };
 
         // Fonctions de navigation principale
         function selectProfile(profile) {
@@ -1028,21 +1414,6 @@ const totalSteps = 10;
             }
         }
 
-        function redirectToExpertForm() {
-            // Demander le niveau d'urgence avant redirection
-            const urgence = prompt(`Choisissez votre niveau d'urgence :\n1 - Normal (sous 48h)\n2 - Premium - Priorité absolue (+50% de frais)\n\nTapez 1 ou 2 :`);
-            let urgenceValue = '';
-            switch(urgence) {
-                case '1': urgenceValue = 'Normal - 48h'; break;
-                case '2': urgenceValue = 'Premium - Priorité absolue (+50% de frais)'; break;
-                default: urgenceValue = 'Normal - 48h'; break;
-            }
-            // Stocker le niveau d'urgence pour le formulaire expert
-            localStorage.setItem('niveau_urgence', urgenceValue);
-            // Redirection automatique vers le formulaire principal
-            window.location.href = 'formulaire-original.html';
-        }
-
         function showWelcome() {
             const welcomeSection = document.getElementById('welcomeSection');
             const tutorialSection = document.getElementById('tutorialSection');
@@ -1056,43 +1427,38 @@ const totalSteps = 10;
             welcomeSection.style.display = 'block';
             welcomeSection.classList.add('fade-enter');
 
-            // Réinitialiser le tutoriel
+            // Réinitialiser le tutoriel et les champs dynamiques
             resetTutorial();
+            resetDynamicFields();
         }
 
-        // Fonctions du tutoriel
+        // Fonctions du tutoriel (inchangées)
         function nextStep() {
             if (currentStep < totalSteps) {
-                // Masquer l'étape actuelle
                 document.getElementById(`tutorialStep${currentStep}`).classList.remove('active');
-                // Marquer l'étape comme terminée
                 document.getElementById(`step${currentStep}`).classList.remove('active');
                 document.getElementById(`step${currentStep}`).classList.add('completed');
                 if (currentStep < totalSteps) {
                     document.getElementById(`line${currentStep}`).classList.add('completed');
                 }
                 currentStep++;
-                // Afficher la nouvelle étape
                 document.getElementById(`tutorialStep${currentStep}`).classList.add('active');
                 if (document.getElementById(`step${currentStep}`)) {
                     document.getElementById(`step${currentStep}`).classList.add('active');
                 }
                 updateNavigationButtons();
             } else {
-                // Fin du tutoriel - redirection vers le formulaire avec urgence
                 goToOriginalFormFromTutorial();
             }
         }
 
         function previousStep() {
             if (currentStep > 1) {
-                // Masquer l'étape actuelle
                 document.getElementById(`tutorialStep${currentStep}`).classList.remove('active');
                 document.getElementById(`step${currentStep}`).classList.remove('active');
                 
                 currentStep--;
                 
-                // Réafficher l'étape précédente
                 document.getElementById(`tutorialStep${currentStep}`).classList.add('active');
                 document.getElementById(`step${currentStep}`).classList.remove('completed');
                 document.getElementById(`step${currentStep}`).classList.add('active');
@@ -1108,10 +1474,8 @@ const totalSteps = 10;
             const prevBtn = document.getElementById('prevBtn');
             const nextBtn = document.getElementById('nextBtn');
             
-            // Bouton précédent
             prevBtn.disabled = currentStep === 1;
             
-            // Bouton suivant
             if (currentStep === totalSteps) {
                 nextBtn.textContent = 'Accéder au formulaire';
             } else {
@@ -1126,14 +1490,12 @@ const totalSteps = 10;
         }
 
         function goToOriginalFormFromTutorial() {
-            // Redirection directe vers le formulaire original
             window.location.href = 'formulaire-original.html';
         }
 
         function resetTutorial() {
             currentStep = 1;
             
-            // Réinitialiser toutes les étapes
             for (let i = 1; i <= totalSteps; i++) {
                 const step = document.getElementById(`tutorialStep${i}`);
                 const progressStep = document.getElementById(`step${i}`);
@@ -1144,109 +1506,174 @@ const totalSteps = 10;
                 }
                 if (progressLine) progressLine.classList.remove('completed');
             }
-            // Activer la première étape
             document.getElementById('tutorialStep1').classList.add('active');
             document.getElementById('step1').classList.add('active');
             updateNavigationButtons();
         }
 
-        // Gestion du formulaire ancien client
-        document.getElementById('ancienClientForm').addEventListener('submit', function(e) {
-            e.preventDefault();
-            
-            const formData = new FormData(this);
-            const submitBtn = this.querySelector('.submit-btn');
-            
-            // Animation de chargement
-            submitBtn.textContent = 'Envoi en cours...';
-            submitBtn.disabled = true;
-            
-            // Préparer les données pour un envoi structuré
-            const structuredData = {
-                type_demande: formData.get('type_demande'),
-                nom_complet: formData.get('nom_complet'),
-                email_contact: formData.get('email_contact'),
-                urgence: formData.get('urgence'),
-                section_modifier: formData.get('section_modifier'),
-                modifications_demandees: formData.get('modifications_demandees'),
-                commentaires_supplementaires: formData.get('commentaires_supplementaires'),
-                date_demande: new Date().toLocaleString('fr-FR'),
-                profil_utilisateur: 'Ancien client'
-            };
-            
-            // Créer un message structuré pour l'email
-            // Message texte brut strictement conforme à la demande pour le profil "Modification de CV – Ancien client"
-            const messageStructure =
-                `| DEMANDE DE MODIFICATION DE CV – Ancien Client\n\n` +
-                `Nom & Prénom : ${structuredData.nom_complet || '—'}\n` +
-                `Email de contact : ${structuredData.email_contact || '—'}\n` +
-                `Niveau d’urgence : ${structuredData.urgence || '—'}\n` +
-                `Section du CV à modifier : ${structuredData.section_modifier || '—'}\n` +
-                `Description précise des modifications : \n${structuredData.modifications_demandees || '—'}\n\n` +
-                `Commentaires supplémentaires : \n${structuredData.commentaires_supplementaires ? structuredData.commentaires_supplementaires : '—'}\n`;
-            
-            // Ajouter le message structuré au formulaire
-            const hiddenField = document.createElement('input');
-            hiddenField.type = 'hidden';
-            hiddenField.name = 'message_structure';
-            hiddenField.value = messageStructure;
-            this.appendChild(hiddenField);
-            
-            // Envoi réel du formulaire
-            fetch(this.action, {
-                method: 'POST',
-                body: new FormData(this),
-                headers: {
-                    'Accept': 'application/json'
-                }
-            })
-            .then(response => {
-                if (response.ok) {
-                    showSuccessMessage();
-                    this.reset();
-                } else {
-                    throw new Error('Erreur lors de l\'envoi');
-                }
-            })
-            .catch(error => {
-                console.error('Erreur:', error);
-                alert('Une erreur est survenue lors de l\'envoi. Veuillez réessayer.');
-            })
-            .finally(() => {
-                submitBtn.textContent = 'Envoyer ma demande de modification';
-                submitBtn.disabled = false;
-                
-                if (hiddenField.parentNode) {
-                    hiddenField.parentNode.removeChild(hiddenField);
-                }
-            });
-        });
+        // ===== NOUVELLES FONCTIONS POUR CHAMPS DYNAMIQUES =====
+        
+        function handleSectionChange() {
+            const sectionSelect = document.getElementById('section_modifier');
+            const dynamicContainer = document.getElementById('dynamicFieldsContainer');
+            const selectedSection = sectionSelect.value;
 
-        function showSuccessMessage() {
-            const form = document.getElementById('ancienClientForm');
-            const successDiv = document.createElement('div');
-            successDiv.className = 'success-message';
-            successDiv.innerHTML = `
-                <strong>Demande envoyée avec succès !</strong><br>
-                Nous traiterons votre demande de modification selon le niveau d'urgence choisi. 
-                Vous recevrez une réponse par email.
-            `;
-            
-            form.parentNode.insertBefore(successDiv, form);
-            successDiv.scrollIntoView({ behavior: 'smooth' });
-            
-            setTimeout(() => {
-                if (successDiv.parentNode) {
-                    successDiv.parentNode.removeChild(successDiv);
-                }
-            }, 10000);
+            // Réinitialiser le conteneur
+            dynamicContainer.innerHTML = '';
+            dynamicContainer.classList.remove('show');
+            dynamicFieldCounters = {};
+
+            // Si une section avec champs dynamiques est sélectionnée
+            if (selectedSection && dynamicFieldTemplates[selectedSection]) {
+                createDynamicSection(selectedSection);
+            }
         }
 
-        // Initialisation
-        // Affichage dynamique du message d'urgence pour le formulaire ancien client
+        function createDynamicSection(sectionName) {
+            const dynamicContainer = document.getElementById('dynamicFieldsContainer');
+            
+            // Initialiser le compteur pour cette section
+            dynamicFieldCounters[sectionName] = 1;
+
+            const sectionHTML = `
+                <div class="dynamic-section-title">
+                    Détails spécifiques - ${sectionName}
+                </div>
+                <div id="fields-${sectionName.replace(/\s+/g, '-').toLowerCase()}" class="dynamic-section-content">
+                    ${getFieldTemplate(sectionName, 1)}
+                </div>
+                <button type="button" class="add-field-btn" onclick="addDynamicField('${sectionName}')">
+                    <span>+</span> Ajouter ${getSingularName(sectionName)}
+                </button>
+            `;
+
+            dynamicContainer.innerHTML = sectionHTML;
+            dynamicContainer.classList.add('show');
+        }
+
+        function addDynamicField(sectionName) {
+            dynamicFieldCounters[sectionName]++;
+            const counter = dynamicFieldCounters[sectionName];
+            const containerKey = sectionName.replace(/\s+/g, '-').toLowerCase();
+            const fieldsContainer = document.getElementById(`fields-${containerKey}`);
+            
+            const newFieldHTML = getFieldTemplate(sectionName, counter);
+            fieldsContainer.insertAdjacentHTML('beforeend', newFieldHTML);
+            
+            // Animation d'apparition
+            const newField = fieldsContainer.lastElementChild;
+            newField.style.opacity = '0';
+            newField.style.transform = 'translateY(-20px)';
+            setTimeout(() => {
+                newField.style.transition = 'all 0.3s ease';
+                newField.style.opacity = '1';
+                newField.style.transform = 'translateY(0)';
+            }, 100);
+        }
+
+        function removeFieldGroup(button) {
+            const fieldGroup = button.closest('.dynamic-field-group');
+            fieldGroup.style.transition = 'all 0.3s ease';
+            fieldGroup.style.opacity = '0';
+            fieldGroup.style.transform = 'translateX(-20px)';
+            setTimeout(() => {
+                fieldGroup.remove();
+            }, 300);
+        }
+
+        function getFieldTemplate(sectionName, counter) {
+            return dynamicFieldTemplates[sectionName].replace(/{counter}/g, counter);
+        }
+
+        function getSingularName(sectionName) {
+            const singularNames = {
+                "Informations personnelles": "une information",
+                "Formation et diplômes": "une formation",
+                "Expériences professionnelles": "une expérience",
+                "Compétences": "une compétence",
+                "Langues": "une langue",
+                "Centres d'intérêts": "un centre d'intérêt",
+                "Objectifs professionnels": "un objectif"
+            };
+            return singularNames[sectionName] || "un élément";
+        }
+
+        function resetDynamicFields() {
+            const dynamicContainer = document.getElementById('dynamicFieldsContainer');
+            dynamicContainer.innerHTML = '';
+            dynamicContainer.classList.remove('show');
+            dynamicFieldCounters = {};
+        }
+
+        function collectDynamicFieldsData() {
+            const formData = {};
+            const dynamicFields = document.querySelectorAll('#dynamicFieldsContainer input, #dynamicFieldsContainer select, #dynamicFieldsContainer textarea');
+            
+            dynamicFields.forEach(field => {
+                if (field.value.trim()) {
+                    formData[field.name] = field.value;
+                }
+            });
+
+            return formData;
+        }
+
+        function generateStructuredMessage(formData, dynamicData) {
+            const sectionName = formData.get('section_modifier');
+            let structuredMessage = `| DEMANDE DE MODIFICATION DE CV – Ancien Client\n\n`;
+            structuredMessage += `Nom & Prénom : ${formData.get('nom_complet') || '—'}\n`;
+            structuredMessage += `Email de contact : ${formData.get('email_contact') || '—'}\n`;
+            structuredMessage += `Niveau d'urgence : ${formData.get('urgence') || '—'}\n`;
+            structuredMessage += `Section du CV à modifier : ${sectionName || '—'}\n\n`;
+
+            // Ajouter les détails spécifiques si des champs dynamiques sont remplis
+            if (Object.keys(dynamicData).length > 0) {
+                structuredMessage += `=== DÉTAILS SPÉCIFIQUES PAR ${sectionName.toUpperCase()} ===\n\n`;
+                
+                // Grouper les données par compteur
+                const groupedData = {};
+                Object.keys(dynamicData).forEach(key => {
+                    const match = key.match(/_(\d+)$/);
+                    if (match) {
+                        const counter = match[1];
+                        const fieldName = key.replace(`_${counter}`, '');
+                        if (!groupedData[counter]) {
+                            groupedData[counter] = {};
+                        }
+                        groupedData[counter][fieldName] = dynamicData[key];
+                    }
+                });
+
+                // Formater chaque groupe
+                Object.keys(groupedData).forEach(counter => {
+                    structuredMessage += `--- ${getSingularName(sectionName)} #${counter} ---\n`;
+                    Object.keys(groupedData[counter]).forEach(fieldName => {
+                        const formattedFieldName = fieldName.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
+                        structuredMessage += `${formattedFieldName} : ${groupedData[counter][fieldName]}\n`;
+                    });
+                    structuredMessage += '\n';
+                });
+            }
+
+            structuredMessage += `=== DESCRIPTION GÉNÉRALE ===\n`;
+            structuredMessage += `${formData.get('modifications_demandees') || '—'}\n\n`;
+            structuredMessage += `=== COMMENTAIRES SUPPLÉMENTAIRES ===\n`;
+            structuredMessage += `${formData.get('commentaires_supplementaires') || '—'}\n`;
+
+            return structuredMessage;
+        }
+
+        // Gestion du formulaire ancien client amélioré
         document.addEventListener('DOMContentLoaded', function() {
-            var urgenceSelect = document.getElementById('urgence_ancien');
-            var infoDiv = document.getElementById('urgenceInfoAncien');
+            // Événement pour changement de section
+            const sectionSelect = document.getElementById('section_modifier');
+            if (sectionSelect) {
+                sectionSelect.addEventListener('change', handleSectionChange);
+            }
+
+            // Gestion du niveau d'urgence
+            const urgenceSelect = document.getElementById('urgence_ancien');
+            const infoDiv = document.getElementById('urgenceInfoAncien');
             if (urgenceSelect && infoDiv) {
                 urgenceSelect.addEventListener('change', function() {
                     if (this.value.includes('Premium')) {
@@ -1276,51 +1703,115 @@ const totalSteps = 10;
                     }
                 });
             }
-        });
-        document.addEventListener('DOMContentLoaded', function() {
+
             // S'assurer que seule la section d'accueil est visible au démarrage
             document.getElementById('welcomeSection').style.display = 'block';
             document.getElementById('tutorialSection').style.display = 'none';
             document.getElementById('ancienClientSection').style.display = 'none';
             
-            // Initialiser les boutons du tutoriel
             updateNavigationButtons();
-        });
-
-        // Gestion des raccourcis clavier pour le tutoriel
-        document.addEventListener('keydown', function(e) {
-            const tutorialSection = document.getElementById('tutorialSection');
             
-            // Seulement si le tutoriel est visible
-            if (tutorialSection.style.display === 'block') {
-                if (e.key === 'ArrowLeft' && currentStep > 1) {
-                    previousStep();
-                } else if (e.key === 'ArrowRight' && currentStep <= totalSteps) {
-                    nextStep();
-                } else if (e.key === 'Escape') {
-                    if (confirm('Voulez-vous quitter le tutoriel et retourner à l\'accueil ?')) {
-                        showWelcome();
-                    }
-                }
+            // Initialiser la validation seulement si le formulaire est visible
+            if (document.getElementById('ancienClientForm')) {
+                setupFormValidation();
             }
         });
 
-        // Animation au scroll pour les éléments visibles
-        function animateOnScroll() {
-            const elements = document.querySelectorAll('.profile-card');
-            
-            elements.forEach(element => {
-                const elementTop = element.getBoundingClientRect().top;
-                const elementVisible = 150;
+        // Soumission du formulaire amélioré
+        const ancienClientForm = document.getElementById('ancienClientForm');
+        if (ancienClientForm) {
+            ancienClientForm.addEventListener('submit', function(e) {
+                e.preventDefault();
                 
-                if (elementTop < window.innerHeight - elementVisible) {
-                    element.classList.add('fade-enter');
-                }
+                const formData = new FormData(this);
+                const submitBtn = this.querySelector('.submit-btn');
+                
+                // Animation de chargement
+                submitBtn.textContent = 'Envoi en cours...';
+                submitBtn.disabled = true;
+                
+                // Collecter les données dynamiques
+                const dynamicData = collectDynamicFieldsData();
+                
+                // Générer le message structuré
+                const structuredMessage = generateStructuredMessage(formData, dynamicData);
+                
+                // Ajouter le message structuré au formulaire
+                const hiddenField = document.createElement('input');
+                hiddenField.type = 'hidden';
+                hiddenField.name = 'message_structure';
+                hiddenField.value = structuredMessage;
+                this.appendChild(hiddenField);
+
+                // Ajouter les données dynamiques individuellement
+                Object.keys(dynamicData).forEach(key => {
+                    const dynamicHiddenField = document.createElement('input');
+                    dynamicHiddenField.type = 'hidden';
+                    dynamicHiddenField.name = key;
+                    dynamicHiddenField.value = dynamicData[key];
+                    this.appendChild(dynamicHiddenField);
+                });
+                
+                // Envoi réel du formulaire
+                fetch(this.action, {
+                    method: 'POST',
+                    body: new FormData(this),
+                    headers: {
+                        'Accept': 'application/json'
+                    }
+                })
+                .then(response => {
+                    if (response.ok) {
+                        showSuccessMessage();
+                        this.reset();
+                        resetDynamicFields();
+                    } else {
+                        throw new Error('Erreur lors de l\'envoi');
+                    }
+                })
+                .catch(error => {
+                    console.error('Erreur:', error);
+                    alert('Une erreur est survenue lors de l\'envoi. Veuillez réessayer.');
+                })
+                .finally(() => {
+                    submitBtn.textContent = 'Envoyer ma demande de modification';
+                    submitBtn.disabled = false;
+                    
+                    // Nettoyer les champs cachés ajoutés
+                    if (hiddenField.parentNode) {
+                        hiddenField.parentNode.removeChild(hiddenField);
+                    }
+                    
+                    Object.keys(dynamicData).forEach(key => {
+                        const fieldToRemove = this.querySelector(`input[name="${key}"]`);
+                        if (fieldToRemove && fieldToRemove.type === 'hidden') {
+                            fieldToRemove.parentNode.removeChild(fieldToRemove);
+                        }
+                    });
+                });
             });
         }
 
-        window.addEventListener('scroll', animateOnScroll);
-        
+        function showSuccessMessage() {
+            const form = document.getElementById('ancienClientForm');
+            const successDiv = document.createElement('div');
+            successDiv.className = 'success-message';
+            successDiv.innerHTML = `
+                <strong>Demande envoyée avec succès !</strong><br>
+                Nous traiterons votre demande de modification selon le niveau d'urgence choisi. 
+                Vous recevrez une réponse par email.
+            `;
+            
+            form.parentNode.insertBefore(successDiv, form);
+            successDiv.scrollIntoView({ behavior: 'smooth' });
+            
+            setTimeout(() => {
+                if (successDiv.parentNode) {
+                    successDiv.parentNode.removeChild(successDiv);
+                }
+            }, 10000);
+        }
+
         // Validation en temps réel pour le formulaire ancien client
         function setupFormValidation() {
             const form = document.getElementById('ancienClientForm');
@@ -1353,25 +1844,56 @@ const totalSteps = 10;
             return isValid;
         }
 
-        // Initialiser la validation
-        document.addEventListener('DOMContentLoaded', setupFormValidation);
+        // Animation au scroll pour les éléments visibles
+        function animateOnScroll() {
+            const elements = document.querySelectorAll('.profile-card');
+            
+            elements.forEach(element => {
+                const elementTop = element.getBoundingClientRect().top;
+                const elementVisible = 150;
+                
+                if (elementTop < window.innerHeight - elementVisible) {
+                    element.classList.add('fade-enter');
+                }
+            });
+        }
+
+        window.addEventListener('scroll', animateOnScroll);
+        
+        // Initialiser la validation seulement si le formulaire est visible
+        if (document.getElementById('ancienClientForm')) {
+            setupFormValidation();
+        }
+
+        // Gestion des raccourcis clavier pour le tutoriel
+        document.addEventListener('keydown', function(e) {
+            const tutorialSection = document.getElementById('tutorialSection');
+            
+            if (tutorialSection.style.display === 'block') {
+                if (e.key === 'ArrowLeft' && currentStep > 1) {
+                    previousStep();
+                } else if (e.key === 'ArrowRight' && currentStep <= totalSteps) {
+                    nextStep();
+                } else if (e.key === 'Escape') {
+                    if (confirm('Voulez-vous quitter le tutoriel et retourner à l\'accueil ?')) {
+                        showWelcome();
+                    }
+                }
+            }
+        });
     </script>
     
 </body>
     <!-- Script pour masquer le loader après 5s -->
     <script>
-      // Affiche le loader au chargement, le masque après 5s
       window.addEventListener('load', function() {
         setTimeout(function() {
           var loader = document.getElementById('loader-chronos');
           if(loader) loader.style.opacity = '0';
           setTimeout(function(){
             if(loader) loader.style.display = 'none';
-          }, 600); // transition douce
-        }, 5000); // visible au moins 5s
+          }, 600);
+        }, 5000);
       });
     </script>
-
-
-
 </html>
