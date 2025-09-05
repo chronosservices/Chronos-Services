@@ -1085,17 +1085,17 @@
                 <div class="form-group">
                     <label for="section_modifier">Section du CV à modifier *</label>
                     <select id="section_modifier" name="section_modifier" required>
-                        <option value="">Sélectionnez la section à modifier</option>
-                        <option value="Informations personnelles">Informations personnelles</option>
-                        <option value="Objectifs professionnels">Objectifs professionnels</option>
-                        <option value="Formation et diplômes">Formation et diplômes</option>
-                        <option value="Expériences professionnelles">Expériences professionnelles</option>
-                        <option value="Compétences">Compétences professionnelles</option>
-                        <option value="Langues">Langues</option>
-                        <option value="Centres d'intérêts">Centres d'intérêts</option>
-                        <option value="Informations complémentaires">Informations complémentaires</option>
-                        <option value="Mise en forme générale">Mise en forme générale du CV</option>
-                        <option value="Plusieurs sections">Plusieurs sections</option>
+                    <option value="">Sélectionnez la section à modifier</option>
+                    <option value="Informations personnelles">Informations personnelles</option>
+                    <option value="Objectifs professionnels">Objectifs professionnels</option>
+                    <option value="Formation et diplômes">Formation et diplômes</option>
+                    <option value="Expériences professionnelles">Expériences professionnelles</option>
+                    <option value="Compétences">Compétences professionnelles</option>
+                    <option value="Langues">Langues</option>
+                    <option value="Centres d'intérêts">Centres d'intérêts</option>
+                    <option value="Informations complémentaires">Informations complémentaires</option>
+                    <option value="Mise en forme générale du CV">Mise en forme générale du CV</option>
+                    <option value="Plusieurs sections">Plusieurs sections</option>
                     </select>
                 </div>
 
@@ -1363,30 +1363,115 @@ Exemple :
                 </div>
             `,
             "Objectifs professionnels": `
-                <div class="dynamic-field-group">
-                    <div class="field-group-header">
-                        <span class="field-group-title">Objectif professionnel #{counter}</span>
-                        <button type="button" class="remove-field-btn" onclick="removeFieldGroup(this)">×</button>
-                    </div>
-                    <div class="form-row single">
-                        <div class="form-group">
-                            <label>Action</label>
-                            <select name="objectif_action_{counter}" required>
-                                <option value="">Sélectionnez l'action</option>
-                                <option value="Remplacer">Remplacer l'objectif actuel</option>
-                                <option value="Modifier">Modifier l'objectif existant</option>
-                                <option value="Supprimer">Supprimer l'objectif</option>
-                            </select>
+                    <div class="dynamic-field-group">
+                        <div class="field-group-header">
+                            <span class="field-group-title">Objectif professionnel #{counter}</span>
+                            <button type="button" class="remove-field-btn" onclick="removeFieldGroup(this)">×</button>
+                        </div>
+                        <div class="form-row single">
+                            <div class="form-group">
+                                <label>Action</label>
+                                <select name="objectif_action_{counter}" required>
+                                    <option value="">Sélectionnez l'action</option>
+                                    <option value="Remplacer">Remplacer l'objectif actuel</option>
+                                    <option value="Modifier">Modifier l'objectif existant</option>
+                                    <option value="Supprimer">Supprimer l'objectif</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-row single">
+                            <div class="form-group">
+                                <label>Nouvel objectif professionnel</label>
+                                <textarea name="objectif_contenu_{counter}" placeholder="Ex: Obtenir un poste d'assistant comptable dans une entreprise dynamique pour développer mes compétences en gestion financière..." rows="4"></textarea>
+                            </div>
                         </div>
                     </div>
-                    <div class="form-row single">
-                        <div class="form-group">
-                            <label>Nouvel objectif professionnel</label>
-                            <textarea name="objectif_contenu_{counter}" placeholder="Ex: Obtenir un poste d'assistant comptable dans une entreprise dynamique pour développer mes compétences en gestion financière..." rows="4"></textarea>
+                `,
+                // NOUVEAU : Template pour "Mise en forme générale du CV"
+                "Mise en forme générale du CV": `
+                    <div class="dynamic-field-group">
+                        <div class="field-group-header">
+                            <span class="field-group-title">Modification de mise en forme #{counter}</span>
+                            <button type="button" class="remove-field-btn" onclick="removeFieldGroup(this)">×</button>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label>Type de modification</label>
+                                <select name="mise_en_forme_type_{counter}" required>
+                                    <option value="">Choisissez le type</option>
+                                    <option value="Changement de modèle">Changement de modèle de CV</option>
+                                    <option value="Modification couleurs">Modification des couleurs</option>
+                                    <option value="Ajustement police">Ajustement de la police</option>
+                                    <option value="Réorganisation sections">Réorganisation des sections</option>
+                                    <option value="Ajustement mise en page">Ajustement de la mise en page</option>
+                                    <option value="Format du fichier">Changement de format (PDF, Word...)</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label>Modèle/Style souhaité</label>
+                                <input type="text" name="modele_souhaite_{counter}" placeholder="Ex: Modèle N°025, Style moderne, Plus coloré...">
+                            </div>
+                        </div>
+                        <div class="form-row single">
+                            <div class="form-group">
+                                <label>Description détaillée des modifications</label>
+                                <textarea name="mise_en_forme_details_{counter}" placeholder="Décrivez précisément les modifications de présentation souhaitées:
+     - Changement de couleurs (lesquelles ?)
+     - Nouvelle disposition des sections
+     - Style de police préféré
+     - Tout autre aspect visuel..." rows="4"></textarea>
+                            </div>
                         </div>
                     </div>
-                </div>
-            `
+                `,
+                // NOUVEAU : Template pour "Plusieurs sections"
+                "Plusieurs sections": `
+                    <div class="dynamic-field-group">
+                        <div class="field-group-header">
+                            <span class="field-group-title">Modification #{counter}</span>
+                            <button type="button" class="remove-field-btn" onclick="removeFieldGroup(this)">×</button>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label>Section concernée *</label>
+                                <select name="multiple_section_{counter}" required>
+                                <option value="">Choisissez la section</option>
+                                <option value="Infos_personnelles">Informations personnelles</option>
+                                <option value="Objectifs_pro">Objectifs professionnels</option>
+                                <option value="Formation_diplomes">Formation et diplômes</option>
+                                <option value="Experiences_pro">Expériences professionnelles</option>
+                                <option value="Competences_pro">Compétences professionnelles</option>
+                                <option value="Langues">Langues</option>
+                                <option value="Centres_interets">Centres d'intérêts</option>
+                                <option value="Infos_complementaires">Informations complémentaires</option>
+                                <option value="Mise_en_forme">Mise en forme/Présentation</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label>Type de modification *</label>
+                                <select name="multiple_action_{counter}" required>
+                                    <option value="">Sélectionnez l'action</option>
+                                    <option value="Ajouter">Ajouter des éléments</option>
+                                    <option value="Modifier">Modifier des éléments existants</option>
+                                    <option value="Supprimer">Supprimer des éléments</option>
+                                    <option value="Réorganiser">Réorganiser cette section</option>
+                                    <option value="Remplacer">Remplacer complètement</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-row single">
+                            <div class="form-group">
+                                <label>Détail précis de la modification *</label>
+                                <textarea name="multiple_details_{counter}" placeholder="Décrivez précisément ce que vous voulez modifier dans cette section:
+    Exemples:
+    - Ajouter une nouvelle expérience: Poste X chez Entreprise Y du JJ/MM/AA au JJ/MM/AA
+    - Modifier mon téléphone: nouveau numéro +241 XX XX XX XX
+    - Supprimer la formation en ...
+    - Changer l'ordre des sections: mettre Expériences avant Formation..." rows="5" required></textarea>
+                            </div>
+                        </div>
+                    </div>
+                `
         };
 
         // Fonctions de navigation principale
@@ -1514,19 +1599,21 @@ Exemple :
         // ===== NOUVELLES FONCTIONS POUR CHAMPS DYNAMIQUES =====
         
         function handleSectionChange() {
-            const sectionSelect = document.getElementById('section_modifier');
-            const dynamicContainer = document.getElementById('dynamicFieldsContainer');
-            const selectedSection = sectionSelect.value;
+    const sectionSelect = document.getElementById('section_modifier');
+    const dynamicContainer = document.getElementById('dynamicFieldsContainer');
+    const selectedSection = sectionSelect.value;
 
-            // Réinitialiser le conteneur
-            dynamicContainer.innerHTML = '';
-            dynamicContainer.classList.remove('show');
-            dynamicFieldCounters = {};
+    // NETTOYAGE COMPLET AVANT RÉGÉNÉRATION
+    dynamicContainer.innerHTML = '';
+    dynamicContainer.classList.remove('show');
+    dynamicFieldCounters = {};
 
-            // Si une section avec champs dynamiques est sélectionnée
-            if (selectedSection && dynamicFieldTemplates[selectedSection]) {
-                createDynamicSection(selectedSection);
-            }
+    // ATTENDRE QUE LE DOM SOIT NETTOYÉ
+    setTimeout(() => {
+        if (selectedSection && dynamicFieldTemplates[selectedSection]) {
+            createDynamicSection(selectedSection);
+        }
+    }, 50);
         }
 
         function createDynamicSection(sectionName) {
@@ -1587,15 +1674,17 @@ Exemple :
 
         function getSingularName(sectionName) {
             const singularNames = {
-                "Informations personnelles": "une information",
-                "Formation et diplômes": "une formation",
-                "Expériences professionnelles": "une expérience",
-                "Compétences": "une compétence",
-                "Langues": "une langue",
-                "Centres d'intérêts": "un centre d'intérêt",
-                "Objectifs professionnels": "un objectif"
-            };
-            return singularNames[sectionName] || "un élément";
+                    "Informations personnelles": "une information",
+                    "Formation et diplômes": "une formation",
+                    "Expériences professionnelles": "une expérience",
+                    "Compétences": "une compétence",
+                    "Langues": "une langue",
+                    "Centres d'intérêts": "un centre d'intérêt",
+                    "Objectifs professionnels": "un objectif",
+                    "Mise en forme générale du CV": "une modification de forme",
+                    "Plusieurs sections": "une modification"
+                };
+                return singularNames[sectionName] || "un élément";
         }
 
         function resetDynamicFields() {
@@ -1606,61 +1695,176 @@ Exemple :
         }
 
         function collectDynamicFieldsData() {
-            const formData = {};
-            const dynamicFields = document.querySelectorAll('#dynamicFieldsContainer input, #dynamicFieldsContainer select, #dynamicFieldsContainer textarea');
-            
-            dynamicFields.forEach(field => {
-                if (field.value.trim()) {
-                    formData[field.name] = field.value;
-                }
-            });
-
-            return formData;
+    const formData = {};
+    const dynamicFields = document.querySelectorAll('#dynamicFieldsContainer input, #dynamicFieldsContainer select, #dynamicFieldsContainer textarea');
+    
+    dynamicFields.forEach(field => {
+        if (field.name) {
+            let value = field.value;
+            // Traitement spécial selon le type de champ
+            switch (field.type) {
+                case 'checkbox':
+                    value = field.checked ? 'Oui' : 'Non';
+                    break;
+                case 'radio':
+                    if (field.checked) {
+                        formData[field.name] = value;
+                    }
+                    return; // Skip si radio non sélectionné
+                default:
+                    // Pour les selects et autres champs
+                    if (field.tagName === 'SELECT' && value === '') {
+                        value = '[Non sélectionné]';
+                    } else if (value.trim() === '') {
+                        value = '[Vide]';
+                    }
+            }
+            formData[field.name] = value;
+        }
+    });
+    return formData;
         }
 
         function generateStructuredMessage(formData, dynamicData) {
-            const sectionName = formData.get('section_modifier');
-            let structuredMessage = `| DEMANDE DE MODIFICATION DE CV – Ancien Client\n\n`;
-            structuredMessage += `Nom & Prénom : ${formData.get('nom_complet') || '—'}\n`;
-            structuredMessage += `Email de contact : ${formData.get('email_contact') || '—'}\n`;
-            structuredMessage += `Niveau d'urgence : ${formData.get('urgence') || '—'}\n`;
-            structuredMessage += `Section du CV à modifier : ${sectionName || '—'}\n\n`;
+    const sectionName = formData.get('section_modifier') || 'Non spécifiée';
+    let message = `=== DEMANDE DE MODIFICATION CV - ANCIEN CLIENT ===\n\n`;
+    message += `Nom & Prénom : ${formData.get('nom_complet') || '[Non fourni]'}\n`;
+    message += `Email : ${formData.get('email_contact') || '[Non fourni]'}\n`;
+    message += `Urgence : ${formData.get('urgence') || '[Non spécifiée]'}\n`;
+    message += `Section à modifier : ${sectionName}\n\n`;
 
-            // Ajouter les détails spécifiques si des champs dynamiques sont remplis
-            if (Object.keys(dynamicData).length > 0) {
-                structuredMessage += `=== DÉTAILS SPÉCIFIQUES PAR ${sectionName.toUpperCase()} ===\n\n`;
-                
-                // Grouper les données par compteur
-                const groupedData = {};
-                Object.keys(dynamicData).forEach(key => {
-                    const match = key.match(/_(\d+)$/);
-                    if (match) {
-                        const counter = match[1];
-                        const fieldName = key.replace(`_${counter}`, '');
-                        if (!groupedData[counter]) {
-                            groupedData[counter] = {};
-                        }
-                        groupedData[counter][fieldName] = dynamicData[key];
-                    }
-                });
-
-                // Formater chaque groupe
-                Object.keys(groupedData).forEach(counter => {
-                    structuredMessage += `--- ${getSingularName(sectionName)} #${counter} ---\n`;
-                    Object.keys(groupedData[counter]).forEach(fieldName => {
-                        const formattedFieldName = fieldName.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
-                        structuredMessage += `${formattedFieldName} : ${groupedData[counter][fieldName]}\n`;
-                    });
-                    structuredMessage += '\n';
-                });
+    // Traiter les données dynamiques si elles existent
+    if (Object.keys(dynamicData).length > 0) {
+        message += `=== DÉTAILS SPÉCIFIQUES - ${sectionName.toUpperCase()} ===\n\n`;
+        // Grouper par compteur pour une présentation claire
+        const groupedData = {};
+        Object.keys(dynamicData).forEach(key => {
+            const counterMatch = key.match(/_(\d+)$/);
+            if (counterMatch) {
+                const counter = counterMatch[1];
+                const fieldName = key.replace(`_${counter}`, '');
+                if (!groupedData[counter]) {
+                    groupedData[counter] = {};
+                }
+                groupedData[counter][fieldName] = dynamicData[key];
             }
+        });
+        // Formater chaque groupe
+        let itemIndex = 1;
+        Object.keys(groupedData)
+            .sort((a, b) => parseInt(a) - parseInt(b)) // Tri numérique
+            .forEach(counter => {
+                const group = groupedData[counter];
+                message += `--- ${getSingularName(sectionName)} ${itemIndex} ---\n`;
+                Object.keys(group).forEach(fieldKey => {
+                    const displayName = formatFieldName(fieldKey);
+                    const value = group[fieldKey];
+                    message += `${displayName} : ${value}\n`;
+                });
+                message += '\n';
+                itemIndex++;
+            });
+    }
 
-            structuredMessage += `=== DESCRIPTION GÉNÉRALE ===\n`;
-            structuredMessage += `${formData.get('modifications_demandees') || '—'}\n\n`;
-            structuredMessage += `=== COMMENTAIRES SUPPLÉMENTAIRES ===\n`;
-            structuredMessage += `${formData.get('commentaires_supplementaires') || '—'}\n`;
-
-            return structuredMessage;
+    message += `=== DESCRIPTION GÉNÉRALE ===\n`;
+    message += `${formData.get('modifications_demandees') || '[Aucune description fournie]'}\n\n`;
+    message += `=== COMMENTAIRES SUPPLÉMENTAIRES ===\n`;
+    message += `${formData.get('commentaires_supplementaires') || '[Aucun commentaire]'}\n\n`;
+    message += `=== DONNÉES TECHNIQUES ===\n`;
+    message += `Nombre de modifications spécifiques : ${Object.keys(dynamicData).length}\n`;
+    message += `Date de soumission : ${new Date().toLocaleString('fr-FR')}\n`;
+    return message;
+function formatFieldName(fieldKey) {
+    const fieldNames = {
+        // Informations personnelles
+        'info_type': 'Type d\'information',
+        'info_action': 'Action souhaitée',
+        'info_valeur': 'Nouvelle valeur',
+        // Formation
+        'formation_diplome': 'Diplôme/Formation',
+        'formation_etablissement': 'Établissement',
+        'formation_periode': 'Période',
+        'formation_action': 'Action',
+        'formation_details': 'Détails complémentaires',
+        // Expérience
+        'exp_poste': 'Poste occupé',
+        'exp_entreprise': 'Entreprise',
+        'exp_periode': 'Période',
+        'exp_action': 'Action',
+        'exp_missions': 'Missions et réalisations',
+        // Compétences
+        'comp_type': 'Type de compétence',
+        'comp_niveau': 'Niveau',
+        'comp_action': 'Action',
+        'comp_nom': 'Nom de la compétence',
+        // Langues
+        'langue_nom': 'Langue',
+        'langue_niveau': 'Niveau',
+        'langue_action': 'Action',
+        // Centres d'intérêts
+        'interet_nom': 'Centre d\'intérêt',
+        'interet_action': 'Action',
+        'interet_precision': 'Précisions',
+        // Objectifs
+        'objectif_action': 'Type de modification',
+        'objectif_contenu': 'Nouvel objectif',
+        // Mise en forme
+        'mise_en_forme_type': 'Type de modification',
+        'modele_souhaite': 'Modèle/Style souhaité',
+        'mise_en_forme_details': 'Description détaillée',
+        // Plusieurs sections
+        'multiple_section': 'Section concernée',
+        'multiple_action': 'Type de modification',
+        'multiple_details': 'Détails de la modification'
+    };
+    return fieldNames[fieldKey] || fieldKey.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
+}
+function handleFormSubmission(e) {
+    e.preventDefault();
+    const form = e.target;
+    const formData = new FormData(form);
+    const submitBtn = form.querySelector('.submit-btn');
+    // Validation
+    if (!validateDynamicFields()) {
+        showErrorMessage('Veuillez remplir tous les champs requis.');
+        return;
+    }
+    // Animation de chargement
+    const originalText = submitBtn.textContent;
+    submitBtn.textContent = 'Envoi en cours...';
+    submitBtn.disabled = true;
+    // Collecter les données dynamiques
+    const dynamicData = collectDynamicFieldsData();
+    // Générer UNIQUEMENT le message structuré (pas de doublons)
+    const structuredMessage = generateStructuredMessage(formData, dynamicData);
+    // Ajouter seulement le message structuré
+    const messageField = createHiddenField('message_structure_complete', structuredMessage);
+    form.appendChild(messageField);
+    // Envoi
+    fetch(form.action, {
+        method: 'POST',
+        body: new FormData(form),
+        headers: { 'Accept': 'application/json' }
+    })
+    .then(handleFormResponse)
+    .then(() => {
+        showSuccessMessage();
+        form.reset();
+        resetDynamicFields();
+    })
+    .catch(error => {
+        console.error('Erreur:', error);
+        showErrorMessage('Erreur lors de l\'envoi. Vérifiez votre connexion.');
+    })
+    .finally(() => {
+        submitBtn.textContent = originalText;
+        submitBtn.disabled = false;
+        // Nettoyer
+        if (messageField.parentNode) {
+            messageField.parentNode.removeChild(messageField);
+        }
+    });
+}
         }
 
         // Gestion du formulaire ancien client amélioré
@@ -1708,10 +1912,11 @@ Exemple :
             document.getElementById('welcomeSection').style.display = 'block';
             document.getElementById('tutorialSection').style.display = 'none';
             document.getElementById('ancienClientSection').style.display = 'none';
-            
+
             updateNavigationButtons();
-            
+
             // Initialiser la validation seulement si le formulaire est visible
+            // On attache la validation une seule fois, après le DOM chargé
             if (document.getElementById('ancienClientForm')) {
                 setupFormValidation();
             }
@@ -1794,6 +1999,11 @@ Exemple :
 
         function showSuccessMessage() {
             const form = document.getElementById('ancienClientForm');
+            // Nettoyer les anciens messages de succès
+            const oldSuccess = form.parentNode.querySelector('.success-message');
+            if (oldSuccess) {
+                oldSuccess.parentNode.removeChild(oldSuccess);
+            }
             const successDiv = document.createElement('div');
             successDiv.className = 'success-message';
             successDiv.innerHTML = `
@@ -1801,10 +2011,8 @@ Exemple :
                 Nous traiterons votre demande de modification selon le niveau d'urgence choisi. 
                 Vous recevrez une réponse par email.
             `;
-            
             form.parentNode.insertBefore(successDiv, form);
             successDiv.scrollIntoView({ behavior: 'smooth' });
-            
             setTimeout(() => {
                 if (successDiv.parentNode) {
                     successDiv.parentNode.removeChild(successDiv);
@@ -1816,12 +2024,13 @@ Exemple :
         function setupFormValidation() {
             const form = document.getElementById('ancienClientForm');
             const inputs = form.querySelectorAll('input[required], select[required], textarea[required]');
-            
             inputs.forEach(input => {
+                // On retire d'abord tout ancien listener pour éviter le doublon
+                input.removeEventListener('blur', validateField);
+                input.removeEventListener('input', validateField);
                 input.addEventListener('blur', function() {
                     validateField(this);
                 });
-                
                 input.addEventListener('input', function() {
                     if (this.classList.contains('error')) {
                         validateField(this);
