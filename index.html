@@ -2131,9 +2131,36 @@
             { title: 'Lettre de Motivation', description: 'Rédiger une lettre sur mesure', target: 'lettre' },
             { title: 'Catalogue de CV', description: 'Parcourir nos modèles', target: 'catalogue' },
             { title: 'Services', description: 'Nos offres et tarifs', target: 'home' },
-            { title: 'Débutant', description: 'Guide pour nouveaux utilisateurs', target: 'cv' },
-            { title: 'Expert', description: 'Accès complet aux outils', target: 'cv' },
-            { title: 'Modèles CV', description: 'Templates professionnels', target: 'catalogue' }
+            { title: 'Modèles CV', description: 'Templates professionnels', target: 'catalogue' },
+            // Profils utilisateurs
+            { title: 'Débutant', description: 'Guide étape par étape pour créer un CV', target: 'cv' },
+            { title: 'Ancien client', description: 'Modifier mon CV existant', target: 'cv' },
+            { title: 'Expert', description: 'Accès direct au formulaire complet', target: 'cv' },
+            // Formulaires et interfaces
+            { title: 'Formulaire complet CV', description: 'Accéder au formulaire de demande de CV', target: 'formulaire-original' },
+            { title: 'Demande de CV', description: 'Formulaire de demande de CV professionnel', target: 'formulaire-original' },
+            { title: 'Formulaire de CV', description: 'Remplir le formulaire complet pour CV', target: 'formulaire-original' },
+            { title: 'Interface complète', description: 'Accéder à interface-new.html', target: 'interface-new' },
+            // Tutoriel et guide
+            { title: 'Tutoriel CV', description: 'Guide interactif pour débutants', target: 'cv' },
+            { title: 'Guide CV', description: 'Apprendre à créer un CV professionnel', target: 'cv' },
+            { title: 'Conseils CV', description: 'Astuces pour un CV réussi', target: 'cv' },
+            { title: 'Étapes CV', description: 'Parcours étape par étape', target: 'cv' },
+            // Modifications et services
+            { title: 'Modifier CV', description: 'Apporter des modifications à un CV existant', target: 'cv' },
+            { title: 'Révision CV', description: 'Service de révision et amélioration', target: 'home' },
+            { title: 'Correction CV', description: 'Corriger et optimiser votre CV', target: 'cv' },
+            { title: 'Mise à jour CV', description: 'Actualiser un CV existant', target: 'cv' },
+            // Fonctionnalités avancées
+            { title: 'ATS', description: 'Optimisation pour systèmes de recrutement', target: 'cv' },
+            { title: 'Optimisation ATS', description: 'CV compatible systèmes de recrutement', target: 'cv' },
+            { title: 'Format Word', description: 'CV au format Word', target: 'cv' },
+            { title: 'Format PowerPoint', description: 'CV au format PowerPoint', target: 'cv' },
+            // Navigation et accès
+            { title: 'Accueil', description: 'Retour à la page principale', target: 'home' },
+            { title: 'Facebook', description: 'Suivre notre page Facebook', target: 'facebook' },
+            { title: 'Contact', description: 'Nous contacter', target: 'contact' },
+            { title: 'Aide', description: 'Centre d\'aide et support', target: 'help' }
         ];
 
         function performSearch(query) {
@@ -2164,7 +2191,30 @@
         }
 
         function searchSelect(target) {
-            switchInterface(target);
+            // Gestion des liens externes et pages spéciales
+            switch(target) {
+                case 'formulaire-original':
+                    window.open('formulaire-original.html', '_blank');
+                    break;
+                case 'interface-new':
+                    window.open('interface-new.html', '_blank');
+                    break;
+                case 'facebook':
+                    window.open('https://web.facebook.com/Chronos.Services/', '_blank');
+                    break;
+                case 'contact':
+                    showContact();
+                    break;
+                case 'help':
+                    showHelp();
+                    break;
+                default:
+                    // Navigation interne normale
+                    switchInterface(target);
+                    break;
+            }
+            
+            // Nettoyer l'interface de recherche
             document.querySelector('.search-input').value = '';
             document.getElementById('searchResults').style.display = 'none';
         }
