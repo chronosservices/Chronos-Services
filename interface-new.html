@@ -2104,5 +2104,20 @@ function handleFormSubmission(e) {
           }, 600);
         }, 5000);
       });
+
+      // Redirection directe vers le tutoriel si paramètre ?tutoriel=1
+document.addEventListener('DOMContentLoaded', function() {
+    const params = new URLSearchParams(window.location.search);
+    if (params.get('tutoriel') === '1') {
+        document.getElementById('welcomeSection').style.display = 'none';
+        document.getElementById('tutorialSection').style.display = 'block';
+        document.getElementById('tutorialSection').classList.add('fade-enter');
+    }
+    if (params.get('ancien') === '1') {
+        document.getElementById('welcomeSection').style.display = 'none';
+        document.getElementById('ancienClientSection').style.display = 'block';
+        document.getElementById('ancienClientSection').classList.add('fade-enter');
+    }
+});
     </script>
 </html>
