@@ -2254,7 +2254,9 @@
                 doc.setFont(undefined, 'bold');
                 doc.text(invoiceNumber, margin, yPosition);
 
-                const currentDate = new Date().toLocaleDateString('fr-FR', { year: 'numeric', month: 'long', day: 'numeric' });
+            const now = new Date();
+            const currentDate = now.toLocaleDateString('fr-FR', { year: 'numeric', month: 'long', day: 'numeric' });
+            const currentTime = now.toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' });
                 doc.text(`Date: ${currentDate}`, pageWidth - margin - 60, yPosition);
 
                 yPosition += 20;
@@ -2360,7 +2362,7 @@
 
                 doc.setTextColor(100, 100, 100);
                 doc.setFontSize(8);
-                doc.text(`Document généré le ${currentDate}`, margin, pageHeight - 15);
+                doc.text(`Document généré le ${currentDate} à ${currentTime}`, margin, pageHeight - 15);
                 // footer droit avec branding
                 const footerRight = 'Chronos-Services — Rédaction de lettres de motivation';
                 const footerLines = doc.splitTextToSize(footerRight, pageWidth - 2 * margin - 10);
