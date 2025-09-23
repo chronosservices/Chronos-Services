@@ -2023,9 +2023,16 @@
                 doc.setTextColor(100, 100, 100);
                 doc.setFontSize(8);
                 doc.text(`Document généré le ${currentDate}`, margin, pageHeight - 15);
-                doc.text('Service de rédaction de CV professionnel', pageWidth - margin - 80, pageHeight - 15);
 
-                const cleanName = clientName.replace(/[^a-zA-Z0-9]/g, '_');
+                // footer droit avec branding (wrapper pour éviter débordement)
+                const footerRight = 'Service de rédaction de CV professionnel Chronos-Services';
+                const footerLines = doc.splitTextToSize(footerRight, pageWidth - 2 * margin - 10);
+                for (let i = 0; i < footerLines.length; i++) {
+                    doc.text(footerLines[i], pageWidth - margin, pageHeight - 15 - (footerLines.length - 1 - i) * 6, { align: 'right' });
+                }
+
+                // sanitize filename (fallback to 'client' si vide, limiter la longueur)
+                const cleanName = (clientName || 'client').replace(/[^a-zA-Z0-9-_]/g, '_').slice(0, 50) || 'client';
                 const timestamp = new Date().toISOString().slice(0, 10);
                 const filename = `Facture_CV_${cleanName}_${timestamp}.pdf`;
 
