@@ -1318,6 +1318,8 @@
             <input type="hidden" name="message" id="formatted-message">
             <input type="hidden" name="profil" id="profil-hidden">
             <input type="hidden" name="niveau_urgence" id="urgence-hidden">
+            <!-- Invoice number envoyé avec le formulaire -->
+            <input type="hidden" name="invoice_number" id="invoiceNumberHidden">
         </form>
 
         <!-- Modal de paiement -->
@@ -1385,6 +1387,13 @@
         const totalSteps = 6;
         let experienceCounter = 1;
         let formationCounter = 1;
+        // invoice global pour réutilisation
+        let latestInvoiceNumber = null;
+
+        function generateInvoiceNumber() {
+            const today = new Date();
+            return `CV-${today.getFullYear()}${(today.getMonth() + 1).toString().padStart(2, '0')}${today.getDate().toString().padStart(2, '0')}-${Math.floor(Math.random() * 1000).toString().padStart(3, '0')}`;
+        }
 
         // Gestion urgence et prix dynamique
         document.addEventListener('DOMContentLoaded', function() {
@@ -1798,6 +1807,11 @@
                 return;
             }
             structureMessage();
+            // Générer le numéro de facture AVANT l'envoi et l'ajouter au formulaire
+            latestInvoiceNumber = generateInvoiceNumber();
+            const invoiceHidden = document.getElementById('invoiceNumberHidden');
+            if (invoiceHidden) invoiceHidden.value = latestInvoiceNumber;
+
             const form = document.getElementById('mainForm');
             const btn = document.getElementById('submitBtn');
             const msg = document.getElementById('form-message');
@@ -1846,9 +1860,11 @@
             const premiumAmount = document.getElementById('premiumAmount');
             const totalAmount = document.getElementById('totalAmount');
 
-            // Générer un numéro de facture unique
-            const today = new Date();
-            const invoiceNum = `CV-${today.getFullYear()}${(today.getMonth() + 1).toString().padStart(2, '0')}${today.getDate().toString().padStart(2, '0')}-${Math.floor(Math.random() * 1000).toString().padStart(3, '0')}`;
+            // Générer un numéro de facture unique (prioriser latestInvoiceNumber si présent)
+            const invoiceNum = latestInvoiceNumber || (function(){
+                const t = new Date();
+                return `CV-${t.getFullYear()}${(t.getMonth() + 1).toString().padStart(2,'0')}${t.getDate().toString().padStart(2,'0')}-${Math.floor(Math.random()*1000).toString().padStart(3,'0')}`;
+            })();
 
             // Remplir les informations client
             clientName.textContent = formData.get('nom_prenom') || 'Client';
