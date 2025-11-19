@@ -1369,12 +1369,13 @@
                     <small>Vous recevrez le document Word / PowerPoint et PDF en fonction du modèle de CV que vous avez choisi, une fois la rédaction terminée.</small>
                 </div>
                 <div class="confirmation-section">
-                    <button class="pdf-btn" onclick="downloadInvoicePDF()">
-                        Télécharger la facture (PDF)
+                    <button class="pdf-btn" onclick="downloadInvoicePDF()" style="flex: 1; min-height: 50px; font-size: 16px; font-weight: 600; border-radius: 8px; background: linear-gradient(135deg, #094102 0%, #0d5c07 100%); color: white; border: none; cursor: pointer; transition: all 0.3s ease; box-shadow: 0 4px 12px rgba(9, 65, 2, 0.3);">
+                         Télécharger la facture (PDF)
                     </button>
-                    <button class="confirmation-btn" onclick="closePaymentModal()">
-                        J'ai effectué le paiement
-                    </button>
+                </div>
+                <div id="downloadMessage" style="margin-top: 16px; padding: 14px; border-radius: 8px; text-align: center; display: none; background: #e6fbe6; border: 1px solid #0A7303; color: #094102; font-weight: 500; line-height: 1.6;">
+                     <strong>Facture téléchargée avec succès !</strong><br>
+                    Veuillez envoyer cette facture par WhatsApp au <strong>+241 65 37 08 82</strong> pour confirmer votre demande.
                 </div>
             </div>
         </div>
@@ -2054,10 +2055,10 @@
 
                 doc.save(filename);
 
-                const msg = document.getElementById('form-message');
-                if (msg) {
-                    msg.textContent = '✅ Facture téléchargée avec succès !';
-                    msg.className = 'success';
+                // Afficher le message de confirmation
+                const downloadMsg = document.getElementById('downloadMessage');
+                if (downloadMsg) {
+                    downloadMsg.style.display = 'block';
                 }
 
             } catch (error) {

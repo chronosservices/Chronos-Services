@@ -1,0 +1,3352 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interview Master - Simulateur d'Entretien</title>
+    
+    <!-- React et ReactDOM -->
+    <script crossorigin src="https://unpkg.com/react@18/umd/react.development.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+    
+    <!-- Babel pour JSX -->
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <style>
+        body { margin: 0; font-family: system-ui, -apple-system, sans-serif; }
+    /* Toast minimal animation */
+    .toast-enter { opacity: 0; transform: translateY(6px); }
+    .toast-enter-active { opacity: 1; transform: translateY(0); transition: opacity 300ms, transform 300ms; }
+    .toast-exit { opacity: 1; }
+    .toast-exit-active { opacity: 0; transition: opacity 300ms; }
+    /* Nouveau design mobile gaming */
+    .gaming-card {
+      background: linear-gradient(135deg, rgba(9, 65, 2, 0.9), rgba(255, 87, 0, 0.1));
+      backdrop-filter: blur(20px);
+      border: 1px solid rgba(255, 87, 0, 0.3);
+      border-radius: 20px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .gaming-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 2px;
+      background: linear-gradient(90deg, #094102, #FF5700, #094102);
+      animation: shimmer 2s linear infinite;
+    }
+
+    @keyframes shimmer {
+      0% { transform: translateX(-100%); }
+      100% { transform: translateX(100%); }
+    }
+
+    .neon-glow {
+      box-shadow: 0 0 20px rgba(255, 87, 0, 0.3), 0 0 40px rgba(9, 65, 2, 0.2);
+      transition: box-shadow 0.3s ease;
+    }
+
+    .neon-glow:hover {
+      box-shadow: 0 0 30px rgba(255, 87, 0, 0.5), 0 0 60px rgba(9, 65, 2, 0.4);
+    }
+
+    .mobile-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 16px;
+    }
+
+    @media (max-width: 640px) {
+      .mobile-grid {
+        grid-template-columns: 1fr;
+        gap: 12px;
+      }
+    }
+
+    .game-mode-card {
+      background: linear-gradient(135deg, rgba(9, 65, 2, 0.8), rgba(255, 87, 0, 0.2));
+      border: 2px solid rgba(255, 87, 0, 0.4);
+      border-radius: 16px;
+      padding: 24px;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .game-mode-card:hover {
+      transform: translateY(-8px) scale(1.02);
+      border-color: rgba(255, 87, 0, 0.6);
+      background: linear-gradient(135deg, rgba(9, 65, 2, 0.9), rgba(255, 87, 0, 0.3));
+    }
+
+    .floating-elements {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      overflow: hidden;
+    }
+
+    .floating-elements::before,
+    .floating-elements::after {
+      content: '';
+      position: absolute;
+      width: 20px;
+      height: 20px;
+      background: rgba(255, 87, 0, 0.1);
+      border-radius: 50%;
+      animation: float 6s ease-in-out infinite;
+    }
+
+    .floating-elements::before {
+      top: 20%;
+      left: 10%;
+      animation-delay: -2s;
+    }
+
+    .floating-elements::after {
+      bottom: 20%;
+      right: 10%;
+      animation-delay: -4s;
+    }
+
+    @keyframes float {
+      0%, 100% { transform: translateY(0px) rotate(0deg); }
+      50% { transform: translateY(-20px) rotate(180deg); }
+    }
+
+    .progress-bar-custom {
+      background: linear-gradient(90deg, rgba(9, 65, 2, 0.3), rgba(255, 87, 0, 0.3));
+      height: 8px;
+      border-radius: 4px;
+      overflow: hidden;
+      position: relative;
+    }
+
+    .progress-bar-fill {
+      background: linear-gradient(90deg, #094102, #FF5700);
+      height: 100%;
+      border-radius: 4px;
+      position: relative;
+      animation: pulse 2s ease-in-out infinite alternate;
+    }
+
+    @keyframes pulse {
+      from { box-shadow: 0 0 5px rgba(255, 87, 0, 0.5); }
+      to { box-shadow: 0 0 20px rgba(255, 87, 0, 0.8); }
+    }
+
+    /* Modal pour feedback de question */
+    .feedback-modal {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(0, 0, 0, 0.8);
+      backdrop-filter: blur(10px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 1000;
+      animation: fadeIn 0.3s ease-out;
+    }
+
+    .feedback-modal-content {
+      background: linear-gradient(135deg, rgba(9, 65, 2, 0.95), rgba(255, 87, 0, 0.2));
+      border: 2px solid rgba(255, 87, 0, 0.4);
+      border-radius: 20px;
+      padding: 2rem;
+      margin: 1rem;
+      max-width: 600px;
+      width: 90%;
+      max-height: 80vh;
+      overflow-y: auto;
+      position: relative;
+      animation: slideUp 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+    }
+
+    .feedback-modal-close {
+      position: absolute;
+      top: 1rem;
+      right: 1rem;
+      background: rgba(255, 255, 255, 0.1);
+      border: none;
+      color: white;
+      border-radius: 50%;
+      width: 36px;
+      height: 36px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.3s ease;
+    }
+
+    .feedback-modal-close:hover {
+      background: rgba(255, 255, 255, 0.2);
+      transform: scale(1.1);
+    }
+
+    .feedback-icon {
+      width: 60px;
+      height: 60px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 1.5rem;
+      font-size: 2rem;
+    }
+
+    .feedback-icon.success {
+      background: rgba(34, 197, 94, 0.2);
+      border: 2px solid #22c55e;
+      color: #22c55e;
+    }
+
+    .feedback-icon.warning {
+      background: rgba(251, 191, 36, 0.2);
+      border: 2px solid #fbbf24;
+      color: #fbbf24;
+    }
+
+    .feedback-icon.error {
+      background: rgba(239, 68, 68, 0.2);
+      border: 2px solid #ef4444;
+      color: #ef4444;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+
+    @keyframes slideUp {
+      from { 
+        opacity: 0;
+        transform: translateY(30px) scale(0.9);
+      }
+      to { 
+        opacity: 1;
+        transform: translateY(0) scale(1);
+      }
+    }
+
+    /* Responsive pour mobile */
+    @media (max-width: 640px) {
+      .feedback-modal-content {
+        padding: 1.5rem;
+        margin: 0.5rem;
+        width: 95%;
+        border-radius: 16px;
+      }
+      
+      .feedback-icon {
+        width: 50px;
+        height: 50px;
+        font-size: 1.5rem;
+      }
+    }
+    </style>
+</head>
+<body>
+    <div id="root"></div>
+    
+    <script type="text/babel">
+        /***** Petites implémentations d'icônes (substitut simple pour lucide-react UMD) *****/
+        const makeIcon = (emoji) => (props) => React.createElement('span', {...props, style:{display:'inline-block', lineHeight:1, verticalAlign:'middle', ...(props && props.style)}} , emoji);
+        const Trophy = makeIcon('🏆');
+        const Brain = makeIcon('🧠');
+        const Target = makeIcon('🎯');
+        const Zap = makeIcon('⚡');
+        const User = makeIcon('👤');
+        const RotateCcw = makeIcon('🔁');
+        const Home = makeIcon('🏠');
+        const CheckCircle = makeIcon('✅');
+        const XCircle = makeIcon('❌');
+        const Timer = makeIcon('⏱️');
+        const Settings = makeIcon('⚙️');
+        const Volume2 = makeIcon('🔊');
+        const VolumeX = makeIcon('🔇');
+        const Award = makeIcon('🏅');
+        const Star = makeIcon('⭐');
+        const RotateCw = makeIcon('🔄');
+        const ZapIcon = Zap;
+        const TargetIcon = Target;
+        // autres icônes de secours si référencées
+        const Play = makeIcon('▶️');
+        const Users = makeIcon('👥');
+        const Clock = makeIcon('🕒');
+        const ChevronRight = makeIcon('➡️');
+
+        /***** Base de données des questions (100 questions structurées) *****/
+        const questionDatabase = [
+          // ====== QUESTIONS CLASSIQUES (25) ======
+          {
+            id: "classic_001",
+            category: "classique",
+            subcategory: "presentation",
+            difficulty: 1,
+            sector: "general",
+            level: "all",
+            question: "Parlez-moi de vous en quelques minutes",
+            answers: [
+              { text: "Je liste mes diplômes et expériences chronologiquement", score: 5, feedback: "Correct mais un peu sec. Ajoutez votre personnalité." },
+              { text: "Je raconte ma passion et comment elle m'a menée à ce poste", score: 15, feedback: "Excellent — motivation et cohérence." },
+              { text: "Je parle de ma vie privée et mes hobbies", score: 2, feedback: "Trop personnel, restez professionnel." },
+              { text: "Je résume en une phrase mes compétences principales", score: 8, feedback: "Bien, mais développez un peu plus." }
+            ],
+            tips: "Préparez un pitch 2-3 minutes : présent, passé, futur.",
+            idealResponse: "Présent → Parcours → Motivation pour le poste",
+            lastUsed: null,
+            tags: ["presentation","pitch"]
+          },
+          {
+            id: "classic_002",
+            category: "classique",
+            subcategory: "entreprise",
+            difficulty: 2,
+            sector: "general",
+            level: "all",
+            question: "Que savez-vous sur notre entreprise ?",
+            answers: [
+              { text: "J'ai lu votre site web", score: 7, feedback: "Bonne préparation de base." },
+              { text: "J'ai étudié vos valeurs, actualités et concurrents", score: 15, feedback: "Excellent — vous avez fait une vraie recherche." },
+              { text: "C'est une grande entreprise connue", score: 3, feedback: "Trop générique, apportez plus de détail." },
+              { text: "Pas grand-chose mais je suis motivé", score: 2, feedback: "Préparez-vous davantage pour vous démarquer." }
+            ],
+            tips: "Mentionnez 2-3 éléments précis (valeurs, projets, chiffres).",
+            idealResponse: "Connaissance des projets/valeurs + pourquoi cela vous attire",
+            lastUsed: null,
+            tags: ["company","research"]
+          },
+          {
+            id: "classic_003",
+            category: "classique",
+            subcategory: "motivation",
+            difficulty: 2,
+            sector: "general",
+            level: "all",
+            question: "Pourquoi voulez-vous travailler ici ?",
+            answers: [
+              { text: "Vous recrutez et j'ai besoin d'un emploi", score: 0, feedback: "Trop centré sur vous — reformulez." },
+              { text: "Vos valeurs correspondent aux miennes", score: 15, feedback: "Très bon angle — montrez des exemples." },
+              { text: "Votre entreprise est prestigieuse", score: 7, feedback: "Correct mais développez le pourquoi." },
+              { text: "Le salaire est attractif", score: 3, feedback: "Évitez de commencer par le salaire." }
+            ],
+            tips: "Reliez vos motivations aux missions et valeurs de l'entreprise.",
+            idealResponse: "Alignement valeurs + projet professionnel",
+            lastUsed: null,
+            tags: ["motivation"]
+          },
+          {
+            id: "classic_004",
+            category: "classique",
+            subcategory: "poste",
+            difficulty: 2,
+            sector: "general",
+            level: "all",
+            question: "Pourquoi postulez-vous pour ce poste ?",
+            answers: [
+              { text: "Il correspond exactement à mon projet professionnel", score: 15, feedback: "Parfait — lien clair entre projet et poste." },
+              { text: "C'est dans mon secteur d'activité", score: 8, feedback: "Bon point, précisez votre plus-value." },
+              { text: "Je pense pouvoir faire l'affaire", score: 5, feedback: "Trop vague — illustrez par des exemples." },
+              { text: "J'ai besoin de changer d'environnement", score: 3, feedback: "Honnête mais insuffisant seul." }
+            ],
+            tips: "Expliquez ce qui vous attire dans les missions et ce que vous apportez.",
+            idealResponse: "Compétences + motivations alignées sur les missions",
+            lastUsed: null,
+            tags: ["poste","motivation"]
+          },
+          {
+            id: "classic_005",
+            category: "classique",
+            subcategory: "qualites",
+            difficulty: 1,
+            sector: "general",
+            level: "all",
+            question: "Quelles sont vos principales qualités ?",
+            answers: [
+              { text: "Je suis perfectionniste et rigoureux", score: 8, feedback: "Bonne qualité si illustrée par un exemple." },
+              { text: "Leadership, adaptabilité et esprit d'équipe avec exemples concrets", score: 15, feedback: "Excellent — illustrez avec faits." },
+              { text: "Je travaille bien en équipe", score: 5, feedback: "Bien mais donnez un exemple précis." },
+              { text: "Je suis quelqu'un de bien", score: 2, feedback: "Trop vague." }
+            ],
+            tips: "Donnez 2-3 qualités avec exemples concrets.",
+            idealResponse: "Qualités + exemple montrant leur usage",
+            lastUsed: null,
+            tags: ["qualites"]
+          },
+          {
+            id: "classic_006",
+            category: "classique",
+            subcategory: "defaut",
+            difficulty: 1,
+            sector: "general",
+            level: "all",
+            question: "Quel est votre principal défaut ?",
+            answers: [
+              { text: "Je suis trop perfectionniste", score: 5, feedback: "Classique — montrez ce que vous faites pour l'améliorer." },
+              { text: "J'apprends encore à déléguer, je travaille dessus", score: 15, feedback: "Très bon — défaut + plan d'action." },
+              { text: "Je n'ai pas vraiment de défauts", score: 0, feedback: "Peu crédible." },
+              { text: "Je suis parfois trop franc", score: 8, feedback: "Honnête, mais illustrez le contrôle." }
+            ],
+            tips: "Choisissez un défaut réel et expliquez votre amélioration.",
+            idealResponse: "Défaut + actions concrètes pour progresser",
+            lastUsed: null,
+            tags: ["defaut","softskills"]
+          },
+          {
+            id: "classic_007",
+            category: "classique",
+            subcategory: "secteur",
+            difficulty: 2,
+            sector: "general",
+            level: "all",
+            question: "Que savez-vous sur notre secteur d'activité ?",
+            answers: [
+              { text: "J'ai analysé les tendances et défis actuels", score: 15, feedback: "Très bon niveau d'analyse." },
+              { text: "C'est un secteur en croissance", score: 7, feedback: "Observation correcte mais développe davantage." },
+              { text: "Je connais les bases", score: 5, feedback: "Point de départ acceptable." },
+              { text: "Pas grand-chose mais je veux apprendre", score: 3, feedback: "Montrez au moins une piste d'apprentissage." }
+            ],
+            tips: "Citez 1-2 tendances et un exemple d'impact pour l'entreprise.",
+            idealResponse: "Tendances + comment vous pouvez aider",
+            lastUsed: null,
+            tags: ["secteur","veille"]
+          },
+          {
+            id: "classic_008",
+            category: "classique",
+            subcategory: "objectifs",
+            difficulty: 2,
+            sector: "general",
+            level: "all",
+            question: "Quels sont vos objectifs de carrière ?",
+            answers: [
+              { text: "Évoluer vers plus de responsabilités dans 3-5 ans", score: 15, feedback: "Ambitieux et réaliste." },
+              { text: "Devenir manager rapidement", score: 8, feedback: "Bon objectif si vous avez l'expérience." },
+              { text: "Avoir un bon salaire et la sécurité", score: 5, feedback: "Valide mais moins différenciant." },
+              { text: "Je ne sais pas encore", score: 2, feedback: "Réfléchissez à un cap professionnel." }
+            ],
+            tips: "Parlez d'évolution concrète et compétences à acquérir.",
+            idealResponse: "Plan de 3-5 ans cohérent avec le poste",
+            lastUsed: null,
+            tags: ["carriere"]
+          },
+          {
+            id: "classic_009",
+            category: "classique",
+            subcategory: "parcours",
+            difficulty: 2,
+            sector: "general",
+            level: "all",
+            question: "Pourquoi avoir choisi cette formation/ce parcours ?",
+            answers: [
+              { text: "Par passion et cohérence avec mes objectifs", score: 15, feedback: "Très bon — reliez au poste." },
+              { text: "C'était un bon compromis", score: 8, feedback: "Acceptable, approfondissez." },
+              { text: "Mes parents m'ont conseillé", score: 3, feedback: "Trop passif — montrez votre engagement." },
+              { text: "Par défaut, faute de mieux", score: 1, feedback: "À éviter." }
+            ],
+            tips: "Expliquez en quoi cette formation vous prépare au poste.",
+            idealResponse: "Motivation + compétences acquises",
+            lastUsed: null,
+            tags: ["parcours"]
+          },
+          {
+            id: "classic_010",
+            category: "classique",
+            subcategory: "salaire",
+            difficulty: 2,
+            sector: "general",
+            level: "all",
+            question: "Quelles sont vos prétentions salariales ?",
+            answers: [
+              { text: "Je me renseigne d'abord sur le poste et l'entreprise", score: 12, feedback: "Bonne approche collaborative." },
+              { text: "Selon la grille de votre entreprise", score: 10, feedback: "Pragmatique." },
+              { text: "J'aimerais X euros (selon marché)", score: 8, feedback: "Raisonnable si justifié." },
+              { text: "Le plus possible", score: 2, feedback: "Trop centré sur l'argent." }
+            ],
+            tips: "Indiquez une fourchette et expliquez comment elle se justifie.",
+            idealResponse: "Fourchette cohérente avec le marché et votre expérience",
+            lastUsed: null,
+            tags: ["salaire"]
+          },
+          {
+            id: "classic_011",
+            category: "classique",
+            subcategory: "experience",
+            difficulty: 2,
+            sector: "general",
+            level: "all",
+            question: "Décrivez votre expérience la plus marquante",
+            answers: [
+              { text: "J'utilise la méthode STAR avec résultats chiffrés", score: 15, feedback: "Format attendu et percutant." },
+              { text: "Je raconte une anecdote professionnelle", score: 10, feedback: "Bien ; préférez des chiffres si possible." },
+              { text: "Je cite plusieurs expériences brièvement", score: 6, feedback: "Valide mais moins profond." },
+              { text: "Je n'ai pas d'expérience marquante", score: 2, feedback: "Préparez une histoire même petite." }
+            ],
+            tips: "Utilisez STAR et quantifiez l'impact.",
+            idealResponse: "Situation, Tâche, Action, Résultat chiffré",
+            lastUsed: null,
+            tags: ["experience","STAR"]
+          },
+          {
+            id: "classic_012",
+            category: "classique",
+            subcategory: "apprentissage",
+            difficulty: 2,
+            sector: "general",
+            level: "all",
+            question: "Qu'avez-vous appris dans votre dernier poste ?",
+            answers: [
+              { text: "Compétences techniques + soft skills avec exemples", score: 15, feedback: "Excellent — montrez des preuves." },
+              { text: "Principalement des compétences techniques", score: 8, feedback: "Bien mais mentionnez aussi comportements professionnels." },
+              { text: "À travailler en équipe", score: 5, feedback: "Correct mais simpliste." },
+              { text: "Pas grand-chose de nouveau", score: 1, feedback: "Peu convaincant." }
+            ],
+            tips: "Donnez 2 compétences et un exemple d'application.",
+            idealResponse: "Compétences + résultat mesurable",
+            lastUsed: null,
+            tags: ["apprentissage"]
+          },
+          {
+            id: "classic_013",
+            category: "classique",
+            subcategory: "posteideal",
+            difficulty: 2,
+            sector: "general",
+            level: "all",
+            question: "Décrivez votre poste idéal",
+            answers: [
+              { text: "Un poste qui combine mes compétences et mes aspirations", score: 15, feedback: "Clair et aligné." },
+              { text: "Quelque chose de stimulant", score: 8, feedback: "Bien mais précisez en quoi." },
+              { text: "Un bon salaire et de bonnes conditions", score: 5, feedback: "Valide mais moins détaillé." },
+              { text: "Pas de contraintes particulières", score: 2, feedback: "Trop vague." }
+            ],
+            tips: "Soyez précis sur les missions et l'environnement souhaité.",
+            idealResponse: "Missions, responsabilités et ambiance souhaitées",
+            lastUsed: null,
+            tags: ["poste"]
+          },
+          {
+            id: "classic_014",
+            category: "classique",
+            subcategory: "contribution",
+            difficulty: 2,
+            sector: "general",
+            level: "all",
+            question: "Comment vous voyez-vous contribuer à notre équipe ?",
+            answers: [
+              { text: "Par mes compétences spécifiques et mon expérience", score: 15, feedback: "Très bon — détaillez vos compétences clés." },
+              { text: "En apportant ma motivation", score: 7, feedback: "C'est bien mais moins concret." },
+              { text: "En travaillant dur", score: 5, feedback: "Correct mais commun." },
+              { text: "En m'intégrant bien", score: 3, feedback: "Trop général." }
+            ],
+            tips: "Donnez 2 actions concrètes que vous ferez dès le début.",
+            idealResponse: "Compétences + actions immédiates",
+            lastUsed: null,
+            tags: ["contribution"]
+          },
+          {
+            id: "classic_015",
+            category: "classique",
+            subcategory: "fierte",
+            difficulty: 2,
+            sector: "general",
+            level: "all",
+            question: "Quelle est votre plus grande fierté professionnelle ?",
+            answers: [
+              { text: "Un projet réussi avec impact mesurable", score: 15, feedback: "Excellent — donnez les chiffres." },
+              { text: "Une promotion obtenue", score: 8, feedback: "Bien, expliquez pourquoi elle a été obtenue." },
+              { text: "D'avoir toujours bien fait mon travail", score: 5, feedback: "Correct mais peu différenciant." },
+              { text: "D'avoir été apprécié par mes collègues", score: 6, feedback: "Valide si vous illustrez." }
+            ],
+            tips: "Choisissez un exemple concret et quantifiez l'impact.",
+            idealResponse: "Projet + rôle + résultats",
+            lastUsed: null,
+            tags: ["fierte"]
+          },
+          {
+            id: "classic_016",
+            category: "classique",
+            subcategory: "avenir",
+            difficulty: 2,
+            sector: "general",
+            level: "all",
+            question: "Où vous voyez-vous dans 5 ans ?",
+            answers: [
+              { text: "Expert reconnu ayant contribué à l'entreprise", score: 15, feedback: "Très pertinent." },
+              { text: "À votre place !", score: 2, feedback: "Trop vague." },
+              { text: "On verra bien", score: 1, feedback: "Peu préparé." },
+              { text: "Avec plus de responsabilités", score: 10, feedback: "Bonne ambition raisonnable." }
+            ],
+            tips: "Montrez trajectoire et compétences à acquérir.",
+            idealResponse: "Objectifs concrets et étapes pour les atteindre",
+            lastUsed: null,
+            tags: ["avenir"]
+          },
+          {
+            id: "classic_017",
+            category: "classique",
+            subcategory: "attentes",
+            difficulty: 2,
+            sector: "general",
+            level: "all",
+            question: "Qu'attendez-vous de ce poste ?",
+            answers: [
+              { text: "Apprentissage, défis et évolution", score: 15, feedback: "Très bon équilibre." },
+              { text: "Un tremplin pour ma carrière", score: 8, feedback: "Correct mais explicitez." },
+              { text: "Un salaire régulier", score: 3, feedback: "Trop centré sur la contrepartie." },
+              { text: "De l'expérience", score: 6, feedback: "Valide mais général." }
+            ],
+            tips: "Liens entre attentes et missions du poste.",
+            idealResponse: "Compétences + perspectives d'évolution",
+            lastUsed: null,
+            tags: ["attentes"]
+          },
+          {
+            id: "classic_018",
+            category: "classique",
+            subcategory: "apport",
+            difficulty: 2,
+            sector: "general",
+            level: "all",
+            question: "Que comptez-vous apporter à l'entreprise ?",
+            answers: [
+              { text: "Mes compétences, mon dynamisme et ma vision", score: 15, feedback: "Très complet." },
+              { text: "Mon expérience", score: 8, feedback: "Correct, détaillez-la." },
+              { text: "Ma motivation", score: 5, feedback: "Bien mais concrétisez." },
+              { text: "Mon savoir-faire", score: 7, feedback: "Valide si vous illustrez." }
+            ],
+            tips: "Donnez 2-3 apports concrets mesurables.",
+            idealResponse: "Actions concrètes que vous conduirez",
+            lastUsed: null,
+            tags: ["apport"]
+          },
+          {
+            id: "classic_019",
+            category: "classique",
+            subcategory: "entrepreneuriat",
+            difficulty: 2,
+            sector: "general",
+            level: "all",
+            question: "Aimeriez-vous créer votre entreprise un jour ?",
+            answers: [
+              { text: "Peut-être à long terme, mais d'abord acquérir l'expérience", score: 12, feedback: "Réponse équilibrée." },
+              { text: "Non, je préfère évoluer en entreprise", score: 10, feedback: "Claire et honnête." },
+              { text: "Oui, c'est mon objectif principal", score: 5, feedback: "Ambitieux mais à expliquer." },
+              { text: "Je n'y ai jamais pensé", score: 3, feedback: "Peu renseigné." }
+            ],
+            tips: "Indiquez un horizon et ce que vous voulez apprendre avant.",
+            idealResponse: "Projet réfléchi ou préférence entreprise",
+            lastUsed: null,
+            tags: ["entrepreneuriat"]
+          },
+          {
+            id: "classic_020",
+            category: "classique",
+            subcategory: "evolution",
+            difficulty: 2,
+            sector: "general",
+            level: "all",
+            question: "Comment voyez-vous l'évolution de votre métier ?",
+            answers: [
+              { text: "J'analyse les tendances et m'y prépare", score: 15, feedback: "Très pertinent." },
+              { text: "Il faut s'adapter en permanence", score: 10, feedback: "Bonne posture." },
+              { text: "Ça va beaucoup changer", score: 5, feedback: "Correct mais développez." },
+              { text: "Je n'y ai pas réfléchi", score: 2, feedback: "Préparez-vous à en parler." }
+            ],
+            tips: "Citez une tendance et comment vous vous y formez.",
+            idealResponse: "Veille + actions d'adaptation",
+            lastUsed: null,
+            tags: ["veille","evolution"]
+          },
+          {
+            id: "classic_021",
+            category: "classique",
+            subcategory: "motivation",
+            difficulty: 1,
+            sector: "general",
+            level: "all",
+            question: "Qu'est-ce qui vous motive le plus dans le travail ?",
+            answers: [
+              { text: "Les défis, l'apprentissage et l'impact", score: 15, feedback: "Très motivant et professionnel." },
+              { text: "La reconnaissance", score: 8, feedback: "Valide, mais précisez." },
+              { text: "Le salaire", score: 3, feedback: "Moins différenciant." },
+              { text: "La stabilité", score: 5, feedback: "Important mais développez." }
+            ],
+            tips: "Reliez motivation et exemples concrets.",
+            idealResponse: "Motivations alignées sur l'impact et l'apprentissage",
+            lastUsed: null,
+            tags: ["motivation"]
+          },
+          {
+            id: "classic_022",
+            category: "classique",
+            subcategory: "succes",
+            difficulty: 1,
+            sector: "general",
+            level: "all",
+            question: "Comment définissez-vous le succès ?",
+            answers: [
+              { text: "Atteindre ses objectifs tout en contribuant positivement", score: 15, feedback: "Bonne définition équilibrée." },
+              { text: "Réussir sa carrière", score: 8, feedback: "Valide mais personnel." },
+              { text: "Gagner beaucoup d'argent", score: 3, feedback: "Trop centré financier." },
+              { text: "Être reconnu", score: 6, feedback: "Valide si lié à l'impact." }
+            ],
+            tips: "Définissez le succès selon vos valeurs et objectifs.",
+            idealResponse: "Impact + objectifs personnels",
+            lastUsed: null,
+            tags: ["succes"]
+          },
+          {
+            id: "classic_023",
+            category: "classique",
+            subcategory: "methode",
+            difficulty: 1,
+            sector: "general",
+            level: "all",
+            question: "Quelle est votre méthode de travail ?",
+            answers: [
+              { text: "Organisation, priorisation et collaboration", score: 15, feedback: "Méthode solide et professionnelle." },
+              { text: "Je m'adapte selon les situations", score: 10, feedback: "Bonne flexibilité." },
+              { text: "Je fais de mon mieux", score: 5, feedback: "Trop générique." },
+              { text: "J'improvise", score: 2, feedback: "Améliorez la rigueur." }
+            ],
+            tips: "Donnez des outils ou méthodes précis (to-do, retro-planning).",
+            idealResponse: "Outils + exemples concrets",
+            lastUsed: null,
+            tags: ["methode"]
+          },
+          {
+            id: "classic_024",
+            category: "classique",
+            subcategory: "travail",
+            difficulty: 1,
+            sector: "general",
+            level: "all",
+            question: "Travaillez-vous mieux seul ou en équipe ?",
+            answers: [
+              { text: "Les deux selon les tâches, avec exemples", score: 15, feedback: "Bonne réponse nuancée." },
+              { text: "En équipe, j'aime collaborer", score: 10, feedback: "Bien si illustré." },
+              { text: "Seul, je suis plus efficace", score: 8, feedback: "Valide selon le contexte." },
+              { text: "Ça dépend des gens", score: 5, feedback: "Réponse honnête." }
+            ],
+            tips: "Illustrer par exemples concrets.",
+            idealResponse: "Flexibilité + exemples",
+            lastUsed: null,
+            tags: ["teamwork"]
+          },
+          {
+            id: "classic_025",
+            category: "classique",
+            subcategory: "questions",
+            difficulty: 1,
+            sector: "general",
+            level: "all",
+            question: "Avez-vous des questions à nous poser ?",
+            answers: [
+              { text: "Questions pertinentes sur le poste/équipe/entreprise", score: 15, feedback: "Très bon — préparez 3-4 questions." },
+              { text: "Questions sur l'évolution possible", score: 10, feedback: "Bonne approche." },
+              { text: "Questions sur les congés/avantages", score: 5, feedback: "Pertinent mais attendez la fin." },
+              { text: "Non, tout est clair", score: 0, feedback: "Préparez au moins une question stratégique." }
+            ],
+            tips: "Préparez 3 questions montrant votre intérêt réel.",
+            idealResponse: "Questions sur missions, équipe, indicateurs de succès",
+            lastUsed: null,
+            tags: ["questions"]
+          },
+
+          // ====== QUESTIONS TECHNIQUES (25) ======
+          {
+            id: "tech_001",
+            category: "technique",
+            subcategory: "gestion",
+            difficulty: 2,
+            sector: "general",
+            level: "all",
+            question: "Comment gérez-vous les priorités avec plusieurs projets urgents ?",
+            answers: [
+              { text: "Matrice urgence/importance + communication parties prenantes", score: 15, feedback: "Méthode structurée, très bonne réponse." },
+              { text: "Je demande à mon manager", score: 7, feedback: "Bien de consulter, mais montrez aussi votre autonomie." },
+              { text: "Je travaille plus d'heures", score: 3, feedback: "Court terme — mieux vaut prioriser." },
+              { text: "Je fais d'abord ce qui me plaît", score: 1, feedback: "Mauvaise stratégie." }
+            ],
+            tips: "Expliquez vos outils et un exemple concret.",
+            idealResponse: "Méthode + exemple chiffré",
+            lastUsed: null,
+            tags: ["gestion","priorisation"]
+          },
+          {
+            id: "tech_002",
+            category: "technique",
+            subcategory: "temps",
+            difficulty: 2,
+            sector: "general",
+            level: "all",
+            question: "Décrivez votre méthode de gestion du temps",
+            answers: [
+              { text: "Planning, to-do list priorisée, gestion des interruptions", score: 15, feedback: "Très bon, concret." },
+              { text: "J'utilise des outils numériques", score: 8, feedback: "Bien, précisez lesquels." },
+              { text: "Je fais au feeling", score: 3, feedback: "Trop improvisé." },
+              { text: "Je suis naturellement organisé", score: 5, feedback: "Valide mais illustrez." }
+            ],
+            tips: "Citez outils et exemples d'usage.",
+            idealResponse: "Outils + pratique quotidienne",
+            lastUsed: null,
+            tags: ["time","organisation"]
+          },
+          {
+            id: "tech_003",
+            category: "technique",
+            subcategory: "delai",
+            difficulty: 2,
+            sector: "general",
+            level: "all",
+            question: "Comment vous organisez-vous pour respecter les délais ?",
+            answers: [
+              { text: "Rétro-planning, jalons, anticipation des risques", score: 15, feedback: "Très professionnel." },
+              { text: "Je commence tôt", score: 7, feedback: "Bonne pratique." },
+              { text: "Je travaille vite sous pression", score: 5, feedback: "Peut fonctionner ponctuellement." },
+              { text: "Je négocie les délais", score: 4, feedback: "Parfois nécessaire." }
+            ],
+            tips: "Montrez un exemple concret de projet livré dans les délais.",
+            idealResponse: "Planification + gestion risques",
+            lastUsed: null,
+            tags: ["delai","planning"]
+          },
+          {
+            id: "tech_004",
+            category: "technique",
+            subcategory: "demarrage",
+            difficulty: 2,
+            sector: "general",
+            level: "all",
+            question: "Quelle est votre approche pour un nouveau projet ?",
+            answers: [
+              { text: "Analyse, planification, définition des objectifs et ressources", score: 15, feedback: "Excellent processus." },
+              { text: "Je commence par ce que je connais", score: 6, feedback: "Pratique mais incomplète." },
+              { text: "J'improvise au fur et à mesure", score: 2, feedback: "Risque élevé." },
+              { text: "Je demande des conseils", score: 8, feedback: "Bien si combiné à une méthode." }
+            ],
+            tips: "Donnez les étapes et un exemple concret.",
+            idealResponse: "Analyse + plan d'action",
+            lastUsed: null,
+            tags: ["projet","lancement"]
+          },
+          {
+            id: "tech_005",
+            category: "technique",
+            subcategory: "charge",
+            difficulty: 2,
+            sector: "general",
+            level: "all",
+            question: "Comment gérez-vous la charge de travail importante ?",
+            answers: [
+              { text: "Priorisation, délégation si possible, optimisation", score: 15, feedback: "Très bonne approche." },
+              { text: "Je fais des heures supplémentaires", score: 5, feedback: "Solution ponctuelle mais non durable." },
+              { text: "Je fais de mon mieux", score: 3, feedback: "Pas de stratégie claire." },
+              { text: "Je négocie les priorités", score: 10, feedback: "Bonne option si communication efficace." }
+            ],
+            tips: "Montrez un exemple concret de délégation/optimisation.",
+            idealResponse: "Priorisation + communication",
+            lastUsed: null,
+            tags: ["charge","delegation"]
+          },
+          {
+            id: "tech_006",
+            category: "technique",
+            subcategory: "apprentissage",
+            difficulty: 2,
+            sector: "general",
+            level: "all",
+            question: "Décrivez une situation où vous avez dû apprendre rapidement",
+            answers: [
+              { text: "Identification experts + plan d'apprentissage structuré", score: 15, feedback: "Très bon processus." },
+              { text: "Formation en ligne + pratique", score: 10, feedback: "Valide si application réelle." },
+              { text: "Apprentissage sur le tas", score: 5, feedback: "Fonctionne mais moins optimal." },
+              { text: "J'ai délégué à quelqu'un qui savait", score: 3, feedback: "Évitement du défi." }
+            ],
+            tips: "Utilisez STAR et montrez l'impact.",
+            idealResponse: "Plan d'apprentissage + résultats",
+            lastUsed: null,
+            tags: ["apprentissage"]
+          },
+          {
+            id: "tech_007",
+            category: "technique",
+            subcategory: "veille",
+            difficulty: 2,
+            sector: "general",
+            level: "all",
+            question: "Comment vous tenez-vous au courant des évolutions de votre secteur ?",
+            answers: [
+              { text: "Veille active : presse, formations, réseaux professionnels", score: 15, feedback: "Très sérieux." },
+              { text: "Je lis occasionnellement", score: 6, feedback: "Faites-en une habitude." },
+              { text: "Mes collègues m'informent", score: 4, feedback: "Complétez avec de la veille personnelle." },
+              { text: "Je n'ai pas le temps", score: 1, feedback: "Priorisez la formation continue." }
+            ],
+            tips: "Citez sources et fréquence de veille.",
+            idealResponse: "Sources + actions régulières",
+            lastUsed: null,
+            tags: ["veille"]
+          },
+          {
+            id: "tech_008",
+            category: "technique",
+            subcategory: "incertitude",
+            difficulty: 3,
+            sector: "general",
+            level: "all",
+            question: "Comment gérez-vous l'incertitude dans votre travail ?",
+            answers: [
+              { text: "Analyse des options, plan B, communication", score: 15, feedback: "Très bonne approche." },
+              { text: "J'attends d'avoir plus d'informations", score: 7, feedback: "Parfois nécessaire mais peut bloquer." },
+              { text: "Je fais avec ce que j'ai", score: 5, feedback: "Pragmatique mais améliorable." },
+              { text: "Je stresse un peu", score: 2, feedback: "Gérer le stress est important." }
+            ],
+            tips: "Donnez un exemple où vous avez pris une décision malgré l'incertitude.",
+            idealResponse: "Analyse + plan de contingence",
+            lastUsed: null,
+            tags: ["incertitude"]
+          },
+          {
+            id: "tech_009",
+            category: "technique",
+            subcategory: "probleme",
+            difficulty: 3,
+            sector: "general",
+            level: "all",
+            question: "Décrivez votre approche face à un problème complexe",
+            answers: [
+              { text: "Décomposition, analyse, recherche de solutions, test", score: 15, feedback: "Très bon processus méthodique." },
+              { text: "Je demande de l'aide", score: 8, feedback: "Bien si combiné à une tentative personnelle." },
+              { text: "J'essaie différentes approches", score: 6, feedback: "Valide mais structurez davantage." },
+              { text: "Je trouve toujours une solution", score: 4, feedback: "Peu explicite." }
+            ],
+            tips: "Donnez un exemple et les étapes suivies.",
+            idealResponse: "Analyse + tests + résultat",
+            lastUsed: null,
+            tags: ["probleme","analyse"]
+          },
+          {
+            id: "tech_010",
+            category: "technique",
+            subcategory: "qualite",
+            difficulty: 2,
+            sector: "general",
+            level: "all",
+            question: "Comment évaluez-vous la qualité de votre travail ?",
+            answers: [
+              { text: "KPIs, feedback, auto-évaluation critique", score: 15, feedback: "Approche complète." },
+              { text: "Feedback de mon manager", score: 8, feedback: "Important mais complétez par auto-évaluation." },
+              { text: "Si ça marche, c'est bon", score: 4, feedback: "Trop superficiel." },
+              { text: "Je le sens", score: 2, feedback: "Pas suffisant." }
+            ],
+            tips: "Citez KPIs pertinents et un exemple concret.",
+            idealResponse: "Indicateurs + feedbacks",
+            lastUsed: null,
+            tags: ["qualite"]
+          },
+          {
+            id: "tech_011",
+            category: "technique",
+            subcategory: "amelioration",
+            difficulty: 2,
+            sector: "general",
+            level: "all",
+            question: "Avez-vous déjà proposé une amélioration dans votre travail ?",
+            answers: [
+              { text: "Exemple concret avec impact mesurable", score: 15, feedback: "Très fort — quantifiez l'impact." },
+              { text: "Quelques suggestions", score: 8, feedback: "Bien, mais illustrez." },
+              { text: "J'ai des idées mais je ne les exprime pas", score: 3, feedback: "Partagez vos idées à l'avenir." },
+              { text: "Je suis les procédures", score: 2, feedback: "Moins proactif." }
+            ],
+            tips: "Montrez impact et déploiement.",
+            idealResponse: "Idée + mise en oeuvre + résultat",
+            lastUsed: null,
+            tags: ["amelioration"]
+          },
+          {
+            id: "tech_012",
+            category: "technique",
+            subcategory: "innovation",
+            difficulty: 2,
+            sector: "general",
+            level: "all",
+            question: "Comment abordez-vous l'innovation dans votre domaine ?",
+            answers: [
+              { text: "Veille, test de nouvelles approches, partage d'expérience", score: 15, feedback: "Très complet." },
+              { text: "J'aime essayer de nouvelles choses", score: 8, feedback: "Bonne attitude." },
+              { text: "Si ce n'est pas cassé, on ne répare pas", score: 3, feedback: "Trop conservateur." },
+              { text: "J'attends qu'on me le demande", score: 2, feedback: "Réactive, pas proactive." }
+            ],
+            tips: "Donnez un exemple d'innovation testée.",
+            idealResponse: "Veille + expérimentation",
+            lastUsed: null,
+            tags: ["innovation"]
+          },
+          {
+            id: "tech_013",
+            category: "technique",
+            subcategory: "formation",
+            difficulty: 1,
+            sector: "general",
+            level: "all",
+            question: "Quelle a été votre dernière formation professionnelle ?",
+            answers: [
+              { text: "Formation récente avec application concrète", score: 15, feedback: "Très pertinent." },
+              { text: "Formation il y a quelques années", score: 6, feedback: "Actualisez vos compétences." },
+              { text: "Je me forme sur le tas", score: 4, feedback: "Valide mais complétez par une formation formelle." },
+              { text: "Je n'ai pas eu l'occasion", score: 2, feedback: "Cherchez des opportunités maintenant." }
+            ],
+            tips: "Expliquez comment vous avez appliqué la formation.",
+            idealResponse: "Formation + résultats",
+            lastUsed: null,
+            tags: ["formation"]
+          },
+          {
+            id: "tech_014",
+            category: "technique",
+            subcategory: "partage",
+            difficulty: 2,
+            sector: "general",
+            level: "all",
+            question: "Comment partagez-vous vos connaissances avec vos collègues ?",
+            answers: [
+              { text: "Sessions de partage, documentation, mentorat", score: 15, feedback: "Très bon." },
+              { text: "Informellement quand on me demande", score: 8, feedback: "Valide mais faites-le plus systématiquement." },
+              { text: "Chacun se débrouille", score: 2, feedback: "Moins collaboratif." },
+              { text: "Je n'ai pas grand-chose à partager", score: 1, feedback: "Réfléchissez à vos savoirs transférables." }
+            ],
+            tips: "Citez un exemple de session de partage que vous avez menée.",
+            idealResponse: "Transmission organisée + exemples",
+            lastUsed: null,
+            tags: ["partage","mentorat"]
+          },
+          {
+            id: "tech_015",
+            category: "technique",
+            subcategory: "outils",
+            difficulty: 2,
+            sector: "general",
+            level: "all",
+            question: "Utilisez-vous des outils numériques pour optimiser votre travail ?",
+            answers: [
+              { text: "Oui, plusieurs outils avec exemples d'usage", score: 15, feedback: "Très bon niveau technique." },
+              { text: "Les outils standards de l'entreprise", score: 8, feedback: "Correct." },
+              { text: "Le minimum syndical", score: 4, feedback: "Améliorez votre outillage." },
+              { text: "Je préfère les méthodes traditionnelles", score: 3, feedback: "Moins efficace." }
+            ],
+            tips: "Donnez 2 outils et comment ils améliorent votre productivité.",
+            idealResponse: "Outils + bénéfices mesurables",
+            lastUsed: null,
+            tags: ["outils"]
+          },
+          {
+            id: "tech_016",
+            category: "technique",
+            subcategory: "performance",
+            difficulty: 2,
+            sector: "general",
+            level: "all",
+            question: "Comment mesurez-vous votre performance ?",
+            answers: [
+              { text: "Objectifs chiffrés + indicateurs qualitatifs", score: 15, feedback: "Très complet." },
+              { text: "Feedback de mon manager", score: 8, feedback: "Important mais complétez par des KPIs." },
+              { text: "Feeling personnel", score: 3, feedback: "Subjectif." },
+              { text: "Comparaison avec les collègues", score: 5, feedback: "Moins pertinent." }
+            ],
+            tips: "Citez KPIs et exemples de suivi.",
+            idealResponse: "KPIs + feedbacks réguliers",
+            lastUsed: null,
+            tags: ["performance"]
+          },
+          {
+            id: "tech_017",
+            category: "technique",
+            subcategory: "echec",
+            difficulty: 3,
+            sector: "general",
+            level: "all",
+            question: "Décrivez un échec professionnel et vos apprentissages",
+            answers: [
+              { text: "Exemple concret + leçons tirées + amélioration", score: 15, feedback: "Très bon réflexe d'apprentissage." },
+              { text: "Un exemple avec quelques leçons", score: 10, feedback: "Bien mais approfondissez." },
+              { text: "Je n'ai pas vraiment échoué", score: 2, feedback: "Peu crédible." },
+              { text: "Je préfère ne pas en parler", score: 1, feedback: "Évitez cette option." }
+            ],
+            tips: "Montrez ce que vous avez changé ensuite.",
+            idealResponse: "Erreur + correction + résultat amélioré",
+            lastUsed: null,
+            tags: ["echec"]
+          },
+          {
+            id: "tech_018",
+            category: "technique",
+            subcategory: "stress",
+            difficulty: 2,
+            sector: "general",
+            level: "all",
+            question: "Comment gérez-vous la pression et le stress ?",
+            answers: [
+              { text: "Techniques de gestion : respiration, priorisation, sport", score: 15, feedback: "Très bonne méthode." },
+              { text: "Je travaille mieux sous pression", score: 8, feedback: "Valide si maîtrisé." },
+              { text: "J'essaie de rester calme", score: 5, feedback: "Correct mais détaillez les techniques." },
+              { text: "Je stresse mais je m'en sors", score: 3, feedback: "Travaillez sur la prévention." }
+            ],
+            tips: "Citez techniques et un exemple où elles ont aidé.",
+            idealResponse: "Prévention + outils de gestion",
+            lastUsed: null,
+            tags: ["stress"]
+          },
+          {
+            id: "tech_019",
+            category: "technique",
+            subcategory: "qualite",
+            difficulty: 2,
+            sector: "general",
+            level: "all",
+            question: "Quelle est votre approche du contrôle qualité ?",
+            answers: [
+              { text: "Vérifications systématiques, check-lists, revue par les pairs", score: 15, feedback: "Très professionnel." },
+              { text: "Je relis toujours mon travail", score: 8, feedback: "Bonne habitude." },
+              { text: "Je fais attention", score: 4, feedback: "Trop vague." },
+              { text: "Les erreurs arrivent", score: 2, feedback: "Attitude passive." }
+            ],
+            tips: "Donnez un exemple d'une check-list que vous utilisez.",
+            idealResponse: "Procédures + illustration",
+            lastUsed: null,
+            tags: ["qualite"]
+          },
+          {
+            id: "tech_020",
+            category: "technique",
+            subcategory: "optimisation",
+            difficulty: 2,
+            sector: "general",
+            level: "all",
+            question: "Comment optimisez-vous vos processus de travail ?",
+            answers: [
+              { text: "Analyse des étapes, identification des goulots, automatisation", score: 15, feedback: "Très bon." },
+              { text: "J'essaie de gagner du temps", score: 6, feedback: "OK mais peu concret." },
+              { text: "Je suis les procédures établies", score: 4, feedback: "Conforme mais pas proactif." },
+              { text: "Je n'ai pas le temps d'optimiser", score: 2, feedback: "Priorisez l'amélioration continue." }
+            ],
+            tips: "Donnez un exemple d'automatisation ou d'amélioration réalisée.",
+            idealResponse: "Analyse + solution déployée",
+            lastUsed: null,
+            tags: ["optimisation"]
+          },
+          {
+            id: "tech_021",
+            category: "technique",
+            subcategory: "communication",
+            difficulty: 2,
+            sector: "general",
+            level: "all",
+            question: "Comment présentez-vous vos résultats à votre hiérarchie ?",
+            answers: [
+              { text: "Rapport structuré avec données et recommandations", score: 15, feedback: "Très professionnel." },
+              { text: "Présentation orale claire", score: 10, feedback: "Bien si support adapté." },
+              { text: "Email de synthèse", score: 6, feedback: "Correct mais combinez formats." },
+              { text: "On me demande rarement", score: 2, feedback: "Proposez proactivement des bilans." }
+            ],
+            tips: "Donnez un exemple de rapport ou présentation.",
+            idealResponse: "Données + recommandations claires",
+            lastUsed: null,
+            tags: ["communication"]
+          },
+          {
+            id: "tech_022",
+            category: "technique",
+            subcategory: "contradictions",
+            difficulty: 2,
+            sector: "general",
+            level: "all",
+            question: "Comment gérez-vous les demandes contradictoires ?",
+            answers: [
+              { text: "Clarification des priorités avec les demandeurs", score: 15, feedback: "Très bon." },
+              { text: "Je demande à mon manager de trancher", score: 8, feedback: "Parfois nécessaire." },
+              { text: "First in, first out", score: 4, feedback: "Pas optimal." },
+              { text: "Je fais ce qui me semble le plus urgent", score: 6, feedback: "Peut créer des conflits." }
+            ],
+            tips: "Montrez un exemple où vous avez priorisé efficacement.",
+            idealResponse: "Communication + arbitrage clair",
+            lastUsed: null,
+            tags: ["priorisation"]
+          },
+          {
+            id: "tech_023",
+            category: "technique",
+            subcategory: "formationcollab",
+            difficulty: 2,
+            sector: "general",
+            level: "all",
+            question: "Votre approche pour former un nouveau collègue ?",
+            answers: [
+              { text: "Plan de formation progressif avec suivi", score: 15, feedback: "Excellente pratique." },
+              { text: "Je lui montre une fois", score: 6, feedback: "Insuffisant pour monter en compétence." },
+              { text: "Il apprendra en observant", score: 3, feedback: "Moins structuré." },
+              { text: "Ce n'est pas mon rôle", score: 1, feedback: "Attitude problématique dans une équipe." }
+            ],
+            tips: "Donnez un plan de 30/60/90 jours si possible.",
+            idealResponse: "Plan + suivi + exemples de résultats",
+            lastUsed: null,
+            tags: ["formation","mentorat"]
+          },
+          {
+            id: "tech_024",
+            category: "technique",
+            subcategory: "documentation",
+            difficulty: 2,
+            sector: "general",
+            level: "all",
+            question: "Comment documentez-vous votre travail ?",
+            answers: [
+              { text: "Documentation systématique et accessible", score: 15, feedback: "Très professionnel." },
+              { text: "Notes personnelles organisées", score: 8, feedback: "Bien mais partagez davantage." },
+              { text: "Quelques notes importantes", score: 5, feedback: "Partiel." },
+              { text: "Tout est dans ma tête", score: 2, feedback: "Risque pour l'équipe." }
+            ],
+            tips: "Citez un outil de documentation et sa structure.",
+            idealResponse: "Documentation accessible + exemples",
+            lastUsed: null,
+            tags: ["documentation"]
+          },
+          {
+            id: "tech_025",
+            category: "technique",
+            subcategory: "interruptions",
+            difficulty: 2,
+            sector: "general",
+            level: "all",
+            question: "Comment gérez-vous les interruptions fréquentes ?",
+            answers: [
+              { text: "Plages de disponibilité + urgence évaluée", score: 15, feedback: "Approche efficace." },
+              { text: "Je réponds toujours rapidement", score: 6, feedback: "Peut nuire à la concentration." },
+              { text: "Ça fait partie du job", score: 4, feedback: "Acceptable mais pas optimal." },
+              { text: "Ça me dérange beaucoup", score: 2, feedback: "Travaillez la gestion du focus." }
+            ],
+            tips: "Expliquez comment protéger vos plages de travail profond.",
+            idealResponse: "Plages dédiées + communication",
+            lastUsed: null,
+            tags: ["interruptions"]
+          },
+
+          // ====== QUESTIONS PIÈGES (25) ======
+          {
+            id: "trap_001",
+            category: "piege",
+            subcategory: "depart",
+            difficulty: 3,
+            sector: "general",
+            level: "all",
+            question: "Pourquoi avez-vous quitté votre dernier emploi ?",
+            answers: [
+              { text: "Recherche de nouveaux défis et d'évolution", score: 15, feedback: "Réponse positive et orientée futur." },
+              { text: "Mon manager était incompétent", score: 0, feedback: "Ne critiquez jamais frontalement un ancien employeur." },
+              { text: "Licenciement économique", score: 12, feedback: "Honnête si c'est vrai, contextualisez." },
+              { text: "Le salaire était insuffisant", score: 6, feedback: "Valide mais reformulez en termes d'évolution." }
+            ],
+            tips: "Restez factuel et orientez la réponse sur le futur.",
+            idealResponse: "Motif factuel + ce que vous cherchez maintenant",
+            lastUsed: null,
+            tags: ["depart","piege"]
+          },
+          {
+            id: "trap_002",
+            category: "piege",
+            subcategory: "employeur",
+            difficulty: 2,
+            sector: "general",
+            level: "all",
+            question: "Que pensez-vous de votre ancien employeur ?",
+            answers: [
+              { text: "Expérience enrichissante avec des apprentissages", score: 15, feedback: "Très professionnel." },
+              { text: "C'était correct", score: 8, feedback: "Ne pas se montrer trop négatif." },
+              { text: "Il y avait des problèmes de management", score: 2, feedback: "Formulez avec diplomatie." },
+              { text: "Je préfère ne pas en parler", score: 3, feedback: "Répondez de façon constructive." }
+            ],
+            tips: "Formulez positivement et apprenez de l'expérience.",
+            idealResponse: "Points positifs + apprentissages",
+            lastUsed: null,
+            tags: ["ancien_employeur"]
+          },
+          {
+            id: "trap_003",
+            category: "piege",
+            subcategory: "duree",
+            difficulty: 2,
+            sector: "general",
+            level: "all",
+            question: "Pourquoi êtes-vous resté si longtemps/si peu dans votre dernier poste ?",
+            answers: [
+              { text: "Évolution des responsabilités et apprentissage continu", score: 15, feedback: "Bonne explication." },
+              { text: "J'étais bien là-bas", score: 8, feedback: "Correct si expliqué." },
+              { text: "J'avais besoin de changement", score: 6, feedback: "Valide." },
+              { text: "Les opportunités se présentent", score: 7, feedback: "Réponse acceptable." }
+            ],
+            tips: "Expliquez clairement les raisons et le lien avec votre trajectoire.",
+            idealResponse: "Raisons professionnelles et apprentissages",
+            lastUsed: null,
+            tags: ["duree"]
+          },
+          {
+            id: "trap_004",
+            category: "piege",
+            subcategory: "conflit",
+            difficulty: 3,
+            sector: "general",
+            level: "all",
+            question: "Avez-vous eu des conflits avec vos anciens collègues ?",
+            answers: [
+              { text: "Quelques divergences résolues par le dialogue", score: 12, feedback: "Bonne capacité de résolution." },
+              { text: "Non, jamais", score: 8, feedback: "Peut paraître peu crédible." },
+              { text: "Oui, certains étaient difficiles", score: 3, feedback: "Expliquez comment vous avez géré." },
+              { text: "Les conflits font partie du travail en équipe", score: 10, feedback: "Réponse nuancée possible." }
+            ],
+            tips: "Montrez la résolution et ce que vous avez appris.",
+            idealResponse: "Conflit + actions de résolution",
+            lastUsed: null,
+            tags: ["conflit"]
+          },
+          {
+            id: "trap_005",
+            category: "piege",
+            subcategory: "preference",
+            difficulty: 2,
+            sector: "general",
+            level: "all",
+            question: "Qu'est-ce qui vous déplaît le plus dans le travail ?",
+            answers: [
+              { text: "Les tâches répétitives sans valeur ajoutée", score: 12, feedback: "Analyse pertinente." },
+              { text: "Le manque de communication", score: 8, feedback: "Bon point à aborder." },
+              { text: "Les collègues difficiles", score: 4, feedback: "Restez professionnel." },
+              { text: "Rien en particulier", score: 6, feedback: "Peu informatif." }
+            ],
+            tips: "Formulez constructivement et proposez une amélioration.",
+            idealResponse: "Critique constructive + solution",
+            lastUsed: null,
+            tags: ["piege"]
+          },
+          {
+            id: "trap_006",
+            category: "piege",
+            subcategory: "competences",
+            difficulty: 3,
+            sector: "general",
+            level: "all",
+            question: "Quelles compétences vous manque-t-il pour ce poste ?",
+            answers: [
+              { text: "J'identifie une compétence et mon plan pour l'acquérir", score: 15, feedback: "Très bon — plan d'action." },
+              { text: "Je pense avoir tout ce qu'il faut", score: 6, feedback: "Risque de paraître sûr de soi." },
+              { text: "Quelques détails techniques", score: 8, feedback: "Honnête et améliorable." },
+              { text: "L'expérience sur certains outils", score: 10, feedback: "Bon si vous précisez lesquels et comment apprendre." }
+            ],
+            tips: "Soyez honnête et montrez votre plan de montée en compétences.",
+            idealResponse: "Compétence manquante + apprentissage prévu",
+            lastUsed: null,
+            tags: ["competences"]
+          },
+          {
+            id: "trap_007",
+            category: "piege",
+            subcategory: "echec",
+            difficulty: 3,
+            sector: "general",
+            level: "all",
+            question: "Comment gérez-vous l'échec ?",
+            answers: [
+              { text: "Analyse, apprentissage et rebond plus fort", score: 15, feedback: "Très bon réflexe." },
+              { text: "J'évite de refaire la même erreur", score: 8, feedback: "Valide." },
+              { text: "Ça arrive à tout le monde", score: 5, feedback: "Trop générique." },
+              { text: "Je n'échoue pas souvent", score: 3, feedback: "Peu crédible." }
+            ],
+            tips: "Donnez un exemple d'échec et ce que vous en avez tiré.",
+            idealResponse: "Erreur + correction + apprentissage",
+            lastUsed: null,
+            tags: ["echec"]
+          },
+          {
+            id: "trap_008",
+            category: "piege",
+            subcategory: "faiblesse",
+            difficulty: 3,
+            sector: "general",
+            level: "all",
+            question: "Quelle est votre plus grande faiblesse professionnelle ?",
+            answers: [
+              { text: "Défaut réel avec plan d'amélioration concret", score: 15, feedback: "Excellente réponse." },
+              { text: "Je suis perfectionniste", score: 5, feedback: "Classique, justifiez-le." },
+              { text: "Parfois trop direct", score: 8, feedback: "Honnête mais montrez gestion." },
+              { text: "Je n'en ai pas vraiment", score: 0, feedback: "Peu crédible." }
+            ],
+            tips: "Présentez le défaut et votre plan pour le corriger.",
+            idealResponse: "Faiblesse + mesures prises",
+            lastUsed: null,
+            tags: ["faiblesse"]
+          },
+          {
+            id: "trap_009",
+            category: "piege",
+            subcategory: "incertitude",
+            difficulty: 2,
+            sector: "general",
+            level: "all",
+            question: "Que faites-vous quand vous ne savez pas ?",
+            answers: [
+              { text: "Recherche, demande d'aide qualifiée, apprentissage", score: 15, feedback: "Très professionnel." },
+              { text: "Je demande à un collègue", score: 8, feedback: "Bon réflexe si suivi d'apprentissage." },
+              { text: "J'essaie de débrouiller", score: 5, feedback: "Pragmatique mais demande rigueur." },
+              { text: "J'avoue que je ne sais pas", score: 10, feedback: "Honnête mais montrez la suite." }
+            ],
+            tips: "Montrez la courbe d'apprentissage après la demande d'aide.",
+            idealResponse: "Recherche + application",
+            lastUsed: null,
+            tags: ["incertitude"]
+          },
+          {
+            id: "trap_010",
+            category: "piege",
+            subcategory: "concurrence",
+            difficulty: 2,
+            sector: "general",
+            level: "all",
+            question: "Êtes-vous en contact avec d'autres employeurs ?",
+            answers: [
+              { text: "J'explore mes options mais ce poste m'intéresse particulièrement", score: 15, feedback: "Sincère et rassurant." },
+              { text: "Non, vous êtes ma priorité", score: 8, feedback: "Bonne loyauté perçue." },
+              { text: "Oui, j'ai plusieurs pistes", score: 6, feedback: "Honnête si vous expliquez vos critères." },
+              { text: "Je préfère ne pas le dire", score: 3, feedback: "Évitez l'opacité." }
+            ],
+            tips: "Soyez transparent sans sembler distrait.",
+            idealResponse: "Exploration sélective + intérêt clairement exprimé",
+            lastUsed: null,
+            tags: ["piege","embauche"]
+          },
+          {
+            id: "trap_011",
+            category: "piege",
+            subcategory: "heures",
+            difficulty: 2,
+            sector: "general",
+            level: "all",
+            question: "Accepteriez-vous de faire des heures supplémentaires ?",
+            answers: [
+              { text: "Ponctuellement pour des projets importants", score: 15, feedback: "Très bon équilibre." },
+              { text: "Bien sûr, pas de problème", score: 8, feedback: "Attitude disponible." },
+              { text: "Ça dépend de la rémunération", score: 5, feedback: "Honnête mais moins flexible." },
+              { text: "J'ai des contraintes personnelles", score: 7, feedback: "Transparence utile." }
+            ],
+            tips: "Répondez en montrant disponibilité et limites.",
+            idealResponse: "Disponibilité ponctuelle + équilibre vie pro/perso",
+            lastUsed: null,
+            tags: ["horaires"]
+          },
+          {
+            id: "trap_012",
+            category: "piege",
+            subcategory: "routine",
+            difficulty: 2,
+            sector: "general",
+            level: "all",
+            question: "Comment gérez-vous la routine ?",
+            answers: [
+              { text: "J'optimise et cherche des améliorations", score: 15, feedback: "Très proactif." },
+              { text: "Je m'adapte", score: 8, feedback: "Bonne flexibilité." },
+              { text: "J'ai besoin de variété", score: 6, feedback: "Honest but explain how you cope." },
+              { text: "La routine ne me dérange pas", score: 7, feedback: "Valide si motivé." }
+            ],
+            tips: "Donnez un exemple d'amélioration que vous avez menée.",
+            idealResponse: "Proactivité face à la routine",
+            lastUsed: null,
+            tags: ["routine"]
+          },
+          {
+            id: "trap_013",
+            category: "piege",
+            subcategory: "ethique",
+            difficulty: 3,
+            sector: "general",
+            level: "all",
+            question: "Que feriez-vous si votre manager vous demande quelque chose d'illégal ?",
+            answers: [
+              { text: "Je refuse et propose des alternatives légales", score: 15, feedback: "Réponse éthique et responsable." },
+              { text: "Je refuse catégoriquement", score: 12, feedback: "Clair et sûr." },
+              { text: "J'essaie de négocier", score: 5, feedback: "Risque d'ambiguïté." },
+              { text: "Je ne pense pas que ça arrive", score: 3, feedback: "Pas de plan de réponse." }
+            ],
+            tips: "Montrez votre attachement aux règles et la démarche alternative.",
+            idealResponse: "Refus + alternatives + escalade si nécessaire",
+            lastUsed: null,
+            tags: ["ethique"]
+          },
+          {
+            id: "trap_014",
+            category: "piege",
+            subcategory: "dureeengagement",
+            difficulty: 2,
+            sector: "general",
+            level: "all",
+            question: "Combien de temps comptez-vous rester chez nous ?",
+            answers: [
+              { text: "Le temps d'apporter ma contribution et d'évoluer", score: 15, feedback: "Bonne réponse réaliste." },
+              { text: "Plusieurs années", score: 10, feedback: "Bonne stabilité perçue." },
+              { text: "Ça dépendra des opportunités", score: 6, feedback: "Honnête mais moins engageant." },
+              { text: "Toute ma carrière", score: 8, feedback: "Ambitieux mais peu réaliste parfois." }
+            ],
+            tips: "Montrer volonté d'investissement et d'évolution.",
+            idealResponse: "Engagement + perspectives d'évolution",
+            lastUsed: null,
+            tags: ["engagement"]
+          },
+          {
+            id: "trap_015",
+            category: "piege",
+            subcategory: "vieprivee",
+            difficulty: 2,
+            sector: "general",
+            level: "all",
+            question: "Parlez-moi de votre vie privée",
+            answers: [
+              { text: "Je maintiens l'équilibre vie pro/perso", score: 12, feedback: "Bonne réponse professionnelle." },
+              { text: "Ma passion pour [hobby lié au job]", score: 10, feedback: "Bien si pertinent." },
+              { text: "Description détaillée de ma vie", score: 3, feedback: "Trop personnel." },
+              { text: "Je préfère séparer", score: 8, feedback: "Acceptable et professionnel." }
+            ],
+            tips: "Restez synthétique et professionnel.",
+            idealResponse: "Equilibre + hobbies pertinents",
+            lastUsed: null,
+            tags: ["vieprivee"]
+          },
+          {
+            id: "trap_016",
+            category: "piege",
+            subcategory: "projetsfamille",
+            difficulty: 2,
+            sector: "general",
+            level: "all",
+            question: "Avez-vous des projets de famille ?",
+            answers: [
+              { text: "Je préfère me concentrer sur le poste", score: 10, feedback: "Professionnel." },
+              { text: "J'ai un bon équilibre vie pro/perso", score: 12, feedback: "Très équilibré." },
+              { text: "Oui, dans quelques années", score: 8, feedback: "Honnête." },
+              { text: "C'est personnel", score: 6, feedback: "Réponse acceptable." }
+            ],
+            tips: "Rassurez sur votre disponibilité pour le poste.",
+            idealResponse: "Transparence + gestion prévues",
+            lastUsed: null,
+            tags: ["famille"]
+          },
+          {
+            id: "trap_017",
+            category: "piege",
+            subcategory: "personnalite",
+            difficulty: 2,
+            sector: "general",
+            level: "all",
+            question: "Comment vos amis vous décrivent-ils ?",
+            answers: [
+              { text: "Qualités pertinentes pour le poste avec exemples", score: 15, feedback: "Très bon." },
+              { text: "Quelqu'un de bien", score: 5, feedback: "Peu démonstratif." },
+              { text: "Fiable et loyal", score: 8, feedback: "Valide." },
+              { text: "Il faut leur demander", score: 3, feedback: "Moins pertinent." }
+            ],
+            tips: "Donnez 2 adjectifs + exemple qui les illustre.",
+            idealResponse: "Traits + preuve",
+            lastUsed: null,
+            tags: ["personnalite"]
+          },
+          {
+            id: "trap_018",
+            category: "piege",
+            subcategory: "finances",
+            difficulty: 2,
+            sector: "general",
+            level: "all",
+            question: "Quelle est votre situation financière ?",
+            answers: [
+              { text: "Stable, ce qui me permet de me concentrer sur le travail", score: 10, feedback: "Rassurant." },
+              { text: "Correcte", score: 6, feedback: "Suffisant." },
+              { text: "C'est pour ça que je cherche du travail", score: 4, feedback: "Honnête mais possible fragilité perçue." },
+              { text: "C'est personnel", score: 8, feedback: "Réponse acceptable." }
+            ],
+            tips: "Restez simple et rassurant.",
+            idealResponse: "Stabilité ou plan de gestion",
+            lastUsed: null,
+            tags: ["finances"]
+          },
+          {
+            id: "trap_019",
+            category: "piege",
+            subcategory: "justice",
+            difficulty: 3,
+            sector: "general",
+            level: "all",
+            question: "Avez-vous déjà eu des problèmes avec la justice ?",
+            answers: [
+              { text: "Non, jamais", score: 15, feedback: "Idéal." },
+              { text: "Un problème mineur résolu", score: 8, feedback: "Expliquez le contexte et la résolution." },
+              { text: "Je préfère ne pas en parler", score: 2, feedback: "Peu clair." },
+              { text: "Ça n'a rien à voir avec le travail", score: 5, feedback: "Contextualisez si nécessaire." }
+            ],
+            tips: "Soyez transparent si pertinent et rassurez sur la résolution.",
+            idealResponse: "Honnêteté + résolution",
+            lastUsed: null,
+            tags: ["justice"]
+          },
+          {
+            id: "trap_020",
+            category: "piege",
+            subcategory: "vente",
+            difficulty: 3,
+            sector: "general",
+            level: "all",
+            question: "Vendez-moi ce stylo/cet objet",
+            answers: [
+              { text: "Identification du besoin + argumentation ciblée", score: 15, feedback: "Très bon pitch commercial." },
+              { text: "Description des caractéristiques", score: 6, feedback: "Techniquement juste mais pas orienté client." },
+              { text: "\"Il écrit bien\"", score: 3, feedback: "Trop faible." },
+              { text: "\"Vous en avez besoin\"", score: 4, feedback: "Trop direct et sans valeur ajoutée." }
+            ],
+            tips: "Commencez par poser une question au client.",
+            idealResponse: "Besoin → bénéfices → preuve sociale",
+            lastUsed: null,
+            tags: ["vente","piege"]
+          },
+          {
+            id: "trap_021",
+            category: "piege",
+            subcategory: "improbable",
+            difficulty: 2,
+            sector: "general",
+            level: "all",
+            question: "Si vous étiez un animal, lequel seriez-vous ?",
+            answers: [
+              { text: "Animal avec qualités pertinentes pour le poste", score: 12, feedback: "Bonne analogie si justifiée." },
+              { text: "Mon animal préféré", score: 5, feedback: "Personnalité mais peu professionnel." },
+              { text: "Question bizarre !", score: 2, feedback: "Répondre avec humour peut aider." },
+              { text: "Je ne sais pas", score: 3, feedback: "Peu préparé." }
+            ],
+            tips: "Choisissez une métaphore qui illustre vos forces.",
+            idealResponse: "Trait + exemple concret",
+            lastUsed: null,
+            tags: ["créativité"]
+          },
+          {
+            id: "trap_022",
+            category: "piege",
+            subcategory: "estimation",
+            difficulty: 3,
+            sector: "general",
+            level: "all",
+            question: "Combien y a-t-il de lampadaires à Paris ?",
+            answers: [
+              { text: "Méthode de résolution structurée", score: 15, feedback: "Montrez une estimation raisonnée." },
+              { text: "Un nombre au hasard", score: 3, feedback: "Pas d'effort d'analyse." },
+              { text: "Impossible à savoir", score: 5, feedback: "Expliquez comment approcher le problème." },
+              { text: "Il faut demander à la mairie", score: 7, feedback: "Raisonnable si vous proposez une méthode." }
+            ],
+            tips: "Expliquez hypothèses et calculs.",
+            idealResponse: "Estimation basée sur hypothèses claires",
+            lastUsed: null,
+            tags: ["estimation"]
+          },
+          {
+            id: "trap_023",
+            category: "piege",
+            subcategory: "feedback",
+            difficulty: 2,
+            sector: "general",
+            level: "all",
+            question: "Que pensez-vous de moi en tant qu'interviewer ?",
+            answers: [
+              { text: "Retour professionnel et constructif", score: 12, feedback: "Bonne approche réfléchie." },
+              { text: "Vous êtes très professionnel", score: 8, feedback: "Compliment utile." },
+              { text: "C'est difficile à dire", score: 5, feedback: "Réponse prudente." },
+              { text: "Question inhabituelle", score: 4, feedback: "Peu informatif." }
+            ],
+            tips: "Soyez constructif et poli.",
+            idealResponse: "Observation + suggestion si pertinente",
+            lastUsed: null,
+            tags: ["feedback"]
+          },
+          {
+            id: "trap_024",
+            category: "piege",
+            subcategory: "curiosite",
+            difficulty: 2,
+            sector: "general",
+            level: "all",
+            question: "Pourquoi les bouches d'égout sont-elles rondes ?",
+            answers: [
+              { text: "Réponse technique correcte (sécurité, praticité)", score: 15, feedback: "Très bon niveau technique." },
+              { text: "Pour des raisons pratiques", score: 8, feedback: "Acceptable." },
+              { text: "Je ne sais pas", score: 5, feedback: "Honnête mais développez." },
+              { text: "Question piège !", score: 3, feedback: "Peu informatif." }
+            ],
+            tips: "Donnez une explication physique ou historique succincte.",
+            idealResponse: "Sécurité + forme + raisons pratiques",
+            lastUsed: null,
+            tags: ["culturegenerale"]
+          },
+          {
+            id: "trap_025",
+            category: "piege",
+            subcategory: "creativite",
+            difficulty: 2,
+            sector: "general",
+            level: "all",
+            question: "Que pensez-vous de la question précédente ?",
+            answers: [
+              { text: "Réponse réfléchie et technique", score: 15, feedback: "Bonne capacité d'analyse." },
+              { text: "C'est une question amusante", score: 8, feedback: "Humour acceptable." },
+              { text: "Inutile", score: 3, feedback: "Évitez le dénigrement." },
+              { text: "Je n'y avais pas pensé", score: 5, feedback: "Réponse honnête." }
+            ],
+            tips: "Restez curieux et analysez rapidement.",
+            idealResponse: "Analyse succincte + intérêt intellectuel",
+            lastUsed: null,
+            tags: ["creativite"]
+          },
+
+          // ====== QUESTIONS COMPORTEMENTALES (25) ======
+          {
+            id: "behav_001",
+            category: "comportementale",
+            subcategory: "motivation",
+            difficulty: 3,
+            sector: "general",
+            level: "all",
+            question: "Décrivez une situation où vous avez dû motiver une équipe",
+            answers: [
+              { text: "Situation + actions concrètes + résultats (STAR)", score: 15, feedback: "Parfait — méthode attendue." },
+              { text: "J'ai organisé une activité de team building", score: 7, feedback: "Bien mais montrez l'impact." },
+              { text: "J'ai fait un discours motivant", score: 5, feedback: "Moins structuré." },
+              { text: "Je ne me suis jamais trouvé dans cette situation", score: 2, feedback: "Préparez un exemple même petit." }
+            ],
+            tips: "Utilisez STAR et mettez des chiffres si possible.",
+            idealResponse: "Situation + actions + résultats mesurables",
+            lastUsed: null,
+            tags: ["leadership"]
+          },
+          {
+            id: "behav_002",
+            category: "comportementale",
+            subcategory: "collaborateur",
+            difficulty: 3,
+            sector: "general",
+            level: "all",
+            question: "Comment gérez-vous un collaborateur difficile ?",
+            answers: [
+              { text: "Écoute, dialogue, recherche de solution commune", score: 15, feedback: "Très mature." },
+              { text: "Je le recadre fermement", score: 6, feedback: "Parfois nécessaire mais expliquez comment." },
+              { text: "J'évite le conflit", score: 3, feedback: "À éviter." },
+              { text: "Je remonte au management", score: 8, feedback: "Bien si escalade justifiée." }
+            ],
+            tips: "Montrez écoute et exemple de médiation.",
+            idealResponse: "Écoute + plan d'action",
+            lastUsed: null,
+            tags: ["management"]
+          },
+          {
+            id: "behav_003",
+            category: "comportementale",
+            subcategory: "decision",
+            difficulty: 3,
+            sector: "general",
+            level: "all",
+            question: "Racontez une fois où vous avez pris une décision impopulaire",
+            answers: [
+              { text: "Contexte + justification + gestion des résistances", score: 15, feedback: "Excellent récit." },
+              { text: "J'explique toujours mes décisions", score: 8, feedback: "Bonne communication." },
+              { text: "J'évite ce genre de situation", score: 3, feedback: "Moins expérience." },
+              { text: "Ça arrive parfois", score: 5, feedback: "Peu détaillé." }
+            ],
+            tips: "Expliquez impact et comment vous avez suivi la mise en oeuvre.",
+            idealResponse: "Décision + communication + résultat",
+            lastUsed: null,
+            tags: ["decision"]
+          },
+          {
+            id: "behav_004",
+            category: "comportementale",
+            subcategory: "delegation",
+            difficulty: 2,
+            sector: "general",
+            level: "all",
+            question: "Comment déléguer efficacement ?",
+            answers: [
+              { text: "Choix de la personne + brief clair + suivi", score: 15, feedback: "Très bonne pratique." },
+              { text: "Je donne des instructions précises", score: 8, feedback: "Correct." },
+              { text: "Je fais confiance", score: 6, feedback: "Bien si suivi présent." },
+              { text: "J'ai du mal à déléguer", score: 4, feedback: "Travaillez la confiance." }
+            ],
+            tips: "Donnez un exemple de délégation réussie.",
+            idealResponse: "Objectifs + feedback + résultat",
+            lastUsed: null,
+            tags: ["delegation"]
+          },
+          {
+            id: "behav_005",
+            category: "comportementale",
+            subcategory: "managementstyle",
+            difficulty: 2,
+            sector: "general",
+            level: "all",
+            question: "Décrivez votre style de management",
+            answers: [
+              { text: "Adaptatif selon les personnes et situations", score: 15, feedback: "Très pertinent." },
+              { text: "Participatif et à l'écoute", score: 10, feedback: "Très bon si illustré." },
+              { text: "Directif mais juste", score: 7, feedback: "Valide selon contexte." },
+              { text: "Je ne suis pas manager", score: 5, feedback: "Honnête." }
+            ],
+            tips: "Donnez exemples concrets de situations de management.",
+            idealResponse: "Flexibilité + résultats",
+            lastUsed: null,
+            tags: ["leadership"]
+          },
+          {
+            id: "behav_006",
+            category: "comportementale",
+            subcategory: "conflit",
+            difficulty: 2,
+            sector: "general",
+            level: "all",
+            question: "Racontez-moi une fois où vous avez dû gérer un conflit avec un collègue",
+            answers: [
+              { text: "Écoute, compréhension mutuelle, solution gagnant-gagnant", score: 15, feedback: "Très mature." },
+              { text: "Discussion calme et franche", score: 10, feedback: "Bonne méthode." },
+              { text: "J'évite les conflits", score: 3, feedback: "Moins efficace." },
+              { text: "J'impose ma vision si j'ai raison", score: 2, feedback: "Attitude risquée." }
+            ],
+            tips: "Expliquez le résultat et les apprentissages.",
+            idealResponse: "Ecoute + solution durable",
+            lastUsed: null,
+            tags: ["conflit"]
+          },
+          {
+            id: "behav_007",
+            category: "comportementale",
+            subcategory: "critique",
+            difficulty: 2,
+            sector: "general",
+            level: "all",
+            question: "Comment réagissez-vous face à une critique ?",
+            answers: [
+              { text: "J'écoute, j'analyse et j'ajuste si c'est constructif", score: 15, feedback: "Très bonne posture." },
+              { text: "Je prends note sans discuter", score: 8, feedback: "Valide mais montrez adaptation." },
+              { text: "Je me justifie", score: 4, feedback: "Moins constructif." },
+              { text: "Ça dépend qui critique", score: 6, feedback: "Soyez professionnel." }
+            ],
+            tips: "Donnez un exemple où une critique vous a fait progresser.",
+            idealResponse: "Écoute + actions correctives",
+            lastUsed: null,
+            tags: ["critique"]
+          },
+          {
+            id: "behav_008",
+            category: "comportementale",
+            subcategory: "erreur",
+            difficulty: 3,
+            sector: "general",
+            level: "all",
+            question: "Décrivez une situation où vous avez eu tort",
+            answers: [
+              { text: "Reconnaissance de l'erreur + actions correctives", score: 15, feedback: "Très bon niveau de responsabilité." },
+              { text: "J'ai admis mon erreur", score: 10, feedback: "Bien si expliqué." },
+              { text: "Ça arrive rarement", score: 3, feedback: "Peu d'exemples concrets." },
+              { text: "J'ai des difficultés à admettre mes torts", score: 5, feedback: "Travaillez l'humilité." }
+            ],
+            tips: "Montrez apprentissage et amélioration post-incident.",
+            idealResponse: "Erreur + remédiation + résultat",
+            lastUsed: null,
+            tags: ["erreur"]
+          },
+          {
+            id: "behav_009",
+            category: "comportementale",
+            subcategory: "tensions",
+            difficulty: 2,
+            sector: "general",
+            level: "all",
+            question: "Comment gérez-vous les tensions en équipe ?",
+            answers: [
+              { text: "Médiation, clarification des rôles, communication", score: 15, feedback: "Très bon." },
+              { text: "Je reste neutre", score: 7, feedback: "Approche prudente." },
+              { text: "Je prends parti pour la justice", score: 5, feedback: "Risque si partialité." },
+              { text: "Ce n'est pas mon rôle", score: 2, feedback: "Peu proactif." }
+            ],
+            tips: "Donnez un exemple de médiation réussie.",
+            idealResponse: "Médiation + résultats",
+            lastUsed: null,
+            tags: ["tensions"]
+          },
+          {
+            id: "behav_010",
+            category: "comportementale",
+            subcategory: "client",
+            difficulty: 2,
+            sector: "general",
+            level: "all",
+            question: "Réaction face à un client/collègue en colère ?",
+            answers: [
+              { text: "Écoute active, empathie, recherche de solution", score: 15, feedback: "Très professionnel." },
+              { text: "Je reste calme et professionnel", score: 10, feedback: "Bonne attitude." },
+              { text: "Je me défends", score: 4, feedback: "Évitez l'escalade." },
+              { text: "Je passe la main à mon manager", score: 6, feedback: "Parfois nécessaire si situation complexe." }
+            ],
+            tips: "Montrez contrôle émotionnel et résolution.",
+            idealResponse: "Écoute + solution concrète",
+            lastUsed: null,
+            tags: ["client","gestion"]
+          },
+          {
+            id: "behav_011",
+            category: "comportementale",
+            subcategory: "decision",
+            difficulty: 3,
+            sector: "general",
+            level: "all",
+            question: "Décrivez une décision difficile que vous avez dû prendre",
+            answers: [
+              { text: "Contexte + processus de décision + suivi des conséquences", score: 15, feedback: "Très complet." },
+              { text: "J'ai pesé le pour et le contre", score: 8, feedback: "Bonne démarche." },
+              { text: "J'ai suivi mon instinct", score: 5, feedback: "Peut être acceptable selon le contexte." },
+              { text: "Je demande toujours conseil", score: 6, feedback: "Valide si contrainte forte." }
+            ],
+            tips: "Montrez la prise de responsabilité et le suivi.",
+            idealResponse: "Processus + résultat",
+            lastUsed: null,
+            tags: ["decision"]
+          },
+          {
+            id: "behav_012",
+            category: "comportementale",
+            subcategory: "incertitude",
+            difficulty: 3,
+            sector: "general",
+            level: "all",
+            question: "Comment gérez-vous l'incertitude dans vos décisions ?",
+            answers: [
+              { text: "Collecte d'infos, analyse des risques, plan de contingence", score: 15, feedback: "Très professionnel." },
+              { text: "Je fais avec les éléments disponibles", score: 8, feedback: "Parfois nécessaire." },
+              { text: "J'attends d'avoir plus d'informations", score: 6, feedback: "Peut retarder l'action." },
+              { text: "Je demande à ma hiérarchie", score: 7, feedback: "Valide selon le contexte." }
+            ],
+            tips: "Donnez un exemple concret.",
+            idealResponse: "Analyse + plan B",
+            lastUsed: null,
+            tags: ["incertitude"]
+          },
+          {
+            id: "behav_013",
+            category: "comportementale",
+            subcategory: "erreurcollective",
+            difficulty: 3,
+            sector: "general",
+            level: "all",
+            question: "Racontez une erreur qui a eu des conséquences importantes",
+            answers: [
+              { text: "Erreur + gestion des conséquences + leçons apprises", score: 15, feedback: "Très bon niveau de responsabilité." },
+              { text: "J'ai réparé rapidement", score: 10, feedback: "Bien si action documentée." },
+              { text: "Ce n'était pas entièrement de ma faute", score: 3, feedback: "Expliquez votre rôle et votre apprentissage." },
+              { text: "Je n'ai jamais fait d'erreur grave", score: 2, feedback: "Peu crédible." }
+            ],
+            tips: "Expliquez le plan de remédiation et les résultats.",
+            idealResponse: "Erreur + remédiation + amélioration",
+            lastUsed: null,
+            tags: ["erreurcollective"]
+          },
+          {
+            id: "behav_014",
+            category: "comportementale",
+            subcategory: "responsabilite",
+            difficulty: 2,
+            sector: "general",
+            level: "all",
+            question: "Comment assumez-vous vos responsabilités ?",
+            answers: [
+              { text: "Engagement total, suivi régulier, communication proactive", score: 15, feedback: "Très professionnel." },
+              { text: "Je fais ce qu'on me demande", score: 7, feedback: "Correct mais minimaliste." },
+              { text: "Je rends compte régulièrement", score: 8, feedback: "Bonne pratique." },
+              { text: "On peut compter sur moi", score: 6, feedback: "Valide mais illustrez." }
+            ],
+            tips: "Donnez un exemple de responsabilité assumée.",
+            idealResponse: "Actions + preuve de suivi",
+            lastUsed: null,
+            tags: ["responsabilite"]
+          },
+          {
+            id: "behav_015",
+            category: "comportementale",
+            subcategory: "ethique",
+            difficulty: 3,
+            sector: "general",
+            level: "all",
+            question: "Face à un dilemme éthique au travail ?",
+            answers: [
+              { text: "Analyse éthique, consultation, décision alignée sur les valeurs", score: 15, feedback: "Très responsable." },
+              { text: "Je suis les règles de l'entreprise", score: 10, feedback: "Solide base." },
+              { text: "Je fais ce qui me semble juste", score: 8, feedback: "Variable selon la situation." },
+              { text: "Je demande conseil à mon manager", score: 7, feedback: "Approche prudente." }
+            ],
+            tips: "Expliquez le processus décisionnel et l'escalade.",
+            idealResponse: "Analyse + consultation + action conforme",
+            lastUsed: null,
+            tags: ["ethique"]
+          },
+          {
+            id: "behav_016",
+            category: "comportementale",
+            subcategory: "changement",
+            difficulty: 2,
+            sector: "general",
+            level: "all",
+            question: "Comment réagissez-vous face au changement ?",
+            answers: [
+              { text: "Curiosité, adaptation rapide, opportunités identifiées", score: 15, feedback: "Très positif." },
+              { text: "J'ai besoin de temps mais je m'adapte", score: 8, feedback: "Honnête et réaliste." },
+              { text: "Ça dépend du changement", score: 6, feedback: "Variable." },
+              { text: "J'ai tendance à résister au début", score: 4, feedback: "Améliorez flexibilité." }
+            ],
+            tips: "Donnez un exemple d'adaptation réussie.",
+            idealResponse: "Adaptation + bénéfices retirés",
+            lastUsed: null,
+            tags: ["changement"]
+          },
+          {
+            id: "behav_017",
+            category: "comportementale",
+            subcategory: "adaptation",
+            difficulty: 3,
+            sector: "general",
+            level: "all",
+            question: "Décrivez une situation où vous avez dû vous adapter rapidement",
+            answers: [
+              { text: "Situation + stratégie d'adaptation + résultats", score: 15, feedback: "Très bon." },
+              { text: "J'ai fait de mon mieux", score: 6, feedback: "Partiel." },
+              { text: "C'était compliqué mais j'y suis arrivé", score: 8, feedback: "Valide si exemples." },
+              { text: "J'ai demandé de l'aide", score: 7, feedback: "Acceptable." }
+            ],
+            tips: "Utilisez STAR et montrez l'impact.",
+            idealResponse: "Adaptation + résultat",
+            lastUsed: null,
+            tags: ["adaptation"]
+          },
+          {
+            id: "behav_018",
+            category: "comportementale",
+            subcategory: "resistance",
+            difficulty: 2,
+            sector: "general",
+            level: "all",
+            question: "Comment gérez-vous la résistance au changement chez vos collègues ?",
+            answers: [
+              { text: "Écoute des craintes, accompagnement, valorisation des bénéfices", score: 15, feedback: "Très bon." },
+              { text: "J'explique les avantages", score: 8, feedback: "Correct." },
+              { text: "Le changement finit toujours par se faire", score: 5, feedback: "Trop fataliste." },
+              { text: "Ce n'est pas mon problème", score: 2, feedback: "Attitude à éviter." }
+            ],
+            tips: "Montrez exemples et actions d'accompagnement.",
+            idealResponse: "Dialogue + plan d'accompagnement",
+            lastUsed: null,
+            tags: ["change"]
+          },
+          {
+            id: "behav_019",
+            category: "comportementale",
+            subcategory: "echeccollectif",
+            difficulty: 3,
+            sector: "general",
+            level: "all",
+            question: "Réaction face à un échec collectif ?",
+            answers: [
+              { text: "Analyse des causes, responsabilité partagée, plan d'amélioration", score: 15, feedback: "Très professionnel." },
+              { text: "On en tire les leçons", score: 8, feedback: "Valide si action concrète." },
+              { text: "Ce sont les risques du métier", score: 5, feedback: "Minimise le problème." },
+              { text: "Il faut identifier les responsables", score: 3, feedback: "Approche punitive à éviter." }
+            ],
+            tips: "Montrez plan d'amélioration post-mortem.",
+            idealResponse: "Analyse + plan concret",
+            lastUsed: null,
+            tags: ["echeccollectif"]
+          },
+          {
+            id: "behav_020",
+            category: "comportementale",
+            subcategory: "inconnu",
+            difficulty: 2,
+            sector: "general",
+            level: "all",
+            question: "Comment vous comportez-vous dans un environnement inconnu ?",
+            answers: [
+              { text: "Observation, questions, intégration progressive", score: 15, feedback: "Très bonne approche." },
+              { text: "Je m'adapte rapidement", score: 8, feedback: "Valide." },
+              { text: "J'attends qu'on me guide", score: 5, feedback: "Peut ralentir la prise d'initiative." },
+              { text: "C'est stressant mais stimulant", score: 6, feedback: "Honnête." }
+            ],
+            tips: "Montrez curiosité et plan d'intégration.",
+            idealResponse: "Observation + actions d'intégration",
+            lastUsed: null,
+            tags: ["adaptation"]
+          },
+          {
+            id: "behav_021",
+            category: "comportementale",
+            subcategory: "influence",
+            difficulty: 3,
+            sector: "general",
+            level: "all",
+            question: "Comment convaincre quelqu'un qui n'est pas d'accord avec vous ?",
+            answers: [
+              { text: "Écoute, reformulation, recherche de terrain d'entente", score: 15, feedback: "Excellente méthode." },
+              { text: "Je présente mes arguments factuels", score: 10, feedback: "Valide si factuel." },
+              { text: "J'insiste jusqu'à ce qu'il comprenne", score: 4, feedback: "Risque d'opposition." },
+              { text: "Si c'est rationnel, il finira par accepter", score: 6, feedback: "Trop naïf parfois." }
+            ],
+            tips: "Donnez un exemple où vous avez réussi à convaincre.",
+            idealResponse: "Écoute + preuve + compromis",
+            lastUsed: null,
+            tags: ["influence"]
+          },
+          {
+            id: "behav_022",
+            category: "comportementale",
+            subcategory: "presentation",
+            difficulty: 2,
+            sector: "general",
+            level: "all",
+            question: "Décrivez une présentation importante que vous avez faite",
+            answers: [
+              { text: "Préparation minutieuse + adaptation au public + gestion du stress", score: 15, feedback: "Très bon." },
+              { text: "J'avais bien préparé mon contenu", score: 8, feedback: "Valide." },
+              { text: "Je ne stresse pas pour les présentations", score: 6, feedback: "Bonne aisance." },
+              { text: "Je ne fais pas souvent de présentation", score: 3, feedback: "Moins d'expérience." }
+            ],
+            tips: "Mentionnez les résultats (décisions prises, feedbacks).",
+            idealResponse: "Préparation + adaptation + résultat",
+            lastUsed: null,
+            tags: ["presentation"]
+          },
+          {
+            id: "behav_023",
+            category: "comportementale",
+            subcategory: "feedbackdifficile",
+            difficulty: 3,
+            sector: "general",
+            level: "all",
+            question: "Comment donnez-vous du feedback difficile à un collègue ?",
+            answers: [
+              { text: "Cadre bienveillant, faits objectifs, suggestions d'amélioration", score: 15, feedback: "Excellente méthode." },
+              { text: "Je suis direct mais respectueux", score: 10, feedback: "Correct si bien fait." },
+              { text: "J'évite si ce n'est pas urgent", score: 4, feedback: "Moins proactif." },
+              { text: "Je passe par le manager", score: 6, feedback: "Parfois nécessaire." }
+            ],
+            tips: "Donnez exemple et résultat positif post-feedback.",
+            idealResponse: "Cadre + faits + plan d'amélioration",
+            lastUsed: null,
+            tags: ["feedback"]
+          },
+          {
+            id: "behav_024",
+            category: "comportementale",
+            subcategory: "crise",
+            difficulty: 3,
+            sector: "general",
+            level: "all",
+            question: "Gérez-vous la communication dans un projet en crise ?",
+            answers: [
+              { text: "Communication fréquente, transparente et rassurante", score: 15, feedback: "Très bon." },
+              { text: "Je communique les faits", score: 8, feedback: "Valide mais insuffisant parfois." },
+              { text: "Je rassure en minimisant", score: 5, feedback: "Peut être risqué." },
+              { text: "Je laisse le chef de projet s'en occuper", score: 4, feedback: "Pas proactif." }
+            ],
+            tips: "Expliquez cadence et canal de communication.",
+            idealResponse: "Plan de communication + actions concrètes",
+            lastUsed: null,
+            tags: ["crise","communication"]
+          },
+          {
+            id: "behav_025",
+            category: "comportementale",
+            subcategory: "reseau",
+            difficulty: 2,
+            sector: "general",
+            level: "all",
+            question: "Comment développez-vous votre réseau professionnel ?",
+            answers: [
+              { text: "Événements, échanges de valeur, suivi régulier", score: 15, feedback: "Très professionnel." },
+              { text: "Rencontres lors d'événements", score: 8, feedback: "Bien." },
+              { text: "Réseaux sociaux professionnels", score: 6, feedback: "Complément utile." },
+              { text: "Je ne développe pas activement", score: 3, feedback: "Travaillez le networking." }
+            ],
+            tips: "Donnez exemples d'actions concrètes (événements, suivi).",
+            idealResponse: "Actions régulières + relations entretenues",
+            lastUsed: null,
+            tags: ["reseau"]
+          }
+        ];
+
+        /***** Achievements, avatars, themes (extraits) *****/
+        const achievements = [
+          { id: 'first_game', name: 'Premier Essai', description: 'Terminer votre premier entretien', icon: '🎯', category: 'milestone', unlocked: false },
+          { id: 'perfect_score', name: 'Sans Faute', description: 'Répondre parfaitement à 5 questions d\'affilée', icon: '⭐', category: 'performance', unlocked: false },
+          { id: 'speed_demon', name: 'Éclair', description: 'Répondre en moins de 10 secondes', icon: '⚡', category: 'speed', unlocked: false },
+          { id: 'persistent', name: 'Persévérant', description: 'Jouer 10 parties', icon: '🏆', category: 'milestone', unlocked: false },
+          // Nouveaux achievements demandés (extension)
+          { id: 'perfectionist', name: 'Perfectionniste', description: 'Score parfait 5 fois de suite', icon: '💯', category: 'performance', unlocked: false },
+          { id: 'category_master_classic', name: 'Expert Classique', description: 'Maîtriser toutes les questions classiques', icon: '🎓', category: 'performance', unlocked: false },
+          { id: 'speed_demon_pro', name: 'Éclair Pro', description: '50 réponses en moins de 5 sec', icon: '⚡', category: 'performance', unlocked: false },
+          { id: 'comeback_king', name: 'Roi du Retour', description: 'Remonter de 20% à 90% en une partie', icon: '👑', category: 'progress', unlocked: false },
+          { id: 'daily_player', name: 'Joueur Quotidien', description: 'Jouer 7 jours consécutifs', icon: '📅', category: 'social', unlocked: false },
+          { id: 'night_owl', name: 'Oiseau de Nuit', description: 'Jouer après minuit', icon: '🦉', category: 'social', unlocked: false },
+          { id: 'level_10', name: 'Vétéran', description: 'Atteindre le niveau 10', icon: '⭐', category: 'progress', unlocked: false },
+          { id: 'social_butterfly', name: 'Social', description: 'Partager vos résultats 5 fois', icon: '🗣️', category: 'social', unlocked: false },
+          { id: 'review_master', name: 'Maître Révision', description: 'Améliorer une question ratée 3 fois', icon: '🔁', category: 'progress', unlocked: false },
+          { id: 'sector_expert', name: 'Expert Sectoriel', description: 'Maîtriser un secteur complet', icon: '🏅', category: 'performance', unlocked: false },
+          { id: 'consistency', name: 'Régulier', description: 'Jouer 3 parties par semaine pendant un mois', icon: '📈', category: 'milestone', unlocked: false },
+          { id: 'helpful', name: 'Conseiller', description: 'Donner 10 feedbacks utiles', icon: '💬', category: 'social', unlocked: false },
+          { id: 'late_night_master', name: 'Noctambule', description: '3 parties après minuit', icon: '🕛', category: 'social', unlocked: false }
+        ];
+
+        const avatars = [
+          { id: 'professional_f', emoji: '👩‍💼', name: 'Professionnelle' },
+          { id: 'professional_m', emoji: '👨‍💼', name: 'Professionnel' },
+          { id: 'tech_f', emoji: '👩‍💻', name: 'Développeuse' },
+          { id: 'tech_m', emoji: '👨‍💻', name: 'Développeur' },
+          { id: 'creative_f', emoji: '👩‍🎨', name: 'Créative' },
+          { id: 'creative_m', emoji: '👨‍🎨', name: 'Créatif' }
+        ];
+
+        const themes = [
+          { id: 'professional', name: 'Professionnel', colors: 'from-green-900 via-green-800 to-orange-900', accent: 'orange' },
+          { id: 'modern', name: 'Moderne', colors: 'from-green-900 via-green-800 to-orange-900', accent: 'green' }
+        ];
+
+        /***** Composant de feedback modal (auto-close) *****/
+        const FeedbackModal = ({ isOpen, onClose, feedbackData, question, selectedAnswer, timeOut }) => {
+          const [autoCloseTime, setAutoCloseTime] = React.useState(5);
+
+          React.useEffect(() => {
+            if (!isOpen) return;
+            
+            const timer = setInterval(() => {
+              setAutoCloseTime(prev => {
+                if (prev <= 1) {
+                  onClose();
+                  return 5;
+                }
+                return prev - 1;
+              });
+            }, 1000);
+
+            return () => clearInterval(timer);
+          }, [isOpen, onClose]);
+
+          React.useEffect(() => {
+            if (isOpen) setAutoCloseTime(5);
+          }, [isOpen]);
+
+          if (!isOpen || !feedbackData) return null;
+
+          const getIconType = () => {
+            if (timeOut) return 'error';
+            if (feedbackData.score >= 12) return 'success';
+            if (feedbackData.score >= 5) return 'warning';
+            return 'error';
+          };
+
+          const getIcon = () => {
+            if (timeOut) return '⏰';
+            if (feedbackData.score >= 12) return '✅';
+            if (feedbackData.score >= 5) return '⚠️';
+            return '❌';
+          };
+
+          return (
+            <div className="feedback-modal" onClick={onClose}>
+              <div className="feedback-modal-content" onClick={e => e.stopPropagation()}>
+                <button className="feedback-modal-close" onClick={onClose}>
+                  ✕
+                </button>
+                
+                <div className={`feedback-icon ${getIconType()}`}>
+                  {getIcon()}
+                </div>
+                
+                <div className="text-center">
+                  {timeOut ? (
+                    <div>
+                      <h3 className="text-2xl font-bold text-red-400 mb-4">Temps écoulé !</h3>
+                      <p className="text-lg mb-4 text-gray-300">Il faut répondre plus rapidement !</p>
+                    </div>
+                  ) : (
+                    <div>
+                      <h3 className={`text-2xl font-bold mb-4 ${
+                        feedbackData.score >= 12 ? 'text-green-400' : 
+                        feedbackData.score >= 5 ? 'text-yellow-400' : 'text-red-400'
+                      }`}>
+                        {feedbackData.score >= 12 ? 'Excellente réponse !' : 
+                         feedbackData.score >= 5 ? 'Réponse correcte' : 'Réponse à améliorer'}
+                      </h3>
+                      <div className="text-4xl font-bold mb-2 text-orange-400">
+                        +{feedbackData.totalPoints} points
+                      </div>
+                      <p className="text-lg mb-6 text-gray-300">{feedbackData.feedback}</p>
+                    </div>
+                  )}
+                  
+                  <div className="text-left">
+                    {question.tips && (
+                      <div className="bg-blue-500/20 rounded-lg p-4 mb-4">
+                        <h4 className="font-bold text-blue-300 mb-2">💡 Conseil</h4>
+                        <p className="text-sm text-gray-300">{question.tips}</p>
+                      </div>
+                    )}
+                    
+                    {question.idealResponse && (
+                      <div className="bg-purple-500/20 rounded-lg p-4 mb-4">
+                        <h4 className="font-bold text-purple-300 mb-2">✨ Réponse idéale</h4>
+                        <p className="text-sm text-gray-300">{question.idealResponse}</p>
+                      </div>
+                    )}
+                  </div>
+                  
+                  <div className="flex flex-col sm:flex-row gap-3 mt-6">
+                    <button 
+                      onClick={onClose}
+                      className="flex-1 bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700 px-6 py-3 rounded-xl font-bold transition-all hover:scale-105"
+                    >
+                      Continuer ({autoCloseTime}s)
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          );
+        };
+
+        /***** Composant InterviewMaster (adapté) *****/
+        const InterviewMaster = () => {
+          const [gameState, setGameState] = React.useState('menu');
+          const [gameMode, setGameMode] = React.useState(null);
+          const [currentQuestion, setCurrentQuestion] = React.useState(0);
+          const [questions, setQuestions] = React.useState([]);
+          const [score, setScore] = React.useState(0);
+          const [streak, setStreak] = React.useState(0);
+          const [timeLeft, setTimeLeft] = React.useState(30);
+          const [selectedAnswer, setSelectedAnswer] = React.useState(null);
+          const [showFeedback, setShowFeedback] = React.useState(false);
+          const [showFeedbackModal, setShowFeedbackModal] = React.useState(false);
+          const [feedbackData, setFeedbackData] = React.useState(null);
+
+          const [playerLevel, setPlayerLevel] = React.useState(1);
+          const [totalXP, setTotalXP] = React.useState(0);
+          const [playerAchievements, setPlayerAchievements] = React.useState(achievements);
+          const [playerAvatar, setPlayerAvatar] = React.useState(avatars[0]);
+          const [gamesPlayed, setGamesPlayed] = React.useState(0);
+          const [bestScore, setBestScore] = React.useState(0);
+          const [bestStreak, setBestStreak] = React.useState(0);
+
+          // Skills and review systems
+          const [skills, setSkills] = React.useState({ communication:0, technique:0, leadership:0, adaptabilite:0 });
+          const [playerStats, setPlayerStats] = React.useState({ questionsAnswered:0, averageScore:0, strongestCategory:null, weakestCategory:null, improvementRate:0, sessionHistory: [] });
+          const [reviewQuestions, setReviewQuestions] = React.useState([]);
+
+          const [showSettings, setShowSettings] = React.useState(false);
+          const [selectedCategory, setSelectedCategory] = React.useState('all');
+          const [currentTheme, setCurrentTheme] = React.useState(themes[0]);
+          const [soundEnabled, setSoundEnabled] = React.useState(true);
+          const [questionHistory, setQuestionHistory] = React.useState([]);
+          const [wrongAnswers, setWrongAnswers] = React.useState([]);
+          const [toasts, setToasts] = React.useState([]);
+          const [showResetModal, setShowResetModal] = React.useState(false);
+          const [lastPlayDate, setLastPlayDate] = React.useState(null);
+          const [consecutiveDays, setConsecutiveDays] = React.useState(0);
+          const [dailyStreak, setDailyStreak] = React.useState(0);
+          const [perfectScoreStreak, setPerfectScoreStreak] = React.useState(0);
+          const [fastResponseCount, setFastResponseCount] = React.useState(0);
+          const [categoriesCompleted, setCategoriesCompleted] = React.useState({});
+          const [shareCount, setShareCount] = React.useState(0);
+
+          // --- LocalStorage persistence keys and helpers ---
+          const STORAGE_KEYS = {
+            achievements: 'im_interview_achievements_v1',
+            stats: 'im_interview_playerstats_v1',
+            review: 'im_interview_reviewquestions_v1',
+            tracking: 'im_interview_tracking_v1'  // AJOUT : clé de tracking des questions
+          };
+
+          // Helpers pour tracking des questions (load / save)
+          const loadQuestionTracking = () => {
+            try {
+              if (typeof localStorage === 'undefined') return {};
+              const raw = localStorage.getItem(STORAGE_KEYS.tracking);
+              return raw ? JSON.parse(raw) : {};
+            } catch (e) {
+              console.warn('Failed to load question tracking:', e);
+              return {};
+            }
+          };
+
+          const saveQuestionTracking = (trackingData) => {
+            try {
+              if (typeof localStorage === 'undefined') return;
+              localStorage.setItem(STORAGE_KEYS.tracking, JSON.stringify(trackingData));
+            } catch (e) {
+              console.warn('Failed to save question tracking:', e);
+            }
+          };
+
+          // State pour le tracking des questions (map id -> { lastUsed, timesAsked })
+          const [questionTracking, setQuestionTracking] = React.useState({});
+
+          // Load persisted state on first mount
+          React.useEffect(() => {
+            try {
+              if (typeof localStorage === 'undefined') return;
+              const rawAch = localStorage.getItem(STORAGE_KEYS.achievements);
+              if (rawAch) {
+                const parsed = JSON.parse(rawAch);
+                if (Array.isArray(parsed)) setPlayerAchievements(parsed);
+              }
+
+              const rawStats = localStorage.getItem(STORAGE_KEYS.stats);
+              if (rawStats) {
+                const parsed = JSON.parse(rawStats);
+                if (parsed && typeof parsed === 'object') {
+                  if (parsed.questionsAnswered !== undefined) setPlayerStats(prev => ({ ...prev, ...parsed }));
+                  if (parsed.totalXP !== undefined) setTotalXP(parsed.totalXP);
+                  if (parsed.playerLevel !== undefined) setPlayerLevel(parsed.playerLevel);
+                  if (parsed.gamesPlayed !== undefined) setGamesPlayed(parsed.gamesPlayed);
+                  if (parsed.bestScore !== undefined) setBestScore(parsed.bestScore);
+                  if (parsed.bestStreak !== undefined) setBestStreak(parsed.bestStreak);
+                  if (parsed.skills !== undefined) setSkills(prev => ({ ...prev, ...parsed.skills }));
+                  if (parsed.lastPlayDate !== undefined) setLastPlayDate(parsed.lastPlayDate);
+                  if (parsed.consecutiveDays !== undefined) setConsecutiveDays(parsed.consecutiveDays);
+                  if (parsed.dailyStreak !== undefined) setDailyStreak(parsed.dailyStreak);
+                  if (parsed.perfectScoreStreak !== undefined) setPerfectScoreStreak(parsed.perfectScoreStreak);
+                  if (parsed.fastResponseCount !== undefined) setFastResponseCount(parsed.fastResponseCount);
+                  if (parsed.shareCount !== undefined) setShareCount(parsed.shareCount);
+                }
+              }
+
+              const rawReview = localStorage.getItem(STORAGE_KEYS.review);
+              if (rawReview) {
+                const parsed = JSON.parse(rawReview);
+                if (Array.isArray(parsed)) setReviewQuestions(parsed);
+              }
+
+              // Load question tracking map
+              try {
+                const tracking = loadQuestionTracking();
+                if (tracking && typeof tracking === 'object') setQuestionTracking(tracking);
+              } catch (e) { /* ignore */ }
+            } catch (e) {
+              // ignore localStorage errors
+              console.warn('LocalStorage load failed', e);
+            }
+          }, []);
+
+          // Toast helper
+          const pushToast = (text, opts = {}) => {
+            const id = Math.random().toString(36).slice(2,9);
+            const toast = { id, text, created: Date.now(), ...opts };
+            setToasts(prev => [...prev, toast]);
+            const ttl = opts.ttl || 4000;
+            setTimeout(() => setToasts(prev => prev.filter(t => t.id !== id)), ttl);
+          };
+
+          // Daily tracking helper
+          const updateDailyTracking = () => {
+            const today = new Date().toDateString();
+            const yesterday = new Date(Date.now() - 86400000).toDateString();
+            
+            if (lastPlayDate === today) return; // Déjà joué aujourd'hui
+            
+            if (lastPlayDate === yesterday) {
+              setConsecutiveDays(prev => prev + 1);
+              setDailyStreak(prev => prev + 1);
+            } else {
+              setConsecutiveDays(1);
+              setDailyStreak(1);
+            }
+            
+            setLastPlayDate(today);
+          };
+
+          // Achievement unlock helper
+          const unlockAchievement = (id) => {
+            setPlayerAchievements(prev => {
+              const ix = prev.findIndex(a => a.id === id);
+              if (ix === -1) return prev;
+              if (prev[ix].unlocked) return prev;
+              const updated = [...prev];
+              updated[ix] = { ...updated[ix], unlocked: true };
+              // push a toast
+              pushToast(`Achievement déverrouillé: ${updated[ix].name}`);
+              return updated;
+            });
+          };
+
+          // Persist achievements when they change
+          React.useEffect(() => {
+            try {
+              if (typeof localStorage === 'undefined') return;
+              localStorage.setItem(STORAGE_KEYS.achievements, JSON.stringify(playerAchievements));
+            } catch (e) {
+              console.warn('Save achievements failed', e);
+            }
+          }, [playerAchievements]);
+
+          // Persist combined stats and progress
+          React.useEffect(() => {
+            try {
+              if (typeof localStorage === 'undefined') return;
+              const payload = {
+                questionsAnswered: playerStats.questionsAnswered,
+                averageScore: playerStats.averageScore,
+                sessionHistory: playerStats.sessionHistory,
+                totalXP,
+                playerLevel,
+                gamesPlayed,
+                bestScore,
+                bestStreak,
+                skills,
+                lastPlayDate,
+                consecutiveDays,
+                dailyStreak,
+                perfectScoreStreak,
+                fastResponseCount,
+                shareCount
+              };
+              localStorage.setItem(STORAGE_KEYS.stats, JSON.stringify(payload));
+            } catch (e) {
+              console.warn('Save stats failed', e);
+            }
+          }, [playerStats, totalXP, playerLevel, gamesPlayed, bestScore, bestStreak, skills, lastPlayDate, consecutiveDays, dailyStreak, perfectScoreStreak, fastResponseCount, shareCount]);
+
+          // Persist reviewQuestions
+          React.useEffect(() => {
+            try {
+              if (typeof localStorage === 'undefined') return;
+              localStorage.setItem(STORAGE_KEYS.review, JSON.stringify(reviewQuestions));
+            } catch (e) {
+              console.warn('Save review failed', e);
+            }
+          }, [reviewQuestions]);
+
+          // Auto-save question tracking
+          React.useEffect(() => {
+            try {
+              if (typeof localStorage === 'undefined') return;
+              if (Object.keys(questionTracking).length > 0) {
+                saveQuestionTracking(questionTracking);
+              }
+            } catch (e) {
+              console.warn('Save question tracking failed', e);
+            }
+          }, [questionTracking]);
+
+          React.useEffect(() => {
+            let timer;
+            // Fix: ensure timeout handler called only when playing and timeLeft reaches 0
+            if (gameState === 'playing' && !showFeedback) {
+              if (timeLeft > 0) {
+                timer = setTimeout(() => setTimeLeft(timeLeft - 1), 1000);
+              } else if (timeLeft === 0) {
+                handleTimeOut();
+              }
+            }
+            return () => clearTimeout(timer);
+          }, [timeLeft, gameState, showFeedback, gameMode]);
+
+          const shuffleArray = (array) => {
+            const shuffled = [...array];
+            for (let i = shuffled.length - 1; i > 0; i--) {
+              const j = Math.floor(Math.random() * (i + 1));
+              [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+            }
+            return shuffled;
+          };
+
+          // Filtre intelligent avec priorité + cooldown (par défaut 48h)
+          const filterQuestions = (pool, cooldownHours = 48) => {
+            const now = Date.now();
+            const cooldownMs = cooldownHours * 60 * 60 * 1000; // heures -> ms
+            
+            const scored = pool.map(q => {
+              const tracking = questionTracking[q.id] || { lastUsed: null, timesAsked: 0 };
+              const timeSinceLastUse = tracking.lastUsed ? now - tracking.lastUsed : Infinity;
+              const timesAsked = tracking.timesAsked || 0;
+
+              let priority = timesAsked * 100;
+              if (timeSinceLastUse < cooldownMs) priority += 1000;
+              if (timesAsked === 0) priority -= 50;
+
+              return { q, priority };
+            });
+
+            scored.sort((a, b) => a.priority - b.priority);
+            return scored.map(s => ({ ...s.q }));
+          };
+
+          const startGame = (mode) => {
+            updateDailyTracking();
+            setGameMode(mode);
+            setGameState('playing');
+            setCurrentQuestion(0);
+            setScore(0);
+            setStreak(0);
+            setTimeLeft(mode === 'timed' ? 15 : 30);
+
+            let pool = [...questionDatabase];
+            if (selectedCategory !== 'all') pool = pool.filter(q => q.category === selectedCategory);
+
+            // Apply smart filter with 48h cooldown
+            const prioritized = filterQuestions(pool, 48);
+
+            // Expert mode: only difficulty 3
+            let finalPool = prioritized;
+            if (mode === 'expert') {
+              finalPool = finalPool.filter(q => q.difficulty === 3);
+              setTimeLeft(12);
+            }
+
+            const questionCount = (mode === 'survival' || mode === 'timed') ? 10 : 5;
+            const finalQuestions = finalPool.slice(0, questionCount);
+
+            // Update tracking immutably for chosen questions
+            const now = Date.now();
+            const newTracking = { ...questionTracking };
+            finalQuestions.forEach(q => {
+              const prev = newTracking[q.id] || { lastUsed: null, timesAsked: 0 };
+              newTracking[q.id] = { lastUsed: now, timesAsked: (prev.timesAsked || 0) + 1 };
+            });
+            setQuestionTracking(newTracking);
+
+            setQuestions(finalQuestions);
+          };
+
+          // Start review mode using reviewQuestions queue
+          const startReview = () => {
+            if (!reviewQuestions || reviewQuestions.length === 0) {
+              alert("Pas de questions à réviser. Jouez d'abord quelques parties !");
+              return;
+            }
+            setGameMode('review');
+            setGameState('playing');
+            setCurrentQuestion(0);
+            setScore(0);
+            setStreak(0);
+            setTimeLeft(45);
+            setQuestions(shuffleArray(reviewQuestions).slice(0, 5));
+          };
+
+          const handleTimeOut = () => {
+            setSelectedAnswer(null);
+            setShowFeedback(true);
+            setStreak(0);
+            
+            // Ouvrir le modal pour timeout
+            setFeedbackData({ score: 0, totalPoints: 0, feedback: 'Temps écoulé !' });
+            setShowFeedbackModal(true);
+          };
+
+          const selectAnswer = (answerIndex) => {
+            if (selectedAnswer !== null || showFeedback) return;
+            setSelectedAnswer(answerIndex);
+            setShowFeedback(true);
+
+            const answer = questions[currentQuestion].answers[answerIndex];
+            const points = answer.score;
+            const timeBonus = gameMode === 'timed' ? Math.floor(timeLeft / 3) : Math.floor(timeLeft / 6);
+            const totalPoints = points + timeBonus;
+
+            setScore(prev => prev + totalPoints);
+
+            // Préparer les données pour le modal
+            setFeedbackData({
+              score: points,
+              totalPoints,
+              feedback: answer.feedback
+            });
+            
+            // Ouvrir le modal au lieu d'afficher le feedback inline
+            setShowFeedbackModal(true);
+
+            // Mise à jour des stats (reste identique)
+            setPlayerStats(prev => {
+              const newQuestions = prev.questionsAnswered + 1;
+              const newAverage = ((prev.averageScore * prev.questionsAnswered) + totalPoints) / newQuestions;
+              const newHistory = [...prev.sessionHistory, { 
+                questionId: questions[currentQuestion].id, 
+                score: totalPoints, 
+                correct: points >= 12 
+              }].slice(-200);
+              return { 
+                ...prev, 
+                questionsAnswered: newQuestions, 
+                averageScore: newAverage, 
+                sessionHistory: newHistory 
+              };
+            });
+
+            if (points >= 12) {
+              setStreak(prev => prev + 1);
+              addXP(totalPoints);
+              const skillMap = {
+                'technique': 'technique',
+                'comportementale': 'leadership',
+                'classique': 'communication',
+                'piege': 'adaptabilite'
+              };
+              const skillKey = skillMap[questions[currentQuestion].category] || 'communication';
+              setSkills(prev => ({ ...prev, [skillKey]: (prev[skillKey] || 0) + 1 }));
+            } else {
+              setStreak(0);
+              setWrongAnswers(prev => [...prev, questions[currentQuestion]]);
+              setReviewQuestions(prev => {
+                const exists = prev.find(q => q.id === questions[currentQuestion].id);
+                if (exists) return prev;
+                return [...prev, { ...questions[currentQuestion], lastIncorrect: Date.now(), attempts: 1 }];
+              });
+            }
+
+            checkAchievements(points, timeLeft);
+          };
+
+          const nextQuestion = () => {
+            setShowFeedback(false);
+            setSelectedAnswer(null);
+            if (currentQuestion + 1 >= questions.length) {
+              endGame();
+            } else {
+              setCurrentQuestion(prev => prev + 1);
+              setTimeLeft(gameMode === 'timed' ? 15 : 30);
+            }
+          };
+
+          const closeFeedbackModal = () => {
+            setShowFeedbackModal(false);
+            setFeedbackData(null);
+            
+            setTimeout(() => {
+              if (selectedAnswer !== null && questions[currentQuestion].answers[selectedAnswer].score < 5 && gameMode === 'survival') {
+                endGame();
+              } else if (selectedAnswer === null && gameMode === 'survival') {
+                endGame();
+              } else {
+                nextQuestion();
+              }
+            }, 300);
+          };
+
+          const endGame = () => {
+            setGameState('results');
+            setGamesPlayed(prev => prev + 1);
+            if (score > bestScore) setBestScore(score);
+            if (streak > bestStreak) setBestStreak(streak);
+            // Check for achievements that may unlock at end of game
+            // first_game: if this was the first finished game (gamesPlayed was 0)
+            if (gamesPlayed === 0) unlockAchievement('first_game');
+            // perfect_score: if player scored maximum across questions (15 per question)
+            const maxPossible = questions.length * 15;
+            if (score === maxPossible) unlockAchievement('perfect_score');
+            // persistent: if player reached threshold now
+            if (gamesPlayed + 1 >= 10) unlockAchievement('persistent');
+          };
+
+          const addXP = (points) => {
+            const newXP = totalXP + points;
+            setTotalXP(newXP);
+            const newLevel = Math.floor(newXP / 100) + 1;
+            if (newLevel > playerLevel) setPlayerLevel(newLevel);
+          };
+
+          const checkAchievements = (points, timeLeft) => {
+            const currentHour = new Date().getHours();
+            
+            playerAchievements.forEach(a => {
+              if (a.unlocked) return;
+              let shouldUnlock = false;
+              
+              switch(a.id) {
+                case 'first_game':
+                  shouldUnlock = gamesPlayed === 0;
+                  break;
+                case 'perfect_score':
+                  shouldUnlock = points === 15 && streak >= 4;
+                  break;
+                case 'speed_demon':
+                  shouldUnlock = timeLeft > 20;
+                  break;
+                case 'persistent':
+                  shouldUnlock = gamesPlayed >= 9; // Car gamesPlayed s'incrémente après
+                  break;
+                case 'perfectionist':
+                  if (points === 15) {
+                    setPerfectScoreStreak(prev => {
+                      const newStreak = prev + 1;
+                      return newStreak;
+                    });
+                    shouldUnlock = perfectScoreStreak >= 4;
+                  } else {
+                    setPerfectScoreStreak(0);
+                  }
+                  break;
+                case 'speed_demon_pro':
+                  if (timeLeft > 25) {
+                    setFastResponseCount(prev => prev + 1);
+                    shouldUnlock = fastResponseCount >= 49;
+                  }
+                  break;
+                case 'comeback_king':
+                  // Logic à implémenter selon vos besoins
+                  shouldUnlock = false;
+                  break;
+                case 'daily_player':
+                  shouldUnlock = consecutiveDays >= 7;
+                  break;
+                case 'night_owl':
+                  shouldUnlock = currentHour >= 0 && currentHour < 6;
+                  break;
+                case 'level_10':
+                  shouldUnlock = playerLevel >= 10;
+                  break;
+                case 'social_butterfly':
+                  shouldUnlock = shareCount >= 5;
+                  break;
+                case 'review_master':
+                  // Logic pour amélioration 3 fois
+                  shouldUnlock = false;
+                  break;
+                case 'sector_expert':
+                  // Logic pour maîtriser un secteur
+                  shouldUnlock = false;
+                  break;
+                case 'consistency':
+                  // Logic pour régularité mensuelle
+                  shouldUnlock = false;
+                  break;
+                case 'helpful':
+                  // Logic pour feedback utiles
+                  shouldUnlock = false;
+                  break;
+                case 'late_night_master':
+                  shouldUnlock = currentHour >= 0 && currentHour < 6;
+                  break;
+                case 'category_master_classic':
+                  // Vérifier si toutes les questions classiques ont été réussies
+                  shouldUnlock = false;
+                  break;
+                default:
+                  shouldUnlock = false;
+              }
+              
+              if (shouldUnlock) unlockAchievement(a.id);
+            });
+          };
+
+          // Reset progress helper (clears local state and localStorage keys)
+          const resetProgress = () => {
+            try {
+              if (typeof localStorage !== 'undefined') {
+                Object.values(STORAGE_KEYS).forEach(k => localStorage.removeItem(k));
+              }
+            } catch (e) { console.warn('Reset localStorage failed', e); }
+
+            // Reset in-memory state to initial
+            setPlayerAchievements(achievements);
+            setPlayerStats({ questionsAnswered:0, averageScore:0, strongestCategory:null, weakestCategory:null, improvementRate:0, sessionHistory: [] });
+            setTotalXP(0);
+            setPlayerLevel(1);
+            setGamesPlayed(0);
+            setBestScore(0);
+            setBestStreak(0);
+            setSkills({ communication:0, technique:0, leadership:0, adaptabilite:0 });
+            setReviewQuestions([]);
+            setQuestionTracking({});
+            pushToast('Progression réinitialisée');
+            setShowResetModal(false);
+          };
+
+          const ProgressBar = ({ current, max, className = "" }) => (
+            <div className={`progress-bar-custom ${className}`}>
+              <div 
+                className="progress-bar-fill transition-all duration-700 ease-out"
+                style={{ width: `${Math.min((current / max) * 100, 100)}%` }}
+              />
+            </div>
+          );
+
+          const TimerCircle = ({ time, maxTime }) => {
+            const percentage = (time / maxTime) * 100;
+            const circumference = 2 * Math.PI * 20;
+            const strokeDasharray = circumference;
+            const strokeDashoffset = circumference - (percentage / 100) * circumference;
+            return (
+              <div className="relative w-16 h-16">
+                <svg className="w-16 h-16 transform -rotate-90">
+                  <circle cx="32" cy="32" r="20" stroke="currentColor" strokeWidth="4" fill="transparent" className="text-gray-200" />
+                  <circle cx="32" cy="32" r="20" stroke="currentColor" strokeWidth="4" fill="transparent" strokeDasharray={strokeDasharray} strokeDashoffset={strokeDashoffset} className={`transition-all duration-1000 ${time > 10 ? 'text-green-500' : time > 5 ? 'text-yellow-500' : 'text-red-500'}`} />
+                </svg>
+                <div className="absolute inset-0 flex items-center justify-center">
+                  <span className={`text-lg font-bold ${time > 10 ? 'text-green-500' : time > 5 ? 'text-yellow-500' : 'text-red-500'}`}>{time}</span>
+                </div>
+              </div>
+            );
+          };
+
+          if (gameState === 'menu') {
+  return (
+    <div className="min-h-screen bg-gradient-to-br from-green-900 via-green-800 to-orange-900 text-white relative overflow-hidden">
+      {/* Éléments flottants de fond */}
+      <div className="floating-elements"></div>
+      
+      <div className="container mx-auto px-4 py-6 max-w-6xl relative z-10">
+        <header className="text-center mb-8">
+          {/* Header controls */}
+          <div className="flex justify-end mb-4">
+            <div className="flex space-x-2">
+              <button 
+                onClick={() => setShowSettings(!showSettings)} 
+                className="neon-glow bg-black/30 hover:bg-black/50 p-3 rounded-xl transition-all"
+              >
+                <Settings className="w-5 h-5" />
+              </button>
+              <button 
+                onClick={() => setSoundEnabled(!soundEnabled)} 
+                className="neon-glow bg-black/30 hover:bg-black/50 p-3 rounded-xl transition-all"
+              >
+                {soundEnabled ? <Volume2 className="w-5 h-5" /> : <VolumeX className="w-5 h-5" />}
+              </button>
+            </div>
+          </div>
+          
+          {/* Logo et titre */}
+          <div className="gaming-card p-8 mb-8">
+            <div className="flex items-center justify-center mb-4">
+              <Trophy className="w-16 h-16 text-orange-400 mr-4 animate-bounce" />
+              <h1 className="text-4xl md:text-6xl font-bold bg-gradient-to-r from-orange-400 via-orange-500 to-green-400 bg-clip-text text-transparent">
+                Interview Master
+              </h1>
+            </div>
+            <p className="text-xl text-gray-300 mb-6">Maîtrisez l'art de l'entretien d'embauche !</p>
+            
+            {/* Stats rapides */}
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+              <div className="game-mode-card p-4 text-center">
+                <div className="text-2xl font-bold text-orange-400">{playerLevel}</div>
+                <div className="text-sm text-gray-300">Niveau</div>
+              </div>
+              <div className="game-mode-card p-4 text-center">
+                <div className="text-2xl font-bold text-green-400">{bestScore}</div>
+                <div className="text-sm text-gray-300">Meilleur Score</div>
+              </div>
+              <div className="game-mode-card p-4 text-center">
+                <div className="text-2xl font-bold text-orange-400">{bestStreak}</div>
+                <div className="text-sm text-gray-300">Meilleur Streak</div>
+              </div>
+              <div className="game-mode-card p-4 text-center">
+                <div className="text-2xl font-bold text-green-400">{gamesPlayed}</div>
+                <div className="text-sm text-gray-300">Parties</div>
+              </div>
+            </div>
+          </div>
+        </header>
+
+        {/* Modes de jeu principaux */}
+        <div className="mobile-grid mb-8">
+          <button 
+            onClick={() => startGame('training')} 
+            className="game-mode-card neon-glow group"
+          >
+            <div className="floating-elements"></div>
+            <Brain className="w-12 h-12 mb-4 mx-auto text-green-400 group-hover:scale-110 transition-transform" />
+            <h3 className="text-xl font-bold mb-2 text-white">Entraînement</h3>
+            <p className="text-sm text-gray-300">5 questions pour s'échauffer</p>
+            <div className="absolute bottom-2 right-2 text-xs bg-green-600 px-2 py-1 rounded-full">
+              Facile
+            </div>
+          </button>
+          
+          <button 
+            onClick={() => startGame('survival')} 
+            className="game-mode-card neon-glow group"
+          >
+            <div className="floating-elements"></div>
+            <Target className="w-12 h-12 mb-4 mx-auto text-orange-400 group-hover:scale-110 transition-transform" />
+            <h3 className="text-xl font-bold mb-2 text-white">Survie</h3>
+            <p className="text-sm text-gray-300">Élimination à la première erreur</p>
+            <div className="absolute bottom-2 right-2 text-xs bg-red-600 px-2 py-1 rounded-full">
+              Hardcore
+            </div>
+          </button>
+          
+          <button 
+            onClick={() => startGame('timed')} 
+            className="game-mode-card neon-glow group"
+          >
+            <div className="floating-elements"></div>
+            <Zap className="w-12 h-12 mb-4 mx-auto text-orange-400 group-hover:scale-110 transition-transform" />
+            <h3 className="text-xl font-bold mb-2 text-white">Chrono</h3>
+            <p className="text-sm text-gray-300">15 secondes par question</p>
+            <div className="absolute bottom-2 right-2 text-xs bg-orange-600 px-2 py-1 rounded-full">
+              Speed
+            </div>
+          </button>
+          
+          <button 
+            onClick={() => setGameState('profile')} 
+            className="game-mode-card neon-glow group"
+          >
+            <div className="floating-elements"></div>
+            <User className="w-12 h-12 mb-4 mx-auto text-green-400 group-hover:scale-110 transition-transform" />
+            <h3 className="text-xl font-bold mb-2 text-white">Profil</h3>
+            <p className="text-sm text-gray-300">Achievements & Stats</p>
+            <div className="absolute bottom-2 right-2 text-xs bg-purple-600 px-2 py-1 rounded-full">
+              Profil
+            </div>
+          </button>
+        </div>
+
+        {/* Modes secondaires */}
+        <div className="mobile-grid mb-8">
+          <button 
+            onClick={() => startReview()} 
+            className="game-mode-card neon-glow group"
+          >
+            <div className="floating-elements"></div>
+            <RotateCw className="w-10 h-10 mb-3 mx-auto text-orange-400 group-hover:rotate-180 transition-all duration-500" />
+            <h3 className="text-lg font-bold mb-2 text-white">Révision</h3>
+            <p className="text-sm text-gray-300">Questions ratées ({reviewQuestions.length})</p>
+          </button>
+
+          <button 
+            onClick={() => startGame('expert')} 
+            className="game-mode-card neon-glow group border-2 border-orange-500"
+          >
+            <div className="floating-elements"></div>
+            <TargetIcon className="w-10 h-10 mb-3 mx-auto text-orange-400 group-hover:scale-110 transition-transform" />
+            <h3 className="text-lg font-bold mb-2 text-white">Expert</h3>
+            <p className="text-sm text-gray-300">Questions difficiles uniquement</p>
+            <div className="absolute top-2 right-2 text-xs bg-gradient-to-r from-orange-500 to-red-500 px-2 py-1 rounded-full animate-pulse">
+              PRO
+            </div>
+          </button>
+        </div>
+
+        {/* Sélecteur de catégorie */}
+        <div className="gaming-card p-6 text-center">
+          <h4 className="text-lg font-semibold mb-4 text-white">Catégorie d'entraînement :</h4>
+          <div className="flex flex-wrap justify-center gap-3">
+            {['all', 'classique', 'technique', 'piege', 'comportementale'].map(category => (
+              <button 
+                key={category} 
+                onClick={() => setSelectedCategory(category)} 
+                className={`px-4 py-2 rounded-full transition-all font-medium ${
+                  selectedCategory === category 
+                    ? 'bg-gradient-to-r from-orange-500 to-green-500 text-white shadow-lg' 
+                    : 'bg-black/30 hover:bg-black/50 text-gray-300 hover:text-white border border-orange-500/30'
+                }`}
+              >
+                {category === 'all' ? 'Toutes' : category.charAt(0).toUpperCase() + category.slice(1)}
+              </button>
+            ))}
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+          if (gameState === 'playing') {
+            const question = questions[currentQuestion];
+            if (!question) return <div>Loading...</div>;
+
+            return (
+              <div className={`min-h-screen bg-gradient-to-br ${currentTheme.colors} text-white`}>
+                <div className="container mx-auto px-4 py-8 max-w-4xl">
+                  <div className="flex justify-between items-center mb-8">
+                    <button onClick={() => setGameState('menu')} className="bg-white/10 hover:bg-white/20 p-3 rounded-lg transition-all">
+                      <Home className="w-6 h-6" />
+                    </button>
+                    
+                    <div className="text-center">
+                      <div className="text-sm text-gray-300">Question {currentQuestion + 1}/{questions.length}</div>
+                      <div className="text-2xl font-bold">Score: {score}</div>
+                    </div>
+                    
+                    <TimerCircle time={timeLeft} maxTime={gameMode === 'timed' ? 15 : 30} />
+                  </div>
+
+                  <ProgressBar current={currentQuestion + 1} max={questions.length} className="mb-8" />
+
+                  <div className="bg-white/10 backdrop-blur-md rounded-2xl p-8 mb-8">
+                    <div className="flex items-center justify-between mb-6">
+                      <span className="bg-gradient-to-r from-yellow-400 to-orange-500 text-black px-3 py-1 rounded-full text-sm font-bold">{question.category.toUpperCase()}</span>
+                      {streak > 0 && (
+                        <div className="flex items-center text-orange-400">
+                          <Star className="w-5 h-5 mr-1" />
+                          <span className="font-bold">{streak} streak</span>
+                        </div>
+                      )}
+                    </div>
+                    
+                    <h2 className="text-2xl md:text-3xl font-bold text-center mb-8 leading-relaxed">{question.question}</h2>
+                  </div>
+
+                  <div className="grid gap-4 mb-8">
+                    {question.answers.map((answer, index) => {
+                      let buttonClass = "w-full p-6 rounded-xl text-left transition-all duration-300 transform hover:scale-105";
+                      if (selectedAnswer === null) {
+                        buttonClass += " bg-white/10 hover:bg-white/20 border-2 border-transparent hover:border-white/30";
+                      } else {
+                        if (index === selectedAnswer) {
+                          if (answer.score >= 12) buttonClass += " bg-green-500 border-2 border-green-300";
+                          else if (answer.score >= 5) buttonClass += " bg-yellow-500 border-2 border-yellow-300";
+                          else buttonClass += " bg-red-500 border-2 border-red-300";
+                        } else {
+                          buttonClass += " bg-gray-500/50 opacity-60";
+                        }
+                      }
+
+                      return (
+                        <button key={index} onClick={() => selectAnswer(index)} disabled={selectedAnswer !== null} className={buttonClass}>
+                          <div className="flex items-center">
+                            <span className="w-8 h-8 bg-white/20 rounded-full flex items-center justify-center mr-4 text-sm font-bold">{String.fromCharCode(65 + index)}</span>
+                            <span className="text-lg">{answer.text}</span>
+                          </div>
+                        </button>
+                      );
+                    })}
+                  </div>
+
+                  {/* Modal de feedback - remplace les anciens blocs showFeedback */}
+                  <FeedbackModal
+                    isOpen={showFeedbackModal}
+                    onClose={closeFeedbackModal}
+                    feedbackData={feedbackData}
+                    question={question}
+                    selectedAnswer={selectedAnswer}
+                    timeOut={selectedAnswer === null && showFeedback}
+                  />
+                </div>
+              </div>
+            );
+          }
+
+          if (gameState === 'results') {
+            const percentage = Math.round((score / (questions.length * 15)) * 100);
+            return (
+              <div className={`min-h-screen bg-gradient-to-br ${currentTheme.colors} text-white`}>
+                <div className="container mx-auto px-4 py-8 max-w-4xl">
+                  <div className="text-center">
+                    <Trophy className="w-20 h-20 text-yellow-400 mx-auto mb-6" />
+                    <h1 className="text-4xl md:text-5xl font-bold mb-4">Entretien Terminé !</h1>
+                    <div className="bg-white/10 backdrop-blur-md rounded-2xl p-8 mb-8">
+                      <div className="text-6xl font-bold text-yellow-400 mb-2">{score}</div>
+                      <div className="text-xl text-gray-300 mb-4">Points obtenus</div>
+                      <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mt-6">
+                        <div className="bg-white/10 rounded-lg p-4"><div className="text-2xl font-bold">{percentage}%</div><div className="text-sm text-gray-300">Réussite</div></div>
+                        <div className="bg-white/10 rounded-lg p-4"><div className="text-2xl font-bold">{bestStreak}</div><div className="text-sm text-gray-300">Meilleur Streak</div></div>
+                        <div className="bg-white/10 rounded-lg p-4"><div className="text-2xl font-bold">{questions.length}</div><div className="text-sm text-gray-300">Questions</div></div>
+                        <div className="bg-white/10 rounded-lg p-4"><div className="text-2xl font-bold">{playerLevel}</div><div className="text-sm text-gray-300">Niveau</div></div>
+                      </div>
+                    </div>
+
+                    <div className="bg-white/10 backdrop-blur-md rounded-xl p-6 mb-8 text-left">
+                      <h3 className="text-xl font-bold mb-4 text-center">📊 Analyse de Performance</h3>
+                      {percentage >= 80 ? (
+                        <div className="bg-green-500/20 rounded-lg p-4 mb-4"><h4 className="font-bold text-green-300 mb-2">🎉 Excellent travail !</h4><p>Vous maîtrisez bien les techniques d'entretien. Continuez à pratiquer pour maintenir ce niveau.</p></div>
+                      ) : percentage >= 60 ? (
+                        <div className="bg-yellow-500/20 rounded-lg p-4 mb-4"><h4 className="font-bold text-yellow-300 mb-2">👍 Bon niveau</h4><p>Vous êtes sur la bonne voie. Concentrez-vous sur les questions qui vous posent le plus de difficultés.</p></div>
+                      ) : (
+                        <div className="bg-red-500/20 rounded-lg p-4 mb-4"><h4 className="font-bold text-red-300 mb-2">💪 À améliorer</h4><p>Ne vous découragez pas ! Pratiquez régulièrement en mode entraînement pour progresser.</p></div>
+                      )}
+
+                      <div className="grid md:grid-cols-2 gap-4 mt-4">
+                        <div>
+                          <h4 className="font-bold text-blue-300 mb-2">💡 Conseils d'amélioration :</h4>
+                          <div className="mt-6 flex justify-center">
+                            <button 
+                              onClick={() => {
+                                setShareCount(prev => prev + 1);
+                                pushToast('Résultats partagés !');
+                              }} 
+                              className="bg-gradient-to-r from-pink-500 to-purple-600 hover:from-pink-600 hover:to-purple-700 px-8 py-4 rounded-xl font-bold transition-all hover:scale-105 flex items-center justify-center"
+                            >
+                              Partager Score
+                            </button>
+                          </div>
+                          <ul className="text-sm space-y-1">
+                            <li>• Préparez vos réponses aux questions classiques</li>
+                            <li>• Utilisez la méthode STAR pour les questions comportementales</li>
+                            <li>• Entraînez-vous à répondre en 2-3 minutes maximum</li>
+                            <li>• Renseignez-vous sur l'entreprise avant l'entretien</li>
+                          </ul>
+                        </div>
+                        <div>
+                          <h4 className="font-bold text-purple-300 mb-2">🎯 Prochaines étapes :</h4>
+                          <ul className="text-sm space-y-1">
+                            <li>• Rejouez en mode Survie pour tester vos limites</li>
+                            <li>• Focalisez sur une catégorie spécifique</li>
+                            <li>• Pratiquez les questions pièges</li>
+                            <li>• Améliorez votre temps de réponse</li>
+                          </ul>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div className="flex flex-col md:flex-row gap-4 justify-center">
+                      <button onClick={() => startGame(gameMode)} className="bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700 px-8 py-4 rounded-xl font-bold transition-all hover:scale-105 flex items-center justify-center">
+                        <RotateCcw className="w-5 h-5 mr-2" />Rejouer
+                      </button>
+                      
+                      <button onClick={() => setGameState('menu')} className="bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 px-8 py-4 rounded-xl font-bold transition-all hover:scale-105 flex items-center justify-center">
+                        <Home className="w-5 h-5 mr-2" />Menu Principal
+                      </button>
+                      
+                      <button onClick={() => setGameState('profile')} className="bg-gradient-to-r from-purple-500 to-pink-600 hover:from-purple-600 hover:to-pink-700 px-8 py-4 rounded-xl font-bold transition-all hover:scale-105 flex items-center justify-center">
+                        <Award className="w-5 h-5 mr-2" />Achievements
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            );
+          }
+
+          if (gameState === 'profile') {
+            return (
+              <div className={`min-h-screen bg-gradient-to-br ${currentTheme.colors} text-white`}>
+                <div className="container mx-auto px-4 py-8 max-w-4xl">
+                  <div className="flex items-center justify-between mb-8">
+                    <button onClick={() => setGameState('menu')} className="bg-white/10 hover:bg-white/20 p-3 rounded-lg transition-all">
+                      <Home className="w-6 h-6" />
+                    </button>
+                    <h1 className="text-3xl md:text-4xl font-bold">Profil Joueur</h1>
+                    <div className="w-12"></div>
+                  </div>
+
+                  <div className="bg-white/10 backdrop-blur-md rounded-2xl p-8 mb-8">
+                    <div className="flex flex-col md:flex-row items-center md:items-start gap-6">
+                      <div className="text-center">
+                        <div className="text-8xl mb-2">{playerAvatar.emoji}</div>
+                        <button onClick={() => setShowSettings(!showSettings)} className="bg-blue-500 hover:bg-blue-600 px-4 py-2 rounded-lg transition-all flex items-center">
+                          <Settings className="w-4 h-4 mr-2" />Changer
+                        </button>
+                      </div>
+                      
+                      <div className="flex-1 text-center md:text-left">
+                        <h2 className="text-3xl font-bold mb-4">Joueur Niveau {playerLevel}</h2>
+                        <div className="mb-4">
+                          <div className="flex justify-between text-sm mb-1">
+                            <span>Expérience</span>
+                            <span>{totalXP % 100}/100 XP</span>
+                          </div>
+                          <ProgressBar current={totalXP % 100} max={100} />
+                        </div>
+                        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                          <div className="bg-white/10 rounded-lg p-3"><div className="text-xl font-bold">{gamesPlayed}</div><div className="text-sm text-gray-300">Parties jouées</div></div>
+                          <div className="bg-white/10 rounded-lg p-3"><div className="text-xl font-bold">{bestScore}</div><div className="text-sm text-gray-300">Meilleur score</div></div>
+                          <div className="bg-white/10 rounded-lg p-3"><div className="text-xl font-bold">{bestStreak}</div><div className="text-sm text-gray-300">Meilleur streak</div></div>
+                          <div className="bg-white/10 rounded-lg p-3"><div className="text-xl font-bold">{playerAchievements.filter(a => a.unlocked).length}</div><div className="text-sm text-gray-300">Achievements</div></div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  {showSettings && (
+                    <div className="bg-white/10 backdrop-blur-md rounded-xl p-6 mb-8">
+                      <h3 className="text-xl font-bold mb-4 text-center">Choisir un avatar</h3>
+                      <div className="grid grid-cols-3 md:grid-cols-6 gap-4">
+                        {avatars.map(avatar => (
+                          <button key={avatar.id} onClick={() => { setPlayerAvatar(avatar); setShowSettings(false); }} className={`p-4 rounded-lg transition-all hover:scale-110 ${ playerAvatar.id === avatar.id ? 'bg-blue-500 scale-110' : 'bg-white/10 hover:bg-white/20' }`}>
+                            <div className="text-4xl mb-2">{avatar.emoji}</div>
+                            <div className="text-xs">{avatar.name}</div>
+                          </button>
+                        ))}
+                      </div>
+
+                      <div className="mt-6 border-t border-white/10 pt-4">
+                        <h4 className="font-bold mb-2">Paramètres de l'application</h4>
+                        <div className="flex items-center justify-between">
+                          <div className="text-sm text-gray-300">Réinitialiser la progression (supprime achievements, stats et révisions)</div>
+                          <button onClick={() => setShowResetModal(true)} className="bg-red-600 hover:bg-red-700 px-3 py-2 rounded-lg">Réinitialiser</button>
+                        </div>
+                      </div>
+                    </div>
+                  )}
+
+                  <div className="bg-white/10 backdrop-blur-md rounded-xl p-6">
+                    <h3 className="text-xl font-bold mb-6 text-center">🏆 Achievements</h3>
+                    <div className="grid md:grid-cols-2 gap-4">
+                      {playerAchievements.map(achievement => (
+                        <div key={achievement.id} className={`p-4 rounded-lg border-2 transition-all ${ achievement.unlocked ? 'bg-yellow-500/20 border-yellow-400 text-yellow-100' : 'bg-gray-500/20 border-gray-600 text-gray-400' }`}>
+                          <div className="flex items-center">
+                            <span className="text-3xl mr-4">{achievement.icon}</span>
+                            <div>
+                              <h4 className="font-bold">{achievement.name}</h4>
+                              <p className="text-sm">{achievement.description}</p>
+                              {achievement.unlocked && <span className="text-xs bg-yellow-400 text-black px-2 py-1 rounded-full mt-1 inline-block">Débloqué !</span>}
+                            </div>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+              </div>
+            );
+          }
+
+          // Global UI: toasts and reset confirmation modal
+          return (
+            <>
+              {/* Toasts */}
+              <div className="fixed bottom-6 right-6 flex flex-col items-end space-y-3 z-50">
+                {toasts.map(t => (
+                  <div key={t.id} className="bg-black/80 text-white px-4 py-2 rounded-lg shadow-lg max-w-xs">
+                    {t.text}
+                  </div>
+                ))}
+              </div>
+
+              {/* Reset confirmation modal */}
+              {showResetModal && (
+                <div className="fixed inset-0 bg-black/60 z-40 flex items-center justify-center">
+                  <div className="bg-white text-black rounded-lg p-6 w-full max-w-md">
+                    <h3 className="text-xl font-bold mb-4">Confirmer la réinitialisation</h3>
+                    <p className="mb-4">Êtes-vous sûr de vouloir supprimer toute votre progression ? Cette action est irréversible.</p>
+                    <div className="flex justify-end gap-3">
+                      <button onClick={() => setShowResetModal(false)} className="px-4 py-2 rounded-lg bg-gray-200">Annuler</button>
+                      <button onClick={resetProgress} className="px-4 py-2 rounded-lg bg-red-600 text-white">Réinitialiser</button>
+                    </div>
+                  </div>
+                </div>
+              )}
+            </>
+          );
+        };
+
+        /***** Montage de l'app *****/
+        const root = ReactDOM.createRoot(document.getElementById('root'));
+  root.render(React.createElement(InterviewMaster));
+
+    </script>
+</body>
+</html>
