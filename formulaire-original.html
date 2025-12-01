@@ -113,7 +113,11 @@
             font-size: 1.1rem;
             color: #094102;
         }
-        /* Modal de paiement responsive et centré */
+        /* ============================================
+           MODAL DE PAIEMENT - VERSION FINALE CORRIGÉE
+           ============================================ */
+
+        /* 1. CONTAINER MODAL - Padding pour éviter contact haut/bas */
         .payment-modal {
             display: none;
             position: fixed;
@@ -125,37 +129,88 @@
             z-index: 1000;
             justify-content: center;
             align-items: center;
+            padding: 20px 10px; /* CRITIQUE : évite contact haut/bas */
+            overflow-y: auto; /* Permet scroll si contenu trop grand */
         }
+
         .payment-modal.show {
             display: flex;
         }
+
+        /* 2. CONTENU MODAL - Marges latérales + hauteur maximale */
         .payment-content {
             background: white;
             border-radius: 16px;
-            padding: 30px;
+            padding: 30px 20px;
             max-width: 500px;
-            width: 95vw;
-            min-width: 0;
+            width: calc(100% - 20px); /* 10px marge de chaque côté */
+            max-height: calc(100vh - 40px); /* CRITIQUE : ne jamais toucher haut/bas */
             box-sizing: border-box;
-            max-height: 90vh;
             overflow-y: auto;
             position: relative;
             animation: slideInModal 0.3s ease;
+            margin: auto; /* Centrage automatique */
         }
+
         @keyframes slideInModal {
             from {
                 opacity: 0;
-                transform: scale(0.9) translateY(20px);
+                transform: scale(0.95);
             }
             to {
                 opacity: 1;
-                transform: scale(1) translateY(0);
+                transform: scale(1);
             }
         }
+
+        /* 3. RESPONSIVE MOBILE - Réduction progressive */
+        @media (max-width: 768px) {
+            .payment-modal {
+                padding: 15px 8px;
+            }
+            
+            .payment-content {
+                padding: 20px 15px;
+                width: calc(100% - 16px); /* 8px marge de chaque côté */
+                max-height: calc(100vh - 30px);
+                border-radius: 12px;
+                font-size: 14px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .payment-modal {
+                padding: 12px 6px;
+            }
+            
+            .payment-content {
+                padding: 16px 12px;
+                width: calc(100% - 12px); /* 6px marge de chaque côté */
+                max-height: calc(100vh - 24px);
+                border-radius: 10px;
+                font-size: 13px;
+            }
+        }
+
+        @media (max-width: 400px) {
+            .payment-modal {
+                padding: 10px 5px;
+            }
+            
+            .payment-content {
+                padding: 14px 10px;
+                width: calc(100% - 10px); /* 5px marge de chaque côté */
+                max-height: calc(100vh - 20px);
+                border-radius: 8px;
+                font-size: 12px;
+            }
+        }
+
+        /* 4. BOUTON FERMETURE - Adaptatif */
         .close-modal {
             position: absolute;
-            top: 15px;
-            right: 15px;
+            top: 10px;
+            right: 10px;
             background: none;
             border: none;
             font-size: 1.5rem;
@@ -168,95 +223,82 @@
             align-items: center;
             justify-content: center;
             transition: all 0.2s ease;
+            z-index: 10;
         }
+
         .close-modal:hover {
             background: #f8f9fa;
             color: #2f3640;
         }
+
+        @media (max-width: 480px) {
+            .close-modal {
+                top: 8px;
+                right: 8px;
+                font-size: 1.3rem;
+                width: 28px;
+                height: 28px;
+            }
+        }
+
+        /* 5. EN-TÊTE FACTURE */
         .invoice-header {
             text-align: center;
-            margin-bottom: 30px;
-            padding-bottom: 20px;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
             border-bottom: 2px solid #e9ecef;
         }
+
         .invoice-title {
             font-size: 1.5rem;
             font-weight: 700;
             color: #2f3640;
-            margin-bottom: 10px;
+            margin-bottom: 8px;
+            line-height: 1.2;
         }
+
         .invoice-number {
             color: #6c757d;
             font-size: 0.9rem;
         }
-        .client-info {
-            background: #f8f9fa;
-            padding: 20px;
-            border-radius: 8px;
-            margin-bottom: 20px;
-        }
-        .client-info h4 {
-            color: #2f3640;
-            margin-bottom: 10px;
-        }
-        .service-details {
-            margin-bottom: 30px;
-        }
-        .service-item {
-            display: flex;
-            justify-content: space-between;
-            padding: 15px 0;
-            border-bottom: 1px solid #e9ecef;
-        }
+
         @media (max-width: 768px) {
-            .payment-content {
-                padding: 10px 5px;
-                max-width: 99vw;
-                width: 99vw;
-                font-size: 0.97rem;
+            .invoice-header {
+                margin-bottom: 16px;
+                padding-bottom: 12px;
             }
+            
+            .invoice-title {
+                font-size: 1.25rem;
+            }
+            
+            .invoice-number {
+                font-size: 0.85rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .invoice-header {
+                margin-bottom: 12px;
+                padding-bottom: 10px;
+            }
+            
             .invoice-title {
                 font-size: 1.1rem;
             }
-            .invoice-header, .client-info, .service-details, .payment-methods, .recipient-info {
-                padding-left: 2px;
-                padding-right: 2px;
-            }
-            .service-item, .payment-option {
-                flex-direction: column;
-                align-items: flex-start;
-                gap: 2px;
-            }
-            .confirmation-btn {
-                width: 100%;
-                font-size: 1rem;
-                padding: 10px 0;
-            }
-            .close-modal {
-                top: 8px;
-                right: 8px;
-                font-size: 1.2rem;
-            }
-            .payment-modal {
-                align-items: flex-start;
-                padding-top: 10vw;
+            
+            .invoice-number {
+                font-size: 0.8rem;
             }
         }
-        @media (max-width: 480px) {
-            #btnCatalogueCV {
-                font-size: 0.75rem;
-                padding: 6px 8px;
-                border-radius: 5px;
-                min-width: 0;
-                width: 90vw;
-                max-width: 180px;
-                margin: 0 auto 8px auto;
-                box-sizing: border-box;
-                display: block;
+
+        @media (max-width: 400px) {
+            .invoice-title {
+                font-size: 1rem;
             }
-            .payment-content {
-                padding: 6px;
-                border-radius: 8px;
+            
+            .invoice-number {
+                font-size: 0.75rem;
             }
         }
         /* Présentation professionnelle étape 6 */
@@ -704,34 +746,48 @@
             border: 1px solid #ff8a00;
         }
 
-        .add-button {
-            display: inline-block;
-            margin: 10px 0;
-            font-size: clamp(14px, 1.5vw, 16px);
-            font-weight: 600;
-            color: #ff5700;
+        .pdf-btn {
+            background: linear-gradient(90deg, #FF5700 0%, #ff8a00 100%); /* DÉGRADÉ */
+            color: white;
+            padding: 14px 24px;
+            border: none;
+            border-radius: 8px;
+            font-weight: 700;
+            font-size: 16px;
             cursor: pointer;
-            text-decoration: none;
-            transition: color 0.3s ease;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 12px rgba(255, 87, 0, 0.3);
+            width: 100%;
+            margin: 16px 0 10px 0;
         }
 
-        .add-button:hover {
-            color: #d94c00;
+        .pdf-btn:hover {
+            background: linear-gradient(90deg, #e64a00 0%, #ff7700 100%);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(255, 87, 0, 0.4);
         }
 
-        .section-title {
-            font-size: clamp(18px, 2.5vw, 20px);
-            color: #094102;
-            margin-bottom: 15px;
-            background: linear-gradient(90deg, #094102, #ff5700);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            padding-bottom: 8px;
-            border-bottom: 2px solid #ff5700;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
+        @media (max-width: 768px) {
+            .pdf-btn {
+                padding: 13px 20px;
+                font-size: 15px;
+            }
         }
+
+        @media (max-width: 480px) {
+            .pdf-btn {
+                padding: 12px 18px;
+                font-size: 14px;
+            }
+        }
+
+        @media (max-width: 400px) {
+            .pdf-btn {
+                padding: 11px 16px;
+                font-size: 13px;
+            }
+        }
+        
 
         .section-help {
             font-size: clamp(13px, 1.5vw, 14px);
@@ -1004,6 +1060,188 @@
         }
     }
     /* ...existing code... */
+
+    /* NOTIFICATION - toast en haut (remplacement demandé) */
+    #downloadMessage {
+        display: none;
+        position: fixed;
+        top: 20px;
+        left: 50%;
+        transform: translateX(-50%);
+        z-index: 10001; /* Au-dessus du modal */
+        
+        background: linear-gradient(135deg, #094102 0%, #0A7303 100%);
+        color: white;
+        padding: 16px 20px;
+        border-radius: 12px;
+        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+        
+        font-weight: 600;
+        font-size: 15px;
+        line-height: 1.5;
+        text-align: center;
+        
+        max-width: calc(100vw - 40px); /* Marge de 20px de chaque côté */
+        width: auto;
+        
+        animation: toastSlideIn 0.5s ease;
+    }
+
+    #downloadMessage.show {
+        display: block;
+    }
+
+    @keyframes toastSlideIn {
+        from {
+            opacity: 0;
+            transform: translateX(-50%) translateY(-20px);
+        }
+        to {
+            opacity: 1;
+            transform: translateX(-50%) translateY(0);
+        }
+    }
+
+    @media (max-width: 480px) {
+        #downloadMessage {
+            font-size: 13px;
+            padding: 14px 16px;
+            max-width: calc(100vw - 32px);
+            top: 15px;
+        }
+    }
+
+    @media (max-width: 400px) {
+        #downloadMessage {
+            font-size: 12px;
+            padding: 12px 14px;
+            max-width: calc(100vw - 28px);
+        }
+    }
+
+    /* Ajustements demandés pour titres, client-info et méthodes de paiement */
+    .invoice-title {
+        font-size: 1.5rem;
+        font-weight: 700;
+        color: #2f3640;
+        margin-bottom: 10px;
+    }
+
+    .invoice-number {
+        color: #6c757d;
+        font-size: 0.9rem;
+    }
+
+    @media (max-width: 768px) {
+        .invoice-title {
+            font-size: 1.25rem;
+        }
+        .invoice-number {
+            font-size: 0.85rem;
+        }
+    }
+
+    @media (max-width: 480px) {
+        .invoice-title {
+            font-size: 1.1rem;
+        }
+        .invoice-number {
+            font-size: 0.8rem;
+        }
+    }
+
+    @media (max-width: 400px) {
+        .invoice-title {
+            font-size: 1rem;
+        }
+        .invoice-number {
+            font-size: 0.75rem;
+        }
+    }
+
+    .client-info {
+        background: #f8f9fa;
+        padding: 15px;
+        border-radius: 8px;
+        margin-bottom: 20px;
+    }
+
+    .client-info h4 {
+        color: #2f3640;
+        margin-bottom: 10px;
+        font-size: 1.1rem;
+    }
+
+    @media (max-width: 480px) {
+        .client-info {
+            padding: 12px 10px;
+            margin-bottom: 15px;
+        }
+        .client-info h4 {
+            font-size: 1rem;
+            margin-bottom: 8px;
+        }
+        .client-info {
+            font-size: 13px;
+        }
+    }
+
+    @media (max-width: 400px) {
+        .client-info {
+            padding: 10px 8px;
+        }
+        .client-info h4 {
+            font-size: 0.95rem;
+        }
+        .client-info {
+            font-size: 12px;
+        }
+    }
+
+    .payment-methods h4 {
+        color: #2f3640;
+        margin-bottom: 15px;
+        font-size: 1.1rem;
+    }
+
+    .payment-option {
+        background: #f8f9fa;
+        padding: 12px;
+        border-radius: 8px;
+        margin-bottom: 10px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    @media (max-width: 480px) {
+        .payment-methods h4 {
+            font-size: 1rem;
+            margin-bottom: 12px;
+        }
+        .payment-option {
+            padding: 10px 8px;
+            font-size: 13px;
+        }
+        .payment-provider,
+        .payment-number {
+            font-size: 13px;
+        }
+    }
+
+    @media (max-width: 400px) {
+        .payment-methods h4 {
+            font-size: 0.95rem;
+        }
+        .payment-option {
+            padding: 9px 7px;
+            font-size: 12px;
+        }
+        .payment-provider,
+        .payment-number {
+            font-size: 12px;
+        }
+    }
 </style>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 </head>
@@ -1369,14 +1607,15 @@
                     <small>Vous recevrez le document Word / PowerPoint et PDF en fonction du modèle de CV que vous avez choisi, une fois la rédaction terminée.</small>
                 </div>
                 <div class="confirmation-section">
-                    <button class="pdf-btn" onclick="downloadInvoicePDF()" style="flex: 1; min-height: 50px; font-size: 16px; font-weight: 600; border-radius: 8px; background: linear-gradient(135deg, #094102 0%, #0d5c07 100%); color: white; border: none; cursor: pointer; transition: all 0.3s ease; box-shadow: 0 4px 12px rgba(9, 65, 2, 0.3);">
-                         Télécharger la facture (PDF)
-                    </button>
-                </div>
-                <div id="downloadMessage" style="margin-top: 16px; padding: 14px; border-radius: 8px; text-align: center; display: none; background: #e6fbe6; border: 1px solid #0A7303; color: #094102; font-weight: 500; line-height: 1.6;">
-                     <strong>Facture téléchargée avec succès !</strong><br>
-                    Veuillez envoyer cette facture par WhatsApp au <strong>+241 65 37 08 82</strong> pour confirmer votre demande.
-                </div>
+    <button class="pdf-btn" onclick="downloadInvoicePDF()">
+        Télécharger la Facture (PDF)
+    </button>
+</div>
+
+<div id="downloadMessage">
+    <strong>Facture téléchargée avec succès !</strong><br>
+    Veuillez envoyer cette facture par WhatsApp au <strong>+241 65 37 08 82</strong> pour confirmer votre demande.
+</div>
             </div>
         </div>
         </form>
@@ -2055,10 +2294,20 @@
 
                 doc.save(filename);
 
-                // Afficher le message de confirmation
+                // NOUVEAU : Notification améliorée avec vibration
                 const downloadMsg = document.getElementById('downloadMessage');
                 if (downloadMsg) {
-                    downloadMsg.style.display = 'block';
+                    downloadMsg.classList.add('show');
+                    
+                    // Vibration mobile (si supporté)
+                    if (navigator.vibrate) {
+                        navigator.vibrate([200, 100, 200]); // Double vibration
+                    }
+                    
+                    // Masquer après 6 secondes
+                    setTimeout(() => {
+                        downloadMsg.classList.remove('show');
+                    }, 6000);
                 }
 
             } catch (error) {
