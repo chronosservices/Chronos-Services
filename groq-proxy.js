@@ -1,38 +1,41 @@
-// api/groq-proxy.js
-// Fonction serverless Vercel — la clé GROQ_API_KEY est stockée dans les variables d'environnement Vercel.
-// Elle n'est jamais visible dans le navigateur.
+// netlify/functions/groq-proxy.js
+// Proxy sécurisé Netlify — la clé Groq ne sera jamais visible dans le navigateur.
 
-export default async function handler(req, res) {
-    // CORS
-    res.setHeader('Access-Control-Allow-Origin', '*');
-    res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
+exports.handler = async function(event, context) {
+  if (event.httpMethod === 'OPTIONS') {
+    return { statusCode: 200, headers: corsHeaders(), body: '' };
+  }
+  if (event.httpMethod !== 'POST') {
+    return { statusCode: 405, headers: corsHeaders(), body: JSON.stringify({ error: 'Method not allowed' }) };
+  }
 
-    if (req.method === 'OPTIONS') {
-        return res.status(200).end();
+  try {
+    const payload = JSON.parse(event.body);
+
+    const response = await fetch('https://api.groq.com/openai/v1/chat/completions', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer ' + process.env.GROQ_API_KEY  // Variable d'env Netlify
+      },
+      body: JSON.stringify(payload)
+    });
+
+    const data = await response.json();
+    if (!response.ok) {
+      return { statusCode: response.status, headers: corsHeaders(), body: JSON.stringify({ error: data.error || 'Groq API error' }) };
     }
-    if (req.method !== 'POST') {
-        return res.status(405).json({ error: 'Method not allowed' });
-    }
+    return { statusCode: 200, headers: corsHeaders(), body: JSON.stringify(data) };
 
-    try {
-        const response = await fetch('https://api.groq.com/openai/v1/chat/completions', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': 'Bearer ' + process.env.GROQ_API_KEY
-            },
-            body: JSON.stringify(req.body)
-        });
+  } catch (err) {
+    return { statusCode: 500, headers: corsHeaders(), body: JSON.stringify({ error: err.message }) };
+  }
+};
 
-        const data = await response.json();
-
-        if (!response.ok) {
-            return res.status(response.status).json({ error: data.error || 'Groq API error' });
-        }
-
-        return res.status(200).json(data);
-
-    } catch (err) {
-        return res.status(500).json({ error: err.message });
-    }
+function corsHeaders() {
+  return {
+    'Access-Control-Allow-Origin': '*',
+    'Access-Control-Allow-Headers': 'Content-Type, Authorization',
+    'Content-Type': 'application/json'
+  };
 }
