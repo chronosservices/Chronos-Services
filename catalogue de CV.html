@@ -11,7 +11,7 @@
   <meta property="og:site_name"   content="Chronos-Services" />
   <meta property="og:title"       content="Catalogue CV — Chronos-Services" />
   <meta property="og:description" content="43 modèles CV professionnels Word & PowerPoint. Trouvez le design parfait pour décrocher votre prochain poste." />
-  <meta property="og:url"         content="https://chronos-services.netlify.app/catalogue-cv" />
+  <meta property="og:url"         content="https://chronos-services.netlify.app/catalogue%20de%20cv" />
   <!-- Image de prévisualisation : remplacez par votre vraie URL d'image (1200×630 px recommandé) -->
   <meta property="og:image"       content="https://chronos-services.netlify.app/Logo/og-cover.jpg" />
   <meta property="og:image:width"  content="1200" />
@@ -2349,8 +2349,8 @@
     /* ── DEEP LINK ── */
     (function checkDeepLink() {
       const params  = new URLSearchParams(window.location.search);
-      // Support ?m=001 (nouveau format court) ET ?model=001 (ancien format)
-      const modelId = params.get('m') || params.get('model');
+      // Support ?model=001 (format complet) ET ?m=001 (format court)
+      const modelId = params.get('model') || params.get('m');
       if (modelId) {
         const m = RAW_MODELS.find(x => x.id === modelId);
         if (m) {
@@ -2706,21 +2706,22 @@
     let shareTarget = null;
 
     /* ── URL de production propre (jamais le chemin local avec %20) ── */
-    const SITE_BASE = 'https://chronos-services.netlify.app/catalogue-cv';
+    const SITE_BASE = 'https://chronos-services.netlify.app/catalogue%20de%20cv';
 
     function buildShareURL(model) {
-      return `${SITE_BASE}?m=${model.id}`;
+      return `${SITE_BASE}?model=${model.id}&format=${model.format}&style=${model.style}`;
     }
 
-    /* ── Texte de partage sobre et professionnel ── */
+    /* ── Texte de partage sobre et professionnel, sans emojis ── */
     function buildShareText(model) {
       const fmtLabel    = model.format === 'word' ? 'Word' : 'PowerPoint';
       const styleLabels = { moderne:'Moderne', classique:'Classique', creatif:'Créatif', minimal:'Minimal' };
       const style       = styleLabels[model.style] || model.style;
       const userMsg     = (document.getElementById('shareMessage')?.value || '').trim();
 
-      const intro = userMsg ? userMsg : 'Je pense que ce modèle de CV pourrait t\'intéresser.';
-      return `${intro}\n\n${model.title} — Chronos-Services\nFormat ${fmtLabel} · Style ${style}\n`;
+      const intro = userMsg ? userMsg : 'Je pense qu\'il peut te correspondre !';
+
+      return `${intro}\n\nDécouvrez le ${model.title} sur Chronos-Services !\nFormat : ${fmtLabel}\nStyle : ${style}\n`;
     }
 
     function openShare(id) {
