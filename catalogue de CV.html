@@ -5,6 +5,26 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Catalogue CV — Chronos-Services</title>
   <meta name="description" content="43 modèles CV professionnels Word & PowerPoint. Trouvez le design qui vous correspond." />
+
+  <!-- ═══ OPEN GRAPH — prévisualisation WhatsApp / Facebook / LinkedIn ═══ -->
+  <meta property="og:type"        content="website" />
+  <meta property="og:site_name"   content="Chronos-Services" />
+  <meta property="og:title"       content="Catalogue CV — Chronos-Services" />
+  <meta property="og:description" content="43 modèles CV professionnels Word & PowerPoint. Trouvez le design parfait pour décrocher votre prochain poste." />
+  <meta property="og:url"         content="https://chronos-services.netlify.app/catalogue-cv" />
+  <!-- Image de prévisualisation : remplacez par votre vraie URL d'image (1200×630 px recommandé) -->
+  <meta property="og:image"       content="https://chronos-services.netlify.app/Logo/og-cover.jpg" />
+  <meta property="og:image:width"  content="1200" />
+  <meta property="og:image:height" content="630" />
+  <meta property="og:locale"      content="fr_FR" />
+
+  <!-- Twitter Card (aussi lu par WhatsApp dans certains cas) -->
+  <meta name="twitter:card"        content="summary_large_image" />
+  <meta name="twitter:title"       content="Catalogue CV — Chronos-Services" />
+  <meta name="twitter:description" content="43 modèles CV professionnels Word & PowerPoint. Trouvez le design parfait pour décrocher votre prochain poste." />
+  <meta name="twitter:image"       content="https://chronos-services.netlify.app/Logo/og-cover.jpg" />
+  <!-- ════════════════════════════════════════════════════════════════════ -->
+
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;600;700;800&family=DM+Sans:ital,wght@0,400;0,500;0,600;1,400&display=swap" rel="stylesheet" />
@@ -446,33 +466,11 @@
       letter-spacing: .03em;
     }
 
-    /* Favourite button */
-    .cv-card__fav {
-      position: absolute;
-      top: 10px;
-      right: 10px;
-      z-index: 2;
-      width: 32px;
-      height: 32px;
-      border-radius: 50%;
-      background: rgba(255,255,255,.85);
-      backdrop-filter: blur(6px);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      color: var(--text-3);
-      transition: all .2s;
-      border: none;
-      cursor: pointer;
-    }
-    .cv-card__fav:hover, .cv-card__fav.active { color: #e53e3e; background: white; }
-    .cv-card__fav.active svg { fill: #e53e3e; }
-
-    /* Share button — appears on hover, sits left of fav */
+    /* Share button — appears on hover */
     .cv-card__share {
       position: absolute;
       top: 10px;
-      right: 48px; /* beside fav */
+      right: 10px;
       z-index: 2;
       width: 32px;
       height: 32px;
@@ -494,7 +492,7 @@
       transform: scale(1);
     }
     .cv-card__share:hover { color: var(--green); background: white; }
-    .grid.list .cv-card__share { top: 8px; right: 46px; opacity: 1; transform: scale(1); }
+    .grid.list .cv-card__share { top: 8px; right: 8px; opacity: 1; transform: scale(1); }
 
     /* Image zone */
     .cv-card__img {
@@ -625,7 +623,6 @@
       align-items: center;
     }
     .grid.list .cv-card__num { top: 8px; left: 8px; }
-    .grid.list .cv-card__fav { top: 8px; right: 8px; }
     .grid.list .cv-card__overlay { display: none; }
     .grid.list .cv-card__body {
       flex: 1;
@@ -638,80 +635,6 @@
     .grid.list .cv-card__actions { grid-template-columns: auto auto; width: auto; flex-shrink: 0; }
     .grid.list .cv-card__title { margin-bottom: 5px; }
     .grid.list .cv-card__tags { margin-bottom: 0; }
-
-    /* ============================================================
-       FAVOURITES SECTION
-    ============================================================ */
-    .fav-section {
-      display: none;
-      background: var(--surface);
-      border-radius: var(--r-xl);
-      padding: 20px;
-      margin-bottom: 24px;
-      border: 1.5px solid var(--border);
-      box-shadow: var(--shadow-xs);
-    }
-    .fav-section.visible { display: block; }
-    .fav-section__header {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      margin-bottom: 14px;
-    }
-    .fav-section__title {
-      font-family: 'Sora', sans-serif;
-      font-size: .9rem;
-      font-weight: 700;
-      color: var(--text);
-      display: flex;
-      align-items: center;
-      gap: 6px;
-    }
-    .fav-section__title svg { color: #e53e3e; }
-    .fav-section__clear {
-      font-size: .75rem;
-      color: var(--text-3);
-      cursor: pointer;
-      transition: color .2s;
-    }
-    .fav-section__clear:hover { color: #e53e3e; }
-    .fav-strip {
-      display: flex;
-      gap: 10px;
-      overflow-x: auto;
-      padding-bottom: 4px;
-      scrollbar-width: none;
-    }
-    .fav-strip::-webkit-scrollbar { display: none; }
-    .fav-chip {
-      flex: 0 0 auto;
-      background: var(--bg);
-      border: 1.5px solid var(--border);
-      border-radius: var(--r-md);
-      padding: 8px 12px;
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      cursor: pointer;
-      transition: all .2s;
-      font-size: .78rem;
-      font-weight: 600;
-    }
-    .fav-chip:hover { border-color: var(--green); color: var(--green); }
-    .fav-chip__remove {
-      width: 16px; height: 16px;
-      border-radius: 50%;
-      background: var(--text-3);
-      color: white;
-      font-size: .6rem;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      cursor: pointer;
-      transition: background .2s;
-      border: none;
-    }
-    .fav-chip__remove:hover { background: #e53e3e; }
 
     /* ============================================================
        EMPTY STATE
@@ -804,22 +727,73 @@
     }
     .modal__close:hover { background: rgba(255,255,255,.3); }
 
-    .modal__img-wrap {
+    /* Image zone + zoom wrapper */
+    .modal__img-outer {
+      flex: 1;
+      position: relative;
       background: var(--bg2);
+      overflow: hidden;           /* clip l'image zoomée au bord du conteneur */
+      min-height: 260px;
+      /* Hauteur fixe pour que offsetHeight soit stable dans clampPan */
+      height: 0;                  /* flex: 1 + height:0 = l'outer prend tout l'espace flex */
+      user-select: none;
+      -webkit-user-select: none;
+    }
+    .modal__img-wrap {
+      width: 100%;
+      height: 100%;
       display: flex;
       align-items: center;
       justify-content: center;
-      flex: 1;
-      overflow: hidden;
-      padding: 20px;
-      min-height: 200px;
+      padding: 16px;
     }
     .modal__img {
-      max-width: 100%;
-      max-height: 55vh;
+      /* PAS de max-width / max-height fixes : on laisse le navigateur calculer
+         la taille optimale dans le conteneur, puis on scale par transform. */
+      max-width: calc(100% - 32px);
+      max-height: calc(100% - 32px);
+      width: auto;
+      height: auto;
       border-radius: var(--r-md);
       box-shadow: var(--shadow-lg);
       object-fit: contain;
+      transition: transform .18s cubic-bezier(.2,0,.2,1);
+      transform-origin: center center;
+      cursor: zoom-in;
+      pointer-events: none;       /* drag géré sur l'outer, pas l'img */
+      will-change: transform;
+      display: block;
+      /* empêche le drag natif de l'image par le navigateur */
+      -webkit-user-drag: none;
+      user-drag: none;
+    }
+    .modal__img.zoomed { cursor: grab; }
+    /* Désactive la transition pendant le drag pour fluidité maximale */
+    .modal__img.dragging { transition: none !important; }
+
+    /* Zoom controls — outside the img wrap so they're never destroyed */
+    .zoom-controls {
+      position: absolute;
+      bottom: 12px;
+      right: 12px;
+      z-index: 5;
+      display: flex;
+      gap: 4px;
+    }
+    .zoom-btn {
+      width: 30px; height: 30px; border-radius: 50%;
+      background: rgba(0,0,0,.55); backdrop-filter: blur(4px);
+      color: white; border: none; cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1rem; font-weight: 700; transition: background .15s;
+      user-select: none;
+    }
+    .zoom-btn:hover { background: rgba(0,0,0,.8); }
+    .zoom-level {
+      height: 30px; padding: 0 8px; border-radius: 15px;
+      background: rgba(0,0,0,.55); backdrop-filter: blur(4px);
+      color: white; font-size: .68rem; font-weight: 700;
+      display: flex; align-items: center; font-family: 'Sora', sans-serif;
     }
 
     .modal__footer {
@@ -1083,109 +1057,418 @@
     }
 
     /* ============================================================
-       RESPONSIVE
+       RESPONSIVE — TOUS SUPPORTS
     ============================================================ */
-    @media (min-width: 600px) {
-      .grid { grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); }
-    }
-    @media (min-width: 900px) {
+
+    /* ── Desktop large (≥1100px) ── */
+    @media (min-width: 1100px) {
       .grid { grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); }
     }
 
+    /* ── Desktop standard (≥900px) ── */
+    @media (min-width: 900px) {
+      .grid { grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); }
+      .controls__top { flex-wrap: nowrap; }
+    }
+
+    /* ── Tablette paysage (≥768px) ── */
+    @media (min-width: 768px) and (max-width: 899px) {
+      .grid { grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 14px; }
+      .main { padding: 0 18px 60px; }
+    }
+
+    /* ── Tablette portrait (600–767px) ── */
+    @media (min-width: 600px) and (max-width: 767px) {
+      .grid { grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 12px; }
+      .main { padding: 0 16px 60px; }
+      .hero { padding: 40px 16px 72px; }
+      .stats-strip { max-width: 480px; }
+    }
+
+    /* ── Tablette générale (≥600px) ── */
+    @media (min-width: 600px) {
+      .grid { grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); }
+    }
+
+    /* ── Mobile large (480–599px) ── */
+    @media (min-width: 480px) and (max-width: 599px) {
+      .grid { grid-template-columns: repeat(2, 1fr); gap: 12px; }
+      .hero__title { font-size: 1.9rem; }
+      .stats-strip { max-width: 440px; }
+      .toolbar { flex-wrap: nowrap; }
+    }
+
+    /* ── Mobile (≤599px) ── */
     @media (max-width: 599px) {
+      /* Hero */
       .hero { padding: 36px 16px 70px; }
       .hero__title { font-size: 1.8rem; }
+      .hero__sub { font-size: .88rem; }
+
+      /* Stats strip */
       .stats-strip { padding: 0 16px; gap: 8px; margin-top: -30px; }
       .stat-pill { padding: 12px 8px; }
       .stat-pill__num { font-size: 1.2rem; }
-      .main { padding: 0 16px 60px; }
-      .controls { padding: 14px; }
+      .stat-pill__label { font-size: .58rem; }
+
+      /* Back bar */
+      .back-bar { padding: 8px 14px; }
+      .back-btn { font-size: .78rem; padding: 6px 11px; }
+
+      /* Main */
+      .main { padding: 0 14px 80px; }
+
+      /* Controls */
+      .controls { padding: 12px; border-radius: var(--r-lg); }
+      .controls__top { flex-wrap: wrap; gap: 8px; }
+      .search-box input { height: 40px; font-size: .85rem; }
+
+      /* Filters — scroll horizontal sur mobile */
+      .filters {
+        flex-wrap: nowrap;
+        overflow-x: auto;
+        scrollbar-width: none;
+        -webkit-overflow-scrolling: touch;
+        padding-bottom: 4px;
+        margin-bottom: -4px;
+        gap: 6px;
+      }
+      .filters::-webkit-scrollbar { display: none; }
+      .filters__label { flex-shrink: 0; }
+      .filter-pill { flex-shrink: 0; height: 30px; font-size: .74rem; padding: 0 11px; }
+
+      /* Toolbar */
+      .toolbar { flex-wrap: wrap; gap: 8px; }
+      .results-badge { font-size: .76rem; padding: 5px 11px; }
+      .toolbar__right { gap: 7px; }
+      .sort-select { height: 32px; font-size: .74rem; padding: 0 9px; }
+      #compareModeBtn { height: 32px !important; font-size: .7rem !important; padding: 0 10px; }
+
+      /* Grid */
       .grid { grid-template-columns: repeat(2, 1fr); gap: 10px; }
+
+      /* Cards */
       .cv-card__body { padding: 10px; }
       .cv-card__title { font-size: .78rem; }
+      .cv-card__tags { gap: 4px; margin-bottom: 8px; }
+      .tag { font-size: .6rem; padding: 2px 6px; }
       .cv-card__actions { grid-template-columns: 1fr; gap: 5px; }
       .btn-sm { height: 32px; font-size: .72rem; }
-      .grid.list { grid-template-columns: 1fr; }
-      .grid.list .cv-card__body { flex-wrap: wrap; gap: 8px; }
+
+      /* List mode */
+      .grid.list { grid-template-columns: 1fr; gap: 8px; }
+      .grid.list .cv-card__img { height: 90px; width: 70px; }
+      .grid.list .cv-card__body { flex-wrap: wrap; gap: 8px; padding: 10px 12px; }
       .grid.list .cv-card__actions { width: 100%; grid-template-columns: 1fr 1fr; }
+
+      /* Active filters */
+      .active-filters { gap: 6px; margin-bottom: 12px; flex-wrap: wrap; }
+
+      /* Modal */
       .modal { max-width: 100%; border-radius: var(--r-xl) var(--r-xl) 0 0; }
       .modal-backdrop { align-items: flex-end; padding: 0; }
+      .modal__header { padding: 13px 16px; }
+      .modal__title { font-size: .9rem; }
+      .modal__footer { padding: 12px 16px; gap: 8px; }
+      .modal__btn { height: 40px; font-size: .8rem; }
+
+      /* Similar strip */
+      .similar-section { padding: 12px 14px; }
+      .similar-chip { padding: 6px 8px; }
+
+      /* Compare bar */
+      .compare-bar { padding: 10px 14px; }
+      .compare-slot { padding: 5px 8px; font-size: .72rem; }
+      .compare-action-btn { height: 32px; font-size: .72rem; padding: 0 11px; }
     }
 
+    /* ── Très petits mobiles (≤380px) ── */
     @media (max-width: 380px) {
-      .grid { grid-template-columns: 1fr; }
       .hero__title { font-size: 1.5rem; }
+      .hero__badge { font-size: .68rem; padding: 4px 11px; }
+
       .stats-strip { grid-template-columns: 1fr 1fr; }
       .stats-strip .stat-pill:last-child { grid-column: 1 / -1; }
+
+      .grid { grid-template-columns: 1fr; gap: 10px; }
+
+      .toolbar { flex-direction: column; align-items: flex-start; }
+      .toolbar__right { width: 100%; justify-content: flex-end; }
+
+      .back-btn span { display: none; }
+
+      .modal__header { flex-wrap: wrap; gap: 6px; }
+
+      .compare-bar__slots { flex-wrap: wrap; }
+      .compare-bar__actions { width: 100%; justify-content: flex-end; }
+
+      .share-platforms { grid-template-columns: repeat(3, 1fr); }
+    }
+
+    /* ── Très très petits écrans (≤320px) ── */
+    @media (max-width: 320px) {
+      .hero__title { font-size: 1.3rem; }
+      .stat-pill__num { font-size: 1rem; }
+      .grid { gap: 8px; }
+      .cv-card__body { padding: 8px; }
+      .share-platforms { grid-template-columns: repeat(2, 1fr); }
     }
 
     /* ============================================================
        DARK MODE
     ============================================================ */
     [data-theme="dark"] {
-      --bg:      #0f1510;
-      --bg2:     #1a2118;
-      --surface: #1e2820;
-      --text:    #e8f0e4;
-      --text-2:  #a8bda0;
-      --text-3:  #5c7055;
-      --border:  #2d3d28;
-      --green-light: rgba(9,65,2,.25);
-      --shadow-xs: 0 1px 3px rgba(0,0,0,.4);
-      --shadow-sm: 0 3px 10px rgba(0,0,0,.4);
-      --shadow-md: 0 8px 24px rgba(0,0,0,.5);
-      --shadow-lg: 0 16px 40px rgba(0,0,0,.6);
+      --bg:          #0f1510;
+      --bg2:         #1a2118;
+      --surface:     #1e2820;
+      --text:        #ffffff;
+      --text-2:      #d4e8cc;
+      --text-3:      #8ab07e;
+      --border:      #3a4e34;
+      --green-light: rgba(255,255,255,.08);
+      --shadow-xs:   0 1px 3px rgba(0,0,0,.4);
+      --shadow-sm:   0 3px 10px rgba(0,0,0,.4);
+      --shadow-md:   0 8px 24px rgba(0,0,0,.5);
+      --shadow-lg:   0 16px 40px rgba(0,0,0,.6);
     }
-    [data-theme="dark"] .back-bar { background: #1e2820; }
-    [data-theme="dark"] .share-link-input { background: #151d13; }
-    [data-theme="dark"] .share-platform-btn { background: #151d13; }
-    [data-theme="dark"] .filter-pill { background: #151d13; }
-    [data-theme="dark"] .search-box input { background: #151d13; }
-    [data-theme="dark"] .sort-select { background: #1e2820; color: var(--text-2); }
-    [data-theme="dark"] .fav-chip { background: #151d13; }
-    [data-theme="dark"] .stat-pill { background: #1e2820; }
-    [data-theme="dark"] .cv-card { background: #1e2820; }
-    [data-theme="dark"] .controls { background: #1e2820; }
+
+    /* ── Barre du haut ── */
+    [data-theme="dark"] .back-bar {
+      background: #1e2820;
+      border-color: #3a4e34;
+    }
+    [data-theme="dark"] .back-btn {
+      color: #ffffff;
+      background: #2a3a24;
+      border-color: #3a4e34;
+    }
+    [data-theme="dark"] .back-btn:hover {
+      background: #3a4e34;
+      border-color: #5a7a50;
+      color: #ffffff;
+    }
+    [data-theme="dark"] .theme-toggle {
+      background: #2a3a24;
+      border-color: #3a4e34;
+      color: #ffffff;
+    }
+    [data-theme="dark"] .theme-toggle:hover {
+      background: #3a4e34;
+      border-color: #5a7a50;
+      color: #ffffff;
+    }
+
+    /* ── Stats ── */
+    [data-theme="dark"] .stat-pill {
+      background: #1e2820;
+      border-color: #3a4e34;
+    }
+    [data-theme="dark"] .stat-pill__label { color: #8ab07e; }
+    [data-theme="dark"] .stat-pill__num {
+      background: linear-gradient(135deg, #7ecb6a 0%, #FF8040 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    /* ── Contrôles / recherche / filtres ── */
+    [data-theme="dark"] .controls {
+      background: #1e2820;
+      border-color: #3a4e34;
+    }
+    [data-theme="dark"] .search-box input {
+      background: #151d13;
+      border-color: #3a4e34;
+      color: #ffffff;
+    }
+    [data-theme="dark"] .search-box input::placeholder { color: #8ab07e; }
+    [data-theme="dark"] .search-box svg { color: #8ab07e; }
+    [data-theme="dark"] .search-clear { background: #5a7a50; }
+    [data-theme="dark"] .filters { border-color: #3a4e34; }
+    [data-theme="dark"] .filters__label { color: #8ab07e; }
+    [data-theme="dark"] .filter-pill {
+      background: #151d13;
+      border-color: #3a4e34;
+      color: #d4e8cc;
+    }
+    [data-theme="dark"] .filter-pill:hover {
+      border-color: #7ecb6a;
+      color: #ffffff;
+      background: rgba(126,203,106,.12);
+    }
+    [data-theme="dark"] .filter-pill.active {
+      background: var(--green);
+      border-color: var(--green);
+      color: #ffffff;
+    }
+    [data-theme="dark"] .filter-pill.active.orange {
+      background: var(--orange);
+      border-color: var(--orange);
+    }
+
+    /* ── Toolbar ── */
     [data-theme="dark"] .toolbar { background: transparent; }
-    [data-theme="dark"] .results-badge { background: #1e2820; }
+    [data-theme="dark"] .results-badge {
+      background: #1e2820;
+      border-color: #3a4e34;
+      color: #d4e8cc;
+    }
+    [data-theme="dark"] .results-badge strong { color: #7ecb6a; }
+    [data-theme="dark"] .sort-select {
+      background: #1e2820;
+      border-color: #3a4e34;
+      color: #ffffff;
+    }
+    [data-theme="dark"] #compareModeBtn {
+      background: #1e2820 !important;
+      border-color: #3a4e34 !important;
+      color: #d4e8cc !important;
+    }
+    [data-theme="dark"] #compareModeBtn:hover {
+      border-color: #5a7a50 !important;
+      color: #ffffff !important;
+    }
     [data-theme="dark"] .view-toggle { background: #151d13; }
-    [data-theme="dark"] .view-btn.active { background: #2d3d28; }
-    [data-theme="dark"] .fav-section { background: #1e2820; }
-    [data-theme="dark"] .share-modal__body { background: #1e2820; }
+    [data-theme="dark"] .view-btn { color: #8ab07e; }
+    [data-theme="dark"] .view-btn.active {
+      background: #2d3d28;
+      color: #ffffff;
+    }
+    [data-theme="dark"] .view-btn:hover:not(.active) { color: #d4e8cc; }
+
+    /* ── Filtres actifs ── */
+    [data-theme="dark"] .active-filters__label { color: #8ab07e; }
+    [data-theme="dark"] .clear-all-btn { color: #8ab07e; }
+    [data-theme="dark"] .clear-all-btn:hover { color: var(--orange); }
+
+    /* ── Cartes CV ── */
+    [data-theme="dark"] .cv-card {
+      background: #1e2820;
+      border-color: #3a4e34;
+    }
+    [data-theme="dark"] .cv-card__title { color: #ffffff; }
+    [data-theme="dark"] .cv-card__body { background: #1e2820; }
+    [data-theme="dark"] .btn-sm.outline {
+      background: #151d13;
+      border-color: #3a4e34;
+      color: #d4e8cc;
+    }
+    [data-theme="dark"] .btn-sm.outline:hover {
+      border-color: #7ecb6a;
+      color: #ffffff;
+      background: rgba(126,203,106,.12);
+    }
+    [data-theme="dark"] .cv-card__share { background: rgba(30,40,32,.85); color: #d4e8cc; }
+    [data-theme="dark"] .cv-card__share:hover { color: #ffffff; background: #2a3a24; }
+
+    /* Tags */
+    [data-theme="dark"] .tag.word     { background: rgba(126,203,106,.15); color: #7ecb6a; }
+    [data-theme="dark"] .tag.ppt      { background: rgba(255,87,0,.18);    color: #FF8040; }
+    [data-theme="dark"] .tag.moderne  { background: #1a2535; color: #6baed6; }
+    [data-theme="dark"] .tag.classique{ background: #2a1f0a; color: #f6b84d; }
+    [data-theme="dark"] .tag.creatif  { background: #1f1430; color: #c084fc; }
+    [data-theme="dark"] .tag.minimal  { background: #0d1f12; color: #4ade80; }
+
+    /* ── Modal aperçu ── */
+    [data-theme="dark"] .modal { background: #1e2820; }
+    [data-theme="dark"] .modal__img-outer { background: #151d13; }
+    [data-theme="dark"] .modal__footer {
+      background: #1e2820;
+      border-color: #3a4e34;
+    }
+    [data-theme="dark"] .modal__btn.outline {
+      background: #151d13;
+      border-color: #3a4e34;
+      color: #d4e8cc;
+    }
+    [data-theme="dark"] .modal__btn.outline:hover {
+      border-color: #7ecb6a;
+      color: #ffffff;
+    }
+    [data-theme="dark"] .modal__footer > div { border-color: #3a4e34; }
+    /* Bouton Partager dans la modal */
+    [data-theme="dark"] .modal__footer + div .btn-sm.outline,
+    [data-theme="dark"] div[style*="border-top"] .btn-sm.outline {
+      background: #151d13;
+      border-color: #3a4e34;
+      color: #d4e8cc;
+    }
+
+    /* ── Section similaires ── */
+    [data-theme="dark"] .similar-section {
+      background: #1e2820;
+      border-color: #3a4e34;
+    }
+    [data-theme="dark"] .similar-label { color: #8ab07e; }
+    [data-theme="dark"] .similar-chip {
+      background: #151d13;
+      border-color: #3a4e34;
+    }
+    [data-theme="dark"] .similar-chip:hover { border-color: #7ecb6a; }
+    [data-theme="dark"] .similar-chip__title { color: #ffffff; }
+    [data-theme="dark"] .similar-chip__tag   { color: #8ab07e; }
+
+    /* ── Share modal ── */
     [data-theme="dark"] .share-modal { background: #1e2820; }
-    [data-theme="dark"] .share-divider { border-color: #2d3d28; }
-    [data-theme="dark"] .share-qr-wrap { background: white; }
-    [data-theme="dark"] .modal-backdrop .modal { background: #1e2820; }
-    [data-theme="dark"] .modal__footer { background: #1e2820; border-color: #2d3d28; }
-    [data-theme="dark"] .tag.word { background: rgba(9,65,2,.3); }
-    [data-theme="dark"] .tag.ppt  { background: rgba(255,87,0,.2); }
-    [data-theme="dark"] .tag.moderne  { background: #1a2535; color:#6baed6; }
-    [data-theme="dark"] .tag.classique{ background: #2a1f0a; color:#f6b84d; }
-    [data-theme="dark"] .tag.creatif  { background: #1f1430; color:#c084fc; }
-    [data-theme="dark"] .tag.minimal  { background: #0d1f12; color:#4ade80; }
-    [data-theme="dark"] .note-modal { background: #1e2820; }
-    [data-theme="dark"] .note-textarea { background: #151d13; color: var(--text); border-color: var(--border); }
-    [data-theme="dark"] .compare-bar { background: #1e2820; border-color: #2d3d28; }
+    [data-theme="dark"] .share-modal__body { background: #1e2820; }
+    [data-theme="dark"] .share-link-input {
+      background: #151d13;
+      border-color: #3a4e34;
+      color: #d4e8cc;
+    }
+    [data-theme="dark"] .share-platform-btn {
+      background: #151d13;
+      border-color: #3a4e34;
+      color: #d4e8cc;
+    }
+    [data-theme="dark"] .share-divider { border-color: #3a4e34; }
+    [data-theme="dark"] .share-qr-wrap { background: white; border-color: #3a4e34; }
+    [data-theme="dark"] .share-qr-info strong { color: #ffffff; }
+    [data-theme="dark"] .share-qr-info p { color: #8ab07e; }
+    [data-theme="dark"] .share-qr-download { color: #7ecb6a; }
+    [data-theme="dark"] .share-platforms-label { color: #8ab07e; }
+    [data-theme="dark"] #shareMessage {
+      background: #151d13 !important;
+      border-color: #3a4e34 !important;
+      color: #ffffff !important;
+    }
+    [data-theme="dark"] #shareMsgCnt { color: #8ab07e; }
+
+    /* ── Compare ── */
+    [data-theme="dark"] .compare-bar {
+      background: #1e2820;
+      border-color: var(--orange);
+    }
+    [data-theme="dark"] .compare-slot {
+      background: #151d13;
+      border-color: #3a4e34;
+      color: #d4e8cc;
+    }
+    [data-theme="dark"] .compare-slot.filled { border-color: var(--orange); }
+    [data-theme="dark"] .compare-slot__num   { color: var(--orange); }
+    [data-theme="dark"] .compare-action-btn.cancel {
+      background: #151d13;
+      border-color: #3a4e34;
+      color: #d4e8cc;
+    }
     [data-theme="dark"] .compare-modal-inner { background: #1e2820; }
-    [data-theme="dark"] .similar-section { background: #1e2820; }
-
-
-    /* ============================================================
-       STAR RATING
-    ============================================================ */
-    .cv-card__rating {
-      display: flex; gap: 2px; margin-bottom: 8px;
+    [data-theme="dark"] .compare-modal-body  { background: #1e2820; }
+    [data-theme="dark"] .compare-item {
+      background: #151d13;
+      border-color: #3a4e34;
     }
-    .star {
-      font-size: .85rem; cursor: pointer; color: #d1d5db;
-      transition: color .15s, transform .1s;
-      line-height: 1;
-      background: none; border: none; padding: 0;
-    }
-    .star.active, .star.hover { color: #f59e0b; }
-    .star:hover { transform: scale(1.2); }
-    .rating-count { font-size: .65rem; color: var(--text-3); margin-left: 3px; align-self: center; }
+    [data-theme="dark"] .compare-item__title { color: #ffffff; }
 
+    /* ── Toast ── */
+    [data-theme="dark"] .toast { background: #2a3a24; color: #ffffff; }
+
+    /* ── Empty state ── */
+    [data-theme="dark"] .empty {
+      background: #1e2820;
+      border-color: #3a4e34;
+    }
+    [data-theme="dark"] .empty h3 { color: #ffffff; }
+    [data-theme="dark"] .empty p   { color: #d4e8cc; }
 
     /* ============================================================
        COMPARE MODE
@@ -1298,8 +1581,12 @@
     @media (max-width:599px) {
       .compare-grid { grid-template-columns:1fr 1fr; }
       .compare-bar { padding:10px 14px; }
+      .compare-modal-inner { border-radius: var(--r-xl) var(--r-xl) 0 0; max-height: 85vh; }
+      .compare-backdrop { align-items: flex-end; padding: 0; }
     }
-
+    @media (max-width:380px) {
+      .compare-grid { grid-template-columns:1fr; }
+    }
 
     /* ============================================================
        SIMILAR MODELS (in preview modal)
@@ -1333,39 +1620,6 @@
     .similar-chip__title { font-size:.72rem; font-weight:600; color:var(--text); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; max-width:80px; }
     .similar-chip__tag { font-size:.6rem; color:var(--text-3); }
 
-    /* ============================================================
-       ZOOM IN MODAL
-    ============================================================ */
-    .modal__img-wrap {
-      position: relative;
-      overflow: hidden;
-    }
-    .zoom-controls {
-      position: absolute; bottom: 12px; right: 12px; z-index: 5;
-      display: flex; gap: 4px;
-    }
-    .zoom-btn {
-      width: 30px; height: 30px; border-radius: 50%;
-      background: rgba(0,0,0,.55); backdrop-filter: blur(4px);
-      color: white; border: none; cursor: pointer;
-      display: flex; align-items: center; justify-content: center;
-      font-size: 1rem; font-weight: 700; transition: background .15s;
-      user-select: none;
-    }
-    .zoom-btn:hover { background: rgba(0,0,0,.8); }
-    .zoom-level {
-      height: 30px; padding: 0 8px; border-radius: 15px;
-      background: rgba(0,0,0,.55); backdrop-filter: blur(4px);
-      color: white; font-size: .68rem; font-weight: 700;
-      display: flex; align-items: center; font-family: 'Sora', sans-serif;
-    }
-    .modal__img {
-      transition: transform .25s cubic-bezier(.2,0,.2,1);
-      transform-origin: center center;
-      cursor: zoom-in;
-    }
-    .modal__img.zoomed { cursor: zoom-out; }
-
   </style>
 </head>
 <body>
@@ -1374,15 +1628,16 @@
   <div class="back-bar">
     <div style="display:flex;align-items:center;gap:10px;">
       <a href="index.html" class="back-btn">
-      <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round">
-        <path d="M19 12H5M12 5l-7 7 7 7"/>
-      </svg>
-      Retour à l'accueil
-    </a>
-    <button class="theme-toggle" id="themeToggle" onclick="toggleTheme()" title="Thème sombre/clair" aria-label="Basculer le thème">
-      <svg class="icon-moon" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
-      <svg class="icon-sun"  width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" style="display:none"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
-    </button>
+        <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round">
+          <path d="M19 12H5M12 5l-7 7 7 7"/>
+        </svg>
+        Retour à l'accueil
+      </a>
+      <button class="theme-toggle" id="themeToggle" onclick="toggleTheme()" title="Thème sombre/clair" aria-label="Basculer le thème">
+        <svg class="icon-moon" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+        <svg class="icon-sun"  width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" style="display:none"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+      </button>
+    </div>
   </div>
 
   <!-- ── HERO ── -->
@@ -1423,7 +1678,6 @@
     <!-- Controls -->
     <div class="controls">
       <div class="controls__top">
-        <!-- Search -->
         <div class="search-box">
           <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2">
             <circle cx="10" cy="10" r="7"/><path d="m20 20-4.35-4.35"/>
@@ -1458,7 +1712,6 @@
     <!-- Active filters display -->
     <div class="active-filters" id="activeFilters">
       <span class="active-filters__label">Filtres actifs :</span>
-      <!-- populated by JS -->
       <button class="clear-all-btn" onclick="clearAllFilters()">Tout effacer</button>
     </div>
 
@@ -1495,18 +1748,6 @@
       </div>
     </div>
 
-    <!-- Favourites section -->
-    <div class="fav-section" id="favSection">
-      <div class="fav-section__header">
-        <span class="fav-section__title">
-          <svg width="14" height="14" fill="#e53e3e" viewBox="0 0 24 24"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
-          Mes favoris
-        </span>
-        <button class="fav-section__clear" onclick="clearFavourites()">Tout retirer</button>
-      </div>
-      <div class="fav-strip" id="favStrip"></div>
-    </div>
-
     <!-- Grid -->
     <div class="grid" id="grid"></div>
 
@@ -1532,46 +1773,38 @@
       <div class="modal__header" style="display:flex;align-items:center;justify-content:space-between;gap:10px;">
         <span class="modal__title" id="modalTitle">Aperçu</span>
         <div style="display:flex;align-items:center;gap:6px;">
-          <!-- Nav slideshow prev/next -->
           <button class="modal__close" style="font-size:.9rem;width:28px;height:28px;" onclick="slidePreview(-1)" title="Précédent">&#8592;</button>
           <span id="modalNavIndex" style="font-size:.72rem;color:rgba(255,255,255,.7);font-family:'Sora',sans-serif;white-space:nowrap;"></span>
           <button class="modal__close" style="font-size:.9rem;width:28px;height:28px;" onclick="slidePreview(1)" title="Suivant">&#8594;</button>
           <button class="modal__close" onclick="closeModal()">×</button>
         </div>
       </div>
-      <div class="modal__img-wrap" id="modalImgWrap">
-        <img class="modal__img" id="modalImg" src="" alt="" onclick="toggleZoom(this)" />
-        <!-- Zoom controls -->
-        <div class="zoom-controls">
+
+      <!-- Image outer: contient l'image ET les contrôles zoom — jamais remplacé par innerHTML -->
+      <div class="modal__img-outer" id="modalImgOuter" onclick="handleImgClick(event)">
+        <div class="modal__img-wrap" id="modalImgWrap">
+          <img class="modal__img" id="modalImg" src="" alt="" />
+        </div>
+        <!-- Zoom controls sont ICI, hors du wrap, donc jamais détruits -->
+        <div class="zoom-controls" id="zoomControls">
           <button class="zoom-btn" onclick="zoomImg(-1)" title="Dézoomer">−</button>
           <span class="zoom-level" id="zoomLevel">100%</span>
           <button class="zoom-btn" onclick="zoomImg(1)" title="Zoomer">+</button>
           <button class="zoom-btn" onclick="resetZoom()" title="Réinitialiser" style="font-size:.7rem;width:auto;padding:0 8px;border-radius:15px;">↺</button>
         </div>
       </div>
-      <!-- Rating row -->
-      <div style="padding:10px 18px 8px;display:flex;align-items:center;justify-content:space-between;border-top:1px solid var(--border);">
-        <div>
-          <div style="font-size:.7rem;color:var(--text-3);font-weight:600;text-transform:uppercase;letter-spacing:.04em;margin-bottom:4px;">Votre note</div>
-          <div class="cv-card__rating" id="modalRating" style="gap:4px;">
-            <button class="star" data-star="1" onclick="rateFromModal(1)">★</button>
-            <button class="star" data-star="2" onclick="rateFromModal(2)">★</button>
-            <button class="star" data-star="3" onclick="rateFromModal(3)">★</button>
-            <button class="star" data-star="4" onclick="rateFromModal(4)">★</button>
-            <button class="star" data-star="5" onclick="rateFromModal(5)">★</button>
-            <span class="rating-count" id="modalRatingCount"></span>
-          </div>
-        </div>
-        <div style="display:flex;gap:6px;">
 
-          <button class="btn-sm outline" style="height:30px;font-size:.7rem;" onclick="state.currentPreview && openShare(state.currentPreview.id)">
-            <svg width="11" height="11" fill="none" stroke="currentColor" stroke-width="2.2"><circle cx="9" cy="2.5" r="1.5"/><circle cx="3" cy="6" r="1.5"/><circle cx="9" cy="9.5" r="1.5"/><line x1="4.27" y1="6.75" x2="7.74" y2="8.77"/><line x1="7.73" y1="3.22" x2="4.27" y2="5.25"/></svg>
-            Partager
-          </button>
-        </div>
+      <!-- Share row -->
+      <div style="padding:10px 18px 8px;display:flex;align-items:center;justify-content:flex-end;border-top:1px solid var(--border);">
+        <button class="btn-sm outline" style="height:30px;font-size:.7rem;" onclick="state.currentPreview && openShare(state.currentPreview.id)">
+          <svg width="11" height="11" fill="none" stroke="currentColor" stroke-width="2.2"><circle cx="9" cy="2.5" r="1.5"/><circle cx="3" cy="6" r="1.5"/><circle cx="9" cy="9.5" r="1.5"/><line x1="4.27" y1="6.75" x2="7.74" y2="8.77"/><line x1="7.73" y1="3.22" x2="4.27" y2="5.25"/></svg>
+          Partager
+        </button>
       </div>
+
       <!-- Similar models -->
       <div class="similar-section" id="similarSection"></div>
+
       <div class="modal__footer">
         <button class="modal__btn outline" onclick="closeModal()">Fermer</button>
         <button class="modal__btn solid" id="modalSelectBtn" onclick="selectFromModal()">
@@ -1600,7 +1833,6 @@
       </div>
 
       <div class="share-modal__body">
-        <!-- Message personnel (optionnel) -->
         <div style="margin-bottom:14px;">
           <div class="share-platforms-label" style="margin-bottom:6px;">Message personnel (optionnel)</div>
           <div style="position:relative;">
@@ -1617,7 +1849,6 @@
           </div>
         </div>
 
-        <!-- Link row -->
         <div class="share-link-row">
           <input type="text" class="share-link-input" id="shareLinkInput" readonly />
           <button class="share-copy-btn" id="shareCopyBtn" onclick="copyShareLink()">
@@ -1626,7 +1857,6 @@
           </button>
         </div>
 
-        <!-- Platforms -->
         <div class="share-platforms-label">Partager via</div>
         <div class="share-platforms">
           <button class="share-platform-btn whatsapp" onclick="shareWhatsApp()">
@@ -1635,23 +1865,19 @@
             </div>
             WhatsApp
           </button>
-
           <button class="share-platform-btn facebook" onclick="shareFacebook()">
             <div class="platform-icon">
               <svg width="18" height="18" fill="white" viewBox="0 0 24 24"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
             </div>
             Facebook
           </button>
-
           <button class="share-platform-btn email" onclick="shareEmail()">
             <div class="platform-icon">
               <svg width="18" height="18" fill="none" stroke="white" stroke-width="2" viewBox="0 0 24 24"><rect x="2" y="4" width="20" height="16" rx="2"/><polyline points="2,6 12,13 22,6"/></svg>
             </div>
             Email
           </button>
-
-          <button class="share-platform-btn" onclick="shareLinkedIn()"
-                  class_extra="linkedin">
+          <button class="share-platform-btn" onclick="shareLinkedIn()">
             <div class="platform-icon" style="background:#0A66C2;">
               <svg width="18" height="18" fill="white" viewBox="0 0 24 24"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"/><rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/></svg>
             </div>
@@ -1667,11 +1893,8 @@
 
         <hr class="share-divider" />
 
-        <!-- QR Code -->
         <div class="share-qr-section">
-          <div class="share-qr-wrap" id="shareQrWrap">
-            <!-- QR drawn by JS -->
-          </div>
+          <div class="share-qr-wrap" id="shareQrWrap"></div>
           <div class="share-qr-info">
             <strong>QR Code</strong>
             <p>Scannez pour accéder directement à ce modèle depuis un autre appareil.</p>
@@ -1788,12 +2011,9 @@
       format: '',
       style: '',
       sort: 'num-asc',
-      favourites: JSON.parse(sessionStorage.getItem('cvFavs') || '[]'),
-      ratings: JSON.parse(sessionStorage.getItem('cvRatings') || '{}'),
       compareMode: false,
       compareList: [],
       currentPreview: null,
-      history: JSON.parse(sessionStorage.getItem('cvHistory') || '[]'),
       zoomLevel: 1
     };
 
@@ -1811,7 +2031,6 @@
         return matchQ && matchF && matchS;
       });
 
-      // Sort
       res = [...res].sort((a,b) => {
         if (state.sort === 'num-asc')  return a.number.localeCompare(b.number);
         if (state.sort === 'num-desc') return b.number.localeCompare(a.number);
@@ -1827,7 +2046,7 @@
 
     /* ── RENDER GRID ── */
     function render() {
-      const grid = document.getElementById('grid');
+      const grid  = document.getElementById('grid');
       const empty = document.getElementById('emptyState');
 
       if (!state.filtered.length) {
@@ -1839,23 +2058,16 @@
 
       grid.className = 'grid' + (state.view === 'list' ? ' list' : '');
 
+      const styleLabels = {moderne:'Moderne',classique:'Classique',creatif:'Créatif',minimal:'Minimal'};
+
       grid.innerHTML = state.filtered.map((m, i) => {
-        const isFav = state.favourites.includes(m.id);
         const fmtLabel = m.format === 'word' ? 'Word' : 'PowerPoint';
-        const styleLabels = {moderne:'Moderne',classique:'Classique',creatif:'Créatif',minimal:'Minimal'};
 
         return `
           <div class="cv-card" data-id="${m.id}" style="animation-delay:${i*30}ms"
                onclick="previewModel('${m.id}')">
             <span class="cv-card__num">N°${m.number}</span>
-            <button class="cv-card__fav ${isFav?'active':''}"
-                    onclick="event.stopPropagation();toggleFav('${m.id}')"
-                    aria-label="${isFav?'Retirer des favoris':'Ajouter aux favoris'}">
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="${isFav?'currentColor':'none'}"
-                   stroke="currentColor" stroke-width="2">
-                <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
-              </svg>
-            </button>
+
             <button class="cv-card__share"
                     onclick="event.stopPropagation();openShare('${m.id}')"
                     aria-label="Partager ${m.title}" title="Partager">
@@ -1864,6 +2076,7 @@
                 <line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/>
               </svg>
             </button>
+
             <button class="cv-card__compare-check ${state.compareList.includes(m.id)?'checked':''}"
                     id="chk-${m.id}"
                     onclick="event.stopPropagation();toggleCompare('${m.id}')"
@@ -1893,13 +2106,6 @@
                   <span class="tag ${m.format === 'word' ? 'word' : 'ppt'}">${fmtLabel}</span>
                   <span class="tag ${m.style}">${styleLabels[m.style]||m.style}</span>
                 </div>
-              </div>
-              <!-- Star rating -->
-              <div class="cv-card__rating" style="margin-bottom:6px;">
-                ${[1,2,3,4,5].map(s=>`<button class="star ${(state.ratings[m.id]||0)>=s?'active':''}" data-star="${s}"
-                  onmouseenter="hoverStars('${m.id}',${s})" onmouseleave="unhoverStars('${m.id}')"
-                  onclick="event.stopPropagation();rateModel('${m.id}',${s})">&#9733;</button>`).join('')}
-                ${(state.ratings[m.id]||0)>0?`<span class="rating-count">${state.ratings[m.id]}&#9733;</span>`:''}
               </div>
               <div class="cv-card__actions">
                 <button class="btn-sm outline" onclick="event.stopPropagation();previewModel('${m.id}')">
@@ -1943,7 +2149,6 @@
           <button onclick="clearActiveTag(${i})" aria-label="Retirer ce filtre">×</button>
         </span>`).join('');
 
-      // Store tags for callbacks
       window._activeTags = tags;
       const clearBtn = bar.querySelector('.clear-all-btn');
       bar.innerHTML = `<span class="active-filters__label">Filtres actifs :</span>${innerHTML}`;
@@ -2014,67 +2219,25 @@
       render();
     }
 
-    /* ── FAVOURITES ── */
-    function toggleFav(id) {
-      const idx = state.favourites.indexOf(id);
-      if (idx === -1) {
-        state.favourites.push(id);
-        showToast('Ajouté aux favoris ❤️');
-      } else {
-        state.favourites.splice(idx, 1);
-        showToast('Retiré des favoris');
-      }
-      sessionStorage.setItem('cvFavs', JSON.stringify(state.favourites));
-      render();
-      renderFavSection();
-    }
-
-    function renderFavSection() {
-      const sec   = document.getElementById('favSection');
-      const strip = document.getElementById('favStrip');
-      if (!state.favourites.length) { sec.classList.remove('visible'); return; }
-      sec.classList.add('visible');
-      strip.innerHTML = state.favourites.map(id => {
-        const m = RAW_MODELS.find(x => x.id === id);
-        if (!m) return '';
-        return `<div class="fav-chip" onclick="previewModel('${id}')">
-          <span>${m.title}</span>
-          <button class="fav-chip__remove" onclick="event.stopPropagation();toggleFav('${id}')" aria-label="Retirer">×</button>
-        </div>`;
-      }).join('');
-    }
-
-    function clearFavourites() {
-      state.favourites = [];
-      sessionStorage.setItem('cvFavs', '[]');
-      render();
-      renderFavSection();
-      showToast('Favoris vidés');
-    }
-
     /* ── PREVIEW MODAL ── */
     function previewModel(id) {
       const m = RAW_MODELS.find(x => x.id === id);
       if (!m) return;
       state.currentPreview = m;
-      // Track history
-      state.history = [m.id, ...state.history.filter(x=>x!==m.id)].slice(0,10);
-      try { sessionStorage.setItem('cvHistory', JSON.stringify(state.history)); } catch(e){}
+
       document.getElementById('modalTitle').textContent = m.title;
 
-      const wrap = document.getElementById('modalImgWrap');
-
-      // Toujours reconstruire le contenu du wrap pour éviter les références nulles
-      // causées par un précédent remplacement via innerHTML dans onerror
-      wrap.innerHTML = `<img class="modal__img" id="modalImg" src="" alt="" />`;
-
+      // CORRECTION BUG ZOOM :
+      // On réinitialise seulement src et alt de l'img existante.
+      // On ne touche JAMAIS au innerHTML du wrap ou de l'outer,
+      // donc les zoom-controls restent intacts dans le DOM.
       const img = document.getElementById('modalImg');
       img.alt = m.title;
+      img.src = '';  // reset pour forcer le rechargement
 
       img.onerror = function() {
-        // Remplacer par le message d'erreur (l'img sera détruite, pas de problème
-        // car on reconstruit à chaque ouverture)
-        wrap.innerHTML = `
+        // En cas d'erreur, on remplace SEULEMENT le contenu du wrap (pas de l'outer)
+        document.getElementById('modalImgWrap').innerHTML = `
           <div style="text-align:center;color:var(--text-3);padding:40px 20px;">
             <svg width="48" height="48" fill="none" stroke="currentColor" stroke-width="1.2"
                  style="margin:0 auto 12px;opacity:.4;display:block;">
@@ -2084,24 +2247,33 @@
             <p style="font-weight:600;margin-bottom:4px;color:var(--text-2)">Aperçu non disponible</p>
             <p style="font-size:.82rem">Disponible prochainement</p>
           </div>`;
+        // Cacher les zoom-controls si pas d'image
+        document.getElementById('zoomControls').style.display = 'none';
       };
 
-      // Affecter src après onerror pour éviter les races conditions
+      img.onload = function() {
+        // S'assurer que les zoom-controls sont visibles quand l'image charge
+        document.getElementById('zoomControls').style.display = 'flex';
+      };
+
       img.src = m.image;
 
-      // Update modal rating stars
-      updateModalRating(m.id);
       // Render similar models
       renderSimilar(m);
+
       // Update slideshow index
-      const idx = state.filtered.findIndex(x=>x.id===m.id);
+      const idx = state.filtered.findIndex(x => x.id === m.id);
       document.getElementById('modalNavIndex').textContent =
-        idx>=0 ? `${idx+1} / ${state.filtered.length}` : '';
-      // Reset zoom
+        idx >= 0 ? `${idx+1} / ${state.filtered.length}` : '';
+
+      // Reset zoom + pan
       state.zoomLevel = 1;
-      const imgEl = document.getElementById('modalImg');
-      if (imgEl) { imgEl.style.transform='scale(1)'; imgEl.classList.remove('zoomed'); }
+      pan.x = 0; pan.y = 0;
+      img.style.transform = 'scale(1)';
+      img.classList.remove('zoomed');
+      img.style.cursor = 'zoom-in';
       document.getElementById('zoomLevel').textContent = '100%';
+      document.getElementById('zoomControls').style.display = 'flex';
 
       document.getElementById('modalBackdrop').classList.add('open');
       document.body.style.overflow = 'hidden';
@@ -2127,7 +2299,6 @@
       if (!m) return;
       closeModal();
 
-      // Store selection and redirect to form
       try {
         localStorage.setItem('chosenCvModel', `N°${m.number} - ${m.title}`);
         localStorage.setItem('chosenCvFormat', m.format);
@@ -2136,7 +2307,6 @@
 
       showToast(`"${m.title}" sélectionné ✓`);
 
-      // Highlight card
       setTimeout(() => {
         const card = document.querySelector(`[data-id="${id}"]`);
         if (card) {
@@ -2146,7 +2316,6 @@
         }
       }, 100);
 
-      // Redirect after short delay
       setTimeout(() => { window.location.href = 'formulaire-original.html'; }, 800);
     }
 
@@ -2176,16 +2345,15 @@
 
     /* ── INIT ── */
     applyFilters();
-    renderFavSection();
 
-    /* ── DEEP LINK : ouvre la modal si ?model=XXX dans l'URL ── */
+    /* ── DEEP LINK ── */
     (function checkDeepLink() {
-      const params = new URLSearchParams(window.location.search);
-      const modelId = params.get('model');
+      const params  = new URLSearchParams(window.location.search);
+      // Support ?m=001 (nouveau format court) ET ?model=001 (ancien format)
+      const modelId = params.get('m') || params.get('model');
       if (modelId) {
         const m = RAW_MODELS.find(x => x.id === modelId);
         if (m) {
-          // Scroll to card after render, then open preview
           setTimeout(() => {
             const card = document.querySelector(`[data-id="${modelId}"]`);
             if (card) { card.scrollIntoView({behavior:'smooth', block:'center'}); }
@@ -2196,279 +2364,209 @@
     })();
 
     /* ================================================================
-       SHARE SYSTEM
+       ZOOM + PAN (zoom + défilement haut/bas/gauche/droite)
     ================================================================ */
-    let shareTarget = null;
 
-    /* Build the shareable URL for a model */
-    function buildShareURL(model) {
-      const base = window.location.href.split('?')[0];
-      return `${base}?model=${model.id}&format=${model.format}&style=${model.style}`;
-    }
+    // État pan global
+    let pan = { x: 0, y: 0 };
 
-    /* Build the human-readable share text */
-    function buildShareText(model) {
-      const fmtLabel = model.format === 'word' ? 'Word' : 'PowerPoint';
-      const styleLabels = {moderne:'Moderne',classique:'Classique',creatif:'Créatif',minimal:'Minimal'};
-      return `🎯 Découvrez le ${model.title} sur Chronos-Services !\n📄 Format : ${fmtLabel}\n✨ Style : ${styleLabels[model.style]||model.style}\n👉 `;
-    }
-
-    /* Open share modal */
-    function openShare(id) {
-      const m = RAW_MODELS.find(x => x.id === id);
-      if (!m) return;
-      shareTarget = m;
-
-      const fmtLabel = m.format === 'word' ? 'Word' : 'PowerPoint';
-      const styleLabels = {moderne:'Moderne',classique:'Classique',creatif:'Créatif',minimal:'Minimal'};
-
-      // Fill header card
-      document.getElementById('shareCardTitle').textContent = m.title;
-      document.getElementById('shareCardMeta').innerHTML = `
-        <span class="share-card__tag">${fmtLabel}</span>
-        <span class="share-card__tag">${styleLabels[m.style]||m.style}</span>`;
-
-      // Fill link input
-      const url = buildShareURL(m);
-      document.getElementById('shareLinkInput').value = url;
-
-      // Reset copy button
-      const copyBtn = document.getElementById('shareCopyBtn');
-      copyBtn.classList.remove('copied');
-      document.getElementById('shareCopyLabel').textContent = 'Copier';
-
-      // Show native share button only if API available
-      document.getElementById('nativeShareBtn').style.display =
-        navigator.share ? 'flex' : 'none';
-
-      // Generate QR code
-      generateQR(url);
-
-      document.getElementById('shareBackdrop').classList.add('open');
-      document.body.style.overflow = 'hidden';
-    }
-
-    function closeShare() {
-      document.getElementById('shareBackdrop').classList.remove('open');
-      document.body.style.overflow = '';
-      const msgEl = document.getElementById('shareMessage');
-      if (msgEl) { msgEl.value = ''; document.getElementById('shareMsgCnt').textContent = '0/200'; }
-      shareTarget = null;
-    }
-
-    function closeShareOnOutside(e) {
-      if (e.target === document.getElementById('shareBackdrop')) closeShare();
-    }
-
-    /* Copy link */
-    function copyShareLink() {
-      if (!shareTarget) return;
-      const url = buildShareURL(shareTarget);
-      const btn  = document.getElementById('shareCopyBtn');
-      const lbl  = document.getElementById('shareCopyLabel');
-
-      navigator.clipboard.writeText(url).then(() => {
-        btn.classList.add('copied');
-        lbl.textContent = 'Copié ✓';
-        showToast('Lien copié dans le presse-papiers ✓');
-        setTimeout(() => { btn.classList.remove('copied'); lbl.textContent = 'Copier'; }, 2500);
-      }).catch(() => {
-        // Fallback for browsers without clipboard API
-        const inp = document.getElementById('shareLinkInput');
-        inp.select();
-        document.execCommand('copy');
-        btn.classList.add('copied');
-        lbl.textContent = 'Copié ✓';
-        showToast('Lien copié ✓');
-        setTimeout(() => { btn.classList.remove('copied'); lbl.textContent = 'Copier'; }, 2500);
-      });
-    }
-
-    /* WhatsApp share */
-    function shareWhatsApp() {
-      if (!shareTarget) return;
-      const msg = (document.getElementById('shareMessage').value.trim());
-      const text = (msg ? msg + '\n\n' : '') + buildShareText(shareTarget) + buildShareURL(shareTarget);
-      window.open(`https://wa.me/?text=${encodeURIComponent(text)}`, '_blank');
-      closeShare();
-    }
-
-    /* Facebook share */
-    function shareFacebook() {
-      if (!shareTarget) return;
-      const url = buildShareURL(shareTarget);
-      window.open(`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(url)}`, '_blank', 'width=600,height=400');
-      closeShare();
-    }
-
-    /* Email share */
-    function shareEmail() {
-      if (!shareTarget) return;
-      const m = shareTarget;
-      const fmtLabel = m.format === 'word' ? 'Word' : 'PowerPoint';
-      const url = buildShareURL(m);
-      const userMsg = (document.getElementById('shareMessage').value.trim());
-      const subject = encodeURIComponent(`Modèle CV ${m.title} — Chronos-Services`);
-      const body = encodeURIComponent(
-        (userMsg ? userMsg + '\n\n' : '') + `Bonjour,\n\nJe vous partage ce modèle de CV professionnel :\n\n` +
-        `📄 ${m.title}\n` +
-        `Format : ${fmtLabel}\n` +
-        `Numéro : N°${m.number}\n\n` +
-        `Voir le modèle : ${url}\n\n` +
-        `— Via Chronos-Services`
-      );
-      window.location.href = `mailto:?subject=${subject}&body=${body}`;
-      closeShare();
-    }
-
-    /* Native Web Share API (mobile) */
-    function nativeShare() {
-      if (!shareTarget || !navigator.share) return;
-      const fmtLabel = shareTarget.format === 'word' ? 'Word' : 'PowerPoint';
-      const userMsg2 = (document.getElementById('shareMessage').value.trim());
-      navigator.share({
-        title: `${shareTarget.title} — Chronos-Services`,
-        text: (userMsg2 ? userMsg2 + '\n' : '') + `${shareTarget.title} (${fmtLabel}) — Modèle CV professionnel`,
-        url: buildShareURL(shareTarget)
-      }).then(() => {
-        closeShare();
-        showToast('Partagé avec succès ✓');
-      }).catch(() => {});
-    }
-
-    /* ── QR CODE GENERATOR (pure JS, no library) ── */
-    function generateQR(url) {
-      const wrap = document.getElementById('shareQrWrap');
-      // Use a public QR API as fallback (no external lib needed)
-      const size = 64;
-      const apiUrl = `https://api.qrserver.com/v1/create-qr-code/?size=${size}x${size}&data=${encodeURIComponent(url)}&bgcolor=ffffff&color=094102&margin=2`;
-      wrap.innerHTML = `<img src="${apiUrl}" width="${size}" height="${size}" alt="QR Code"
-        style="border-radius:4px;"
-        onerror="this.parentElement.innerHTML='<span style=\\'font-size:.6rem;color:var(--text-3);text-align:center;padding:4px;\\'>QR<br>indisponible</span>'"
-      />`;
-    }
-
-    /* Download QR */
-    function downloadQR() {
-      if (!shareTarget) return;
-      const url = buildShareURL(shareTarget);
-      const apiUrl = `https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=${encodeURIComponent(url)}&bgcolor=ffffff&color=094102&margin=10`;
-      const a = document.createElement('a');
-      a.href = apiUrl;
-      a.download = `QR-${shareTarget.id}-${shareTarget.format}.png`;
-      a.target = '_blank';
-      a.click();
-      showToast('Téléchargement du QR code…');
-    }
-
-
-    /* ================================================================
-       DARK MODE
-    ================================================================ */
-    function toggleTheme() {
-      const isDark = document.body.getAttribute('data-theme') === 'dark';
-      document.body.setAttribute('data-theme', isDark ? '' : 'dark');
-      document.querySelector('.icon-moon').style.display = isDark ? 'block' : 'none';
-      document.querySelector('.icon-sun').style.display  = isDark ? 'none'  : 'block';
-      try { sessionStorage.setItem('cvTheme', isDark ? '' : 'dark'); } catch(e){}
-    }
-    // Restore theme on load
-    (function() {
-      const saved = sessionStorage.getItem('cvTheme');
-      if (saved === 'dark') {
-        document.body.setAttribute('data-theme', 'dark');
-        const moon = document.querySelector('.icon-moon');
-        const sun  = document.querySelector('.icon-sun');
-        if (moon) moon.style.display = 'none';
-        if (sun)  sun.style.display  = 'block';
-      }
-    })();
-
-    /* ================================================================
-       STAR RATING
-    ================================================================ */
-    function rateModel(id, stars) {
-      state.ratings[id] = state.ratings[id] === stars ? 0 : stars; // toggle off if same
-      try { sessionStorage.setItem('cvRatings', JSON.stringify(state.ratings)); } catch(e){}
-      render();
-      if (state.currentPreview && state.currentPreview.id === id) updateModalRating(id);
-      showToast(state.ratings[id] ? `Note : ${state.ratings[id]} étoile${state.ratings[id]>1?'s':''} ★` : 'Note retirée');
-    }
-
-    function rateFromModal(stars) {
-      if (!state.currentPreview) return;
-      rateModel(state.currentPreview.id, stars);
-    }
-
-    function updateModalRating(id) {
-      const rating = state.ratings[id] || 0;
-      document.querySelectorAll('#modalRating .star').forEach((s, i) => {
-        s.classList.toggle('active', i < rating);
-      });
-      const countEl = document.getElementById('modalRatingCount');
-      if (countEl) countEl.textContent = rating ? `${rating}/5` : '';
-    }
-
-    function hoverStars(id, n) {
-      const card = document.querySelector(`[data-id="${id}"]`);
-      if (!card) return;
-      card.querySelectorAll('.star').forEach((s, i) => s.classList.toggle('hover', i < n));
-    }
-    function unhoverStars(id) {
-      const card = document.querySelector(`[data-id="${id}"]`);
-      if (!card) return;
-      const r = state.ratings[id] || 0;
-      card.querySelectorAll('.star').forEach((s, i) => { s.classList.remove('hover'); s.classList.toggle('active', i < r); });
-    }
-
-    /* ================================================================
-       ZOOM
-    ================================================================ */
+    /* ── Zoom buttons & toggle ── */
     function zoomImg(dir) {
-      state.zoomLevel = Math.min(3, Math.max(1, state.zoomLevel + dir * 0.5));
+      state.zoomLevel = Math.min(4, Math.max(1, state.zoomLevel + dir * 0.5));
       applyZoom();
     }
-    function toggleZoom(img) {
+    function toggleZoom() {
       state.zoomLevel = state.zoomLevel > 1 ? 1 : 2;
       applyZoom();
     }
     function resetZoom() {
       state.zoomLevel = 1;
+      pan.x = 0; pan.y = 0;
       applyZoom();
     }
+
+    /* ── Clamp pan dans les limites de l'image zoomée ── */
+    function clampPan() {
+      const img   = document.getElementById('modalImg');
+      const outer = document.getElementById('modalImgOuter');
+      if (!img || !outer) return;
+
+      // naturalWidth / naturalHeight = taille réelle du fichier image
+      // offsetWidth / offsetHeight  = taille rendue par le navigateur AVANT le transform CSS
+      // getBoundingClientRect inclut le scale CSS — on doit l'éviter pour le clamp.
+      const imgW = img.offsetWidth;   // largeur naturelle affichée (avant scale)
+      const imgH = img.offsetHeight;  // hauteur naturelle affichée (avant scale)
+
+      // Dimensions du conteneur visible
+      const outerW = outer.clientWidth;
+      const outerH = outer.clientHeight;
+
+      // Quand on est à zoomLevel=Z, l'image fait imgW*Z × imgH*Z pixels à l'écran.
+      // Le pan max = (taille zoomée - taille conteneur) / 2
+      // (si l'image zoomée est plus petite que le conteneur, maxX/Y = 0 → pas de pan)
+      const maxX = Math.max(0, (imgW * state.zoomLevel - outerW)  / 2);
+      const maxY = Math.max(0, (imgH * state.zoomLevel - outerH) / 2);
+
+      pan.x = Math.min(maxX, Math.max(-maxX, pan.x));
+      pan.y = Math.min(maxY, Math.max(-maxY, pan.y));
+    }
+
+    /* ── Appliquer zoom + pan sur l'image ── */
     function applyZoom() {
       const img = document.getElementById('modalImg');
       if (!img) return;
-      img.style.transform = `scale(${state.zoomLevel})`;
+
+      if (state.zoomLevel <= 1) { pan.x = 0; pan.y = 0; }
+      clampPan();
+
+      // translate(tx, ty) est exprimé dans le repère POST-scale → diviser par zoomLevel
+      // pour obtenir le décalage correct en pixels écran.
+      const tx = pan.x / state.zoomLevel;
+      const ty = pan.y / state.zoomLevel;
+      img.style.transform = `scale(${state.zoomLevel}) translate(${tx}px, ${ty}px)`;
       img.classList.toggle('zoomed', state.zoomLevel > 1);
+      img.style.cursor = state.zoomLevel > 1 ? 'grab' : 'zoom-in';
       document.getElementById('zoomLevel').textContent = Math.round(state.zoomLevel * 100) + '%';
     }
-    // Pinch-to-zoom on mobile
+
+    /* ── PAN souris (drag) ── */
     (function() {
+      const outer = document.getElementById('modalImgOuter');
+      let dragging = false;
+      let startX = 0, startY = 0;
+      let startPanX = 0, startPanY = 0;
+      let didDrag = false;
+
+      outer.addEventListener('mousedown', function(e) {
+        if (e.target.closest('.zoom-controls')) return;
+        if (state.zoomLevel <= 1) return;
+        e.preventDefault();
+        dragging = true;
+        didDrag = false;
+        startX = e.clientX;
+        startY = e.clientY;
+        startPanX = pan.x;
+        startPanY = pan.y;
+        const img = document.getElementById('modalImg');
+        if (img) { img.style.cursor = 'grabbing'; img.classList.add('dragging'); }
+      });
+
+      window.addEventListener('mousemove', function(e) {
+        if (!dragging) return;
+        const dx = e.clientX - startX;
+        const dy = e.clientY - startY;
+        if (Math.abs(dx) > 2 || Math.abs(dy) > 2) didDrag = true;
+        pan.x = startPanX + dx;
+        pan.y = startPanY + dy;
+        applyZoom();
+      });
+
+      window.addEventListener('mouseup', function() {
+        if (!dragging) return;
+        dragging = false;
+        const img = document.getElementById('modalImg');
+        if (img) {
+          img.classList.remove('dragging');
+          img.style.cursor = state.zoomLevel > 1 ? 'grab' : 'zoom-in';
+        }
+      });
+
+      // Exposer didDrag pour le clic
+      outer._getDidDrag = () => didDrag;
+    })();
+
+    /* ── Clic = toggle zoom (sauf si drag) ── */
+    function handleImgClick(e) {
+      if (e.target.closest('.zoom-controls')) return;
+      const outer = document.getElementById('modalImgOuter');
+      if (outer._getDidDrag && outer._getDidDrag()) return;
+      toggleZoom();
+    }
+
+    /* ── PAN tactile 1 doigt + Pinch-to-zoom 2 doigts ── */
+    (function() {
+      const outer = document.getElementById('modalImgOuter');
       let lastDist = 0;
-      const wrap = document.getElementById('modalImgWrap');
-      wrap.addEventListener('touchstart', e => { if (e.touches.length===2) lastDist = Math.hypot(e.touches[0].pageX-e.touches[1].pageX, e.touches[0].pageY-e.touches[1].pageY); }, {passive:true});
-      wrap.addEventListener('touchmove', e => {
-        if (e.touches.length===2) {
-          const dist = Math.hypot(e.touches[0].pageX-e.touches[1].pageX, e.touches[0].pageY-e.touches[1].pageY);
+      let lastTX = 0, lastTY = 0;
+      let touchPanning = false;
+
+      outer.addEventListener('touchstart', function(e) {
+        if (e.touches.length === 2) {
+          touchPanning = false;
+          lastDist = Math.hypot(
+            e.touches[0].pageX - e.touches[1].pageX,
+            e.touches[0].pageY - e.touches[1].pageY
+          );
+        } else if (e.touches.length === 1 && state.zoomLevel > 1) {
+          touchPanning = true;
+          lastTX = e.touches[0].clientX;
+          lastTY = e.touches[0].clientY;
+        }
+      }, { passive: true });
+
+      outer.addEventListener('touchmove', function(e) {
+        if (e.touches.length === 2) {
+          const dist = Math.hypot(
+            e.touches[0].pageX - e.touches[1].pageX,
+            e.touches[0].pageY - e.touches[1].pageY
+          );
           const delta = (dist - lastDist) / 80;
-          state.zoomLevel = Math.min(3, Math.max(1, state.zoomLevel + delta));
+          state.zoomLevel = Math.min(4, Math.max(1, state.zoomLevel + delta));
           applyZoom();
           lastDist = dist;
+        } else if (e.touches.length === 1 && touchPanning) {
+          pan.x += e.touches[0].clientX - lastTX;
+          pan.y += e.touches[0].clientY - lastTY;
+          lastTX = e.touches[0].clientX;
+          lastTY = e.touches[0].clientY;
+          applyZoom();
         }
-      }, {passive:true});
+      }, { passive: true });
+
+      outer.addEventListener('touchend', function(e) {
+        if (e.touches.length < 1) touchPanning = false;
+      }, { passive: true });
     })();
-    // Mouse wheel zoom
-    document.getElementById('modalImgWrap').addEventListener('wheel', e => {
-      if (document.getElementById('modalBackdrop').classList.contains('open')) {
-        e.preventDefault();
-        state.zoomLevel = Math.min(3, Math.max(1, state.zoomLevel - e.deltaY/300));
-        applyZoom();
+
+    /* ── Molette souris : zoom centré sur le curseur ── */
+    document.getElementById('modalImgOuter').addEventListener('wheel', function(e) {
+      if (!document.getElementById('modalBackdrop').classList.contains('open')) return;
+      e.preventDefault();
+      const oldZoom = state.zoomLevel;
+      state.zoomLevel = Math.min(4, Math.max(1, state.zoomLevel - e.deltaY / 250));
+      if (state.zoomLevel === oldZoom) return;
+
+      if (oldZoom > 1 && state.zoomLevel > 1) {
+        // Décaler le pan pour que le point sous le curseur reste fixe
+        const outer = document.getElementById('modalImgOuter');
+        const rect  = outer.getBoundingClientRect();
+        // Position du curseur relative au centre du conteneur
+        const cx = e.clientX - rect.left - rect.width  / 2;
+        const cy = e.clientY - rect.top  - rect.height / 2;
+        const ratio = state.zoomLevel / oldZoom;
+        pan.x = cx + (pan.x - cx) * ratio;
+        pan.y = cy + (pan.y - cy) * ratio;
+      } else if (state.zoomLevel <= 1) {
+        pan.x = 0; pan.y = 0;
       }
-    }, {passive:false});
+
+      applyZoom();
+    }, { passive: false });
+
+    /* ── Flèches clavier pour déplacer l'image zoomée ── */
+    document.addEventListener('keydown', function(e) {
+      if (!document.getElementById('modalBackdrop').classList.contains('open')) return;
+      if (state.zoomLevel > 1) {
+        const step = 50;
+        if (e.key === 'ArrowUp')                      { pan.y += step; applyZoom(); e.preventDefault(); return; }
+        if (e.key === 'ArrowDown')                    { pan.y -= step; applyZoom(); e.preventDefault(); return; }
+        if (e.key === 'ArrowLeft'  && !e.shiftKey)    { pan.x += step; applyZoom(); e.preventDefault(); return; }
+        if (e.key === 'ArrowRight' && !e.shiftKey)    { pan.x -= step; applyZoom(); e.preventDefault(); return; }
+      }
+    });
 
     /* ================================================================
-       SLIDESHOW NAV (← →)
+       SLIDESHOW NAV
     ================================================================ */
     function slidePreview(dir) {
       if (!state.currentPreview) return;
@@ -2477,7 +2575,7 @@
       const next = arr[(idx + dir + arr.length) % arr.length];
       previewModel(next.id);
     }
-    // Arrow keys nav inside modal
+
     document.addEventListener('keydown', function(e) {
       if (!document.getElementById('modalBackdrop').classList.contains('open')) return;
       if (e.key === 'ArrowRight') slidePreview(1);
@@ -2544,7 +2642,6 @@
       badge.textContent = state.compareList.length;
       goBtn.disabled = state.compareList.length < 2;
 
-      // Show up to 3 slots
       const maxSlots = 3;
       slots.innerHTML = Array.from({length: maxSlots}).map((_, i) => {
         const id = state.compareList[i];
@@ -2573,7 +2670,6 @@
       document.getElementById('compareGrid').innerHTML = state.compareList.map(id => {
         const m = RAW_MODELS.find(x => x.id === id);
         if (!m) return '';
-        const rating = state.ratings[m.id] || 0;
         return `
           <div class="compare-item">
             <div class="compare-item__img">
@@ -2586,8 +2682,6 @@
                 <span class="tag ${m.format==='word'?'word':'ppt'}">${m.format==='word'?'Word':'PowerPoint'}</span>
                 <span class="tag ${m.style}">${styleLabels[m.style]||m.style}</span>
               </div>
-              ${rating ? `<div style="font-size:.8rem;color:#f59e0b;margin-bottom:4px;">${'★'.repeat(rating)}${'☆'.repeat(5-rating)} <span style="color:var(--text-3);font-size:.7rem;">${rating}/5</span></div>` : ''}
-              ${note ? `<div style="font-size:.72rem;color:var(--text-2);background:var(--bg);padding:6px 8px;border-radius:6px;margin-bottom:8px;line-height:1.4;">"${note}"</div>` : ''}
               <button class="compare-item__select" onclick="closeCompareModal();selectModel('${m.id}')">
                 Choisir ce modèle
               </button>
@@ -2607,8 +2701,143 @@
     }
 
     /* ================================================================
-       LINKEDIN SHARE (add to share modal functions)
+       SHARE SYSTEM
     ================================================================ */
+    let shareTarget = null;
+
+    /* ── URL de production propre (jamais le chemin local avec %20) ── */
+    const SITE_BASE = 'https://chronos-services.netlify.app/catalogue-cv';
+
+    function buildShareURL(model) {
+      return `${SITE_BASE}?m=${model.id}`;
+    }
+
+    /* ── Texte de partage sobre et professionnel ── */
+    function buildShareText(model) {
+      const fmtLabel    = model.format === 'word' ? 'Word' : 'PowerPoint';
+      const styleLabels = { moderne:'Moderne', classique:'Classique', creatif:'Créatif', minimal:'Minimal' };
+      const style       = styleLabels[model.style] || model.style;
+      const userMsg     = (document.getElementById('shareMessage')?.value || '').trim();
+
+      const intro = userMsg ? userMsg : 'Je pense que ce modèle de CV pourrait t\'intéresser.';
+      return `${intro}\n\n${model.title} — Chronos-Services\nFormat ${fmtLabel} · Style ${style}\n`;
+    }
+
+    function openShare(id) {
+      const m = RAW_MODELS.find(x => x.id === id);
+      if (!m) return;
+      shareTarget = m;
+
+      const fmtLabel    = m.format === 'word' ? 'Word' : 'PowerPoint';
+      const styleLabels = { moderne:'Moderne', classique:'Classique', creatif:'Créatif', minimal:'Minimal' };
+      const style       = styleLabels[m.style] || m.style;
+      const url         = buildShareURL(m);
+
+      // Carte dans la modal
+      document.getElementById('shareCardTitle').textContent = m.title;
+      document.getElementById('shareCardMeta').innerHTML = `
+        <span class="share-card__tag">${fmtLabel}</span>
+        <span class="share-card__tag">${style}</span>`;
+
+      // Lien affiché — toujours l'URL de production propre
+      document.getElementById('shareLinkInput').value = url;
+
+      // Mise à jour dynamique des balises Open Graph
+      // (utile si un robot de scraping passe APRÈS le JS, ex: WhatsApp Web, Slack)
+      const ogTitle = `${m.title} — Chronos-Services`;
+      const ogDesc  = `Modèle CV professionnel · Format ${fmtLabel} · Style ${style}. Téléchargez-le sur Chronos-Services.`;
+      document.querySelector('meta[property="og:title"]')?.setAttribute('content', ogTitle);
+      document.querySelector('meta[property="og:description"]')?.setAttribute('content', ogDesc);
+      document.querySelector('meta[property="og:url"]')?.setAttribute('content', url);
+      document.querySelector('meta[name="twitter:title"]')?.setAttribute('content', ogTitle);
+      document.querySelector('meta[name="twitter:description"]')?.setAttribute('content', ogDesc);
+      document.title = ogTitle;
+
+      // Bouton copier
+      const copyBtn = document.getElementById('shareCopyBtn');
+      copyBtn.classList.remove('copied');
+      document.getElementById('shareCopyLabel').textContent = 'Copier';
+
+      // Partage natif (mobile)
+      document.getElementById('nativeShareBtn').style.display =
+        navigator.share ? 'flex' : 'none';
+
+      // QR code
+      generateQR(url);
+
+      document.getElementById('shareBackdrop').classList.add('open');
+      document.body.style.overflow = 'hidden';
+    }
+
+    function closeShare() {
+      document.getElementById('shareBackdrop').classList.remove('open');
+      document.body.style.overflow = '';
+      const msgEl = document.getElementById('shareMessage');
+      if (msgEl) { msgEl.value = ''; document.getElementById('shareMsgCnt').textContent = '0/200'; }
+      shareTarget = null;
+    }
+
+    function closeShareOnOutside(e) {
+      if (e.target === document.getElementById('shareBackdrop')) closeShare();
+    }
+
+    function copyShareLink() {
+      if (!shareTarget) return;
+      const url = buildShareURL(shareTarget);
+      const btn  = document.getElementById('shareCopyBtn');
+      const lbl  = document.getElementById('shareCopyLabel');
+
+      navigator.clipboard.writeText(url).then(() => {
+        btn.classList.add('copied');
+        lbl.textContent = 'Copié ✓';
+        showToast('Lien copié dans le presse-papiers ✓');
+        setTimeout(() => { btn.classList.remove('copied'); lbl.textContent = 'Copier'; }, 2500);
+      }).catch(() => {
+        const inp = document.getElementById('shareLinkInput');
+        inp.select();
+        document.execCommand('copy');
+        btn.classList.add('copied');
+        lbl.textContent = 'Copié ✓';
+        showToast('Lien copié ✓');
+        setTimeout(() => { btn.classList.remove('copied'); lbl.textContent = 'Copier'; }, 2500);
+      });
+    }
+
+    function shareWhatsApp() {
+      if (!shareTarget) return;
+      // Texte d'abord, URL seule sur la dernière ligne — WhatsApp génère la preview depuis l'URL
+      const text = buildShareText(shareTarget) + buildShareURL(shareTarget);
+      window.open(`https://wa.me/?text=${encodeURIComponent(text)}`, '_blank');
+      closeShare();
+    }
+
+    function shareFacebook() {
+      if (!shareTarget) return;
+      const url = buildShareURL(shareTarget);
+      window.open(`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(url)}`, '_blank', 'width=600,height=400');
+      closeShare();
+    }
+
+    function shareEmail() {
+      if (!shareTarget) return;
+      const m          = shareTarget;
+      const fmtLabel   = m.format === 'word' ? 'Word' : 'PowerPoint';
+      const styleLabels = { moderne:'Moderne', classique:'Classique', creatif:'Créatif', minimal:'Minimal' };
+      const style      = styleLabels[m.style] || m.style;
+      const url        = buildShareURL(m);
+      const userMsg    = (document.getElementById('shareMessage')?.value || '').trim();
+
+      const subject = encodeURIComponent(`${m.title} — Chronos-Services`);
+      const body    = encodeURIComponent(
+        (userMsg ? userMsg + '\n\n' : 'Bonjour,\n\nJe vous partage ce modèle de CV professionnel.\n\n') +
+        `${m.title}\nFormat : ${fmtLabel}  |  Style : ${style}\n\n` +
+        `Voir le modèle : ${url}\n\n` +
+        `Chronos-Services`
+      );
+      window.location.href = `mailto:?subject=${subject}&body=${body}`;
+      closeShare();
+    }
+
     function shareLinkedIn() {
       if (!shareTarget) return;
       const url = buildShareURL(shareTarget);
@@ -2616,8 +2845,64 @@
       closeShare();
     }
 
+    function nativeShare() {
+      if (!shareTarget || !navigator.share) return;
+      const fmtLabel = shareTarget.format === 'word' ? 'Word' : 'PowerPoint';
+      navigator.share({
+        title: `${shareTarget.title} — Chronos-Services`,
+        text:  buildShareText(shareTarget),
+        url:   buildShareURL(shareTarget)
+      }).then(() => {
+        closeShare();
+        showToast('Partagé avec succès ✓');
+      }).catch(() => {});
+    }
+
+    function generateQR(url) {
+      const wrap = document.getElementById('shareQrWrap');
+      const size = 64;
+      const apiUrl = `https://api.qrserver.com/v1/create-qr-code/?size=${size}x${size}&data=${encodeURIComponent(url)}&bgcolor=ffffff&color=094102&margin=2`;
+      wrap.innerHTML = `<img src="${apiUrl}" width="${size}" height="${size}" alt="QR Code"
+        style="border-radius:4px;"
+        onerror="this.parentElement.innerHTML='<span style=\\'font-size:.6rem;color:var(--text-3);text-align:center;padding:4px;\\'>QR<br>indisponible</span>'"
+      />`;
+    }
+
+    function downloadQR() {
+      if (!shareTarget) return;
+      const url = buildShareURL(shareTarget);
+      const apiUrl = `https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=${encodeURIComponent(url)}&bgcolor=ffffff&color=094102&margin=10`;
+      const a = document.createElement('a');
+      a.href = apiUrl;
+      a.download = `QR-${shareTarget.id}-${shareTarget.format}.png`;
+      a.target = '_blank';
+      a.click();
+      showToast('Téléchargement du QR code…');
+    }
+
     /* ================================================================
-       UPDATE ESCAPE KEY to handle all modals
+       DARK MODE
+    ================================================================ */
+    function toggleTheme() {
+      const isDark = document.body.getAttribute('data-theme') === 'dark';
+      document.body.setAttribute('data-theme', isDark ? '' : 'dark');
+      document.querySelector('.icon-moon').style.display = isDark ? 'block' : 'none';
+      document.querySelector('.icon-sun').style.display  = isDark ? 'none'  : 'block';
+      try { sessionStorage.setItem('cvTheme', isDark ? '' : 'dark'); } catch(e){}
+    }
+    (function() {
+      const saved = sessionStorage.getItem('cvTheme');
+      if (saved === 'dark') {
+        document.body.setAttribute('data-theme', 'dark');
+        const moon = document.querySelector('.icon-moon');
+        const sun  = document.querySelector('.icon-sun');
+        if (moon) moon.style.display = 'none';
+        if (sun)  sun.style.display  = 'block';
+      }
+    })();
+
+    /* ================================================================
+       ESCAPE KEY — gère tous les modals
     ================================================================ */
     document.addEventListener('keydown', function(e) {
       if (e.key !== 'Escape') return;
