@@ -1177,34 +1177,43 @@ async function callGroq(text) {
   var prompts = {
     auto:
       'Tu es un assistant expert en lecture de documents professionnels francophones. ' +
-      'Analyse le texte fourni, identifie le type de document (contrat, diplôme, attestation, CV, autre) et extrais uniquement les informations utiles pour mettre à jour un CV. ' +
+      'Analyse le texte fourni et extrais toutes les informations utiles pour mettre à jour un CV. ' +
       'Réponds UNIQUEMENT en JSON valide sans texte ni balises markdown. ' +
-      'Structure : {"type_document":"","exp_dates":"","exp_poste":"","exp_entreprise":"","exp_taches":"","fm_diplome":"","fm_serie":"","fm_date":"","fm_etablissement":"","langues":"","logiciels":"","domaines":"","nom_prenom":"","telephone":"","adresse":"","email":"","infos_comp":""}. ' +
-      'type_document = "experience", "formation", "competences", "infos" ou "mixte". Ne jamais inventer.',
+      'Structure EXACTE à respecter :\n' +
+      '{"type_document":"","experiences":[{"dates":"","poste":"","entreprise":"","taches":""}],"formations":[{"diplome":"","serie":"","date":"","etablissement":""}],"langues":"","logiciels":"","domaines":"","nom_prenom":"","telephone":"","adresse":"","email":"","infos_comp":""}' +
+      '\ntype_document = "experience", "formation", "competences", "infos" ou "mixte".' +
+      '\nPour chaque expérience distincte, crée UN objet séparé dans le tableau experiences.' +
+      '\nPour chaque diplôme/formation distinct, crée UN objet séparé dans le tableau formations.' +
+      '\nNe jamais regrouper plusieurs expériences ou formations dans un seul objet.' +
+      '\nSi une information est absente, laisse la valeur vide. Ne jamais inventer.',
 
     experience:
-      'Tu es un assistant expert. Extrais UNIQUEMENT les informations liées à une expérience professionnelle dans ce document. ' +
+      'Tu es un assistant expert. Extrais toutes les expériences professionnelles de ce document.' +
       'Réponds UNIQUEMENT en JSON valide sans texte ni balises markdown. ' +
-      'Structure : {"type_document":"experience","exp_dates":"","exp_poste":"","exp_entreprise":"","exp_taches":"","fm_diplome":"","fm_serie":"","fm_date":"","fm_etablissement":"","langues":"","logiciels":"","domaines":"","nom_prenom":"","telephone":"","adresse":"","email":"","infos_comp":""}. ' +
-      'Cherche : intitulé du poste, nom de l\'entreprise et lieu, dates de début et fin, tâches ou missions. Ne jamais inventer.',
+      'Structure EXACTE :\n' +
+      '{"type_document":"experience","experiences":[{"dates":"","poste":"","entreprise":"","taches":""}],"formations":[],"langues":"","logiciels":"","domaines":"","nom_prenom":"","telephone":"","adresse":"","email":"","infos_comp":""}' +
+      '\nCrée UN objet par expérience distincte. Ne jamais regrouper. Ne jamais inventer.',
 
     formation:
-      'Tu es un assistant expert. Extrais UNIQUEMENT les informations liées à une formation ou un diplôme dans ce document. ' +
+      'Tu es un assistant expert. Extrais toutes les formations et diplômes de ce document. ' +
       'Réponds UNIQUEMENT en JSON valide sans texte ni balises markdown. ' +
-      'Structure : {"type_document":"formation","exp_dates":"","exp_poste":"","exp_entreprise":"","exp_taches":"","fm_diplome":"","fm_serie":"","fm_date":"","fm_etablissement":"","langues":"","logiciels":"","domaines":"","nom_prenom":"","telephone":"","adresse":"","email":"","infos_comp":""}. ' +
-      'Cherche : intitulé du diplôme ou de la formation, filière ou spécialité, année ou date d\'obtention, nom de l\'établissement. Ne jamais inventer.',
+      'Structure EXACTE :\n' +
+      '{"type_document":"formation","experiences":[],"formations":[{"diplome":"","serie":"","date":"","etablissement":""}],"langues":"","logiciels":"","domaines":"","nom_prenom":"","telephone":"","adresse":"","email":"","infos_comp":""}' +
+      '\nCrée UN objet par diplôme/formation distinct. Ne jamais regrouper. Ne jamais inventer.',
 
     competences:
-      'Tu es un assistant expert. Extrais UNIQUEMENT les compétences mentionnées dans ce document. ' +
+      'Tu es un assistant expert. Extrais uniquement les compétences de ce document. ' +
       'Réponds UNIQUEMENT en JSON valide sans texte ni balises markdown. ' +
-      'Structure : {"type_document":"competences","exp_dates":"","exp_poste":"","exp_entreprise":"","exp_taches":"","fm_diplome":"","fm_serie":"","fm_date":"","fm_etablissement":"","langues":"","logiciels":"","domaines":"","nom_prenom":"","telephone":"","adresse":"","email":"","infos_comp":""}. ' +
-      'langues = liste des langues séparées par des virgules. logiciels = liste des logiciels et outils. domaines = domaines de compétences professionnelles. Ne jamais inventer.',
+      'Structure EXACTE :\n' +
+      '{"type_document":"competences","experiences":[],"formations":[],"langues":"","logiciels":"","domaines":"","nom_prenom":"","telephone":"","adresse":"","email":"","infos_comp":""}' +
+      '\nlangues = langues séparées par virgule. logiciels = logiciels/outils séparés par virgule. domaines = domaines de compétences. Ne jamais inventer.',
 
     infos:
-      'Tu es un assistant expert. Extrais UNIQUEMENT les informations personnelles de contact dans ce document. ' +
+      'Tu es un assistant expert. Extrais uniquement les informations personnelles de contact. ' +
       'Réponds UNIQUEMENT en JSON valide sans texte ni balises markdown. ' +
-      'Structure : {"type_document":"infos","exp_dates":"","exp_poste":"","exp_entreprise":"","exp_taches":"","fm_diplome":"","fm_serie":"","fm_date":"","fm_etablissement":"","langues":"","logiciels":"","domaines":"","nom_prenom":"","telephone":"","adresse":"","email":"","infos_comp":""}. ' +
-      'Cherche : nom et prénom, numéro de téléphone, adresse postale, adresse email. Ne jamais inventer.'
+      'Structure EXACTE :\n' +
+      '{"type_document":"infos","experiences":[],"formations":[],"langues":"","logiciels":"","domaines":"","nom_prenom":"","telephone":"","adresse":"","email":"","infos_comp":""}' +
+      '\nCherche : nom et prénom, téléphone, adresse, email. Ne jamais inventer.'
   };
 
   var payload = {
@@ -1214,7 +1223,7 @@ async function callGroq(text) {
       { role: 'user', content: 'Texte du document :\n\n' + text.slice(0, 8000) }
     ],
     temperature: 0.1,
-    max_tokens: 1024,
+    max_tokens: 2048,
     response_format: { type: 'json_object' }
   };
 
@@ -1222,7 +1231,11 @@ async function callGroq(text) {
   if (!r.ok) { var ed = await r.json().catch(function(){return{};}); throw new Error((ed.error && ed.error.message) || 'Erreur Groq API'); }
   var data = await r.json(), raw = data.choices[0].message.content || '';
   raw = raw.replace(/```json|```/g, '').trim();
-  return JSON.parse(raw);
+  var p = JSON.parse(raw);
+  // Normaliser : s'assurer que experiences et formations sont bien des tableaux
+  if (!Array.isArray(p.experiences)) p.experiences = p.experiences ? [p.experiences] : [];
+  if (!Array.isArray(p.formations))  p.formations  = p.formations  ? [p.formations]  : [];
+  return p;
 }
 async function analyzeDoc() {
   if(!selectedFile){ scErr('Veuillez sélectionner un fichier.'); return; }
@@ -1262,28 +1275,28 @@ function showSR(d) {
   var typeLabels = { experience: 'Expérience professionnelle', formation: 'Diplôme / Formation', competences: 'Compétences', infos: 'Informations personnelles', mixte: 'Document mixte' };
   card('Type détecté', typeLabels[d.type_document] || 'Document professionnel', true);
 
-  if (d.exp_poste || d.exp_entreprise || d.exp_dates) {
-    card('Poste', d.exp_poste);
-    card('Entreprise', d.exp_entreprise);
-    card('Période', d.exp_dates);
-    if (d.exp_taches) card('Tâches', d.exp_taches, true);
+  if (d.experiences && d.experiences.length) {
+    card('Expériences', d.experiences.length + ' expérience(s) détectée(s)', true);
+    d.experiences.forEach(function(e, i) {
+      if (e.poste || e.entreprise) card('Expérience ' + (i+1), (e.poste || '') + (e.entreprise ? ' — ' + e.entreprise : '') + (e.dates ? ' (' + e.dates + ')' : ''), true);
+    });
   }
-  if (d.fm_diplome || d.fm_etablissement) {
-    card('Diplôme', d.fm_diplome);
-    card('Établissement', d.fm_etablissement);
-    card('Filière', d.fm_serie);
-    card('Date', d.fm_date);
+  if (d.formations && d.formations.length) {
+    card('Formations', d.formations.length + ' formation(s) détectée(s)', true);
+    d.formations.forEach(function(f, i) {
+      if (f.diplome || f.etablissement) card('Formation ' + (i+1), (f.diplome || '') + (f.etablissement ? ' — ' + f.etablissement : '') + (f.date ? ' (' + f.date + ')' : ''), true);
+    });
   }
   if (d.langues || d.logiciels || d.domaines) {
-    if (d.langues) card('Langues', d.langues);
+    if (d.langues)   card('Langues', d.langues);
     if (d.logiciels) card('Logiciels', d.logiciels);
-    if (d.domaines) card('Domaines', d.domaines);
+    if (d.domaines)  card('Domaines', d.domaines);
   }
   if (d.nom_prenom || d.telephone || d.email || d.adresse) {
     if (d.nom_prenom) card('Nom & Prénom', d.nom_prenom);
-    if (d.telephone) card('Téléphone', d.telephone);
-    if (d.email) card('Email', d.email);
-    if (d.adresse) card('Adresse', d.adresse);
+    if (d.telephone)  card('Téléphone', d.telephone);
+    if (d.email)      card('Email', d.email);
+    if (d.adresse)    card('Adresse', d.adresse);
   }
   if (d.infos_comp) card('Infos complémentaires', d.infos_comp, true);
 }
@@ -1296,47 +1309,68 @@ function applyResults() {
     var el = document.getElementById(id);
     if (el) { el.value = (el.value ? el.value + '\n' : '') + val.trim(); el.style.borderColor = '#094102'; }
   }
-
-  // ── Expérience ────────────────────────────────────────────────────────────
-  if (d.exp_poste || d.exp_entreprise || d.exp_dates) {
-    document.getElementById('rub_exp').checked = true;
-    toggleSec('sec_exp', true);
-    var expBlocks = document.querySelectorAll('#expContainer .exp-block');
-    var targetExp = null;
-    expBlocks.forEach(function(b) {
-      if (!targetExp) { var ins = b.querySelectorAll('input,textarea'); var empty = true; ins.forEach(function(i){ if(i.value.trim()) empty=false; }); if(empty) targetExp=b; }
-    });
-    if (!targetExp) { addExp(); targetExp = document.getElementById('exp_' + expCount); }
-    function fillExp(suffix, val) {
-      if (!val || !val.trim()) return;
-      var el; targetExp.querySelectorAll('input,textarea').forEach(function(i){ if(i.name && i.name.indexOf(suffix)!==-1) el=i; });
-      if (el) { el.value = val; el.style.borderColor = '#094102'; }
-    }
-    fillExp('poste', d.exp_poste);
-    fillExp('entreprise', d.exp_entreprise);
-    fillExp('dates', d.exp_dates);
-    fillExp('taches', d.exp_taches);
+  function sfIfEmpty(id, val) {
+    if (!val || !val.trim()) return;
+    var el = document.getElementById(id);
+    if (el && !el.value.trim()) { el.value = val; el.style.borderColor = '#094102'; }
   }
 
-  // ── Formation ─────────────────────────────────────────────────────────────
-  if (d.fm_diplome || d.fm_etablissement) {
-    document.getElementById('rub_form').checked = true;
-    toggleSec('sec_form', true);
-    var fmBlocks = document.querySelectorAll('#fmContainer .fm-block');
-    var targetFm = null;
-    fmBlocks.forEach(function(b) {
-      if (!targetFm) { var ins = b.querySelectorAll('input'); var empty = true; ins.forEach(function(i){ if(i.value.trim()) empty=false; }); if(empty) targetFm=b; }
-    });
-    if (!targetFm) { addFm(); targetFm = document.getElementById('fm_' + fmCount); }
-    function fillFm(suffix, val) {
-      if (!val || !val.trim()) return;
-      var el; targetFm.querySelectorAll('input').forEach(function(i){ if(i.name && i.name.indexOf(suffix)!==-1) el=i; });
-      if (el) { el.value = val; el.style.borderColor = '#094102'; }
+  // ── Expériences — UN bloc par expérience ─────────────────────────────────
+  if (d.experiences && d.experiences.length) {
+    var hasExp = d.experiences.some(function(e){ return e.poste || e.entreprise || e.dates; });
+    if (hasExp) {
+      document.getElementById('rub_exp').checked = true;
+      toggleSec('sec_exp', true);
+      var ef = document.getElementById('expContainer');
+      ef.innerHTML = '';
+      expCount = 0;
+      d.experiences.forEach(function(exp) {
+        if (!exp.poste && !exp.entreprise && !exp.dates) return;
+        expCount++;
+        var div = document.createElement('div');
+        div.className = 'exp-block'; div.id = 'exp_' + expCount;
+        div.innerHTML = (expCount > 1 ? '<button class="remove-btn" type="button" onclick="this.parentNode.remove()">Supprimer</button>' : '') +
+          '<div class="block-title">Expérience ' + expCount + '</div>' +
+          '<div class="row2">' +
+            '<div class="field"><label>Période</label><input type="text" name="exp_' + expCount + '_dates" value="' + esc(exp.dates || '') + '" style="border-color:#094102"></div>' +
+            '<div class="field"><label>Poste occupé</label><input type="text" name="exp_' + expCount + '_poste" value="' + esc(exp.poste || '') + '" style="border-color:#094102"></div>' +
+          '</div>' +
+          '<div class="field"><label>Entreprise et lieu</label><input type="text" name="exp_' + expCount + '_entreprise" value="' + esc(exp.entreprise || '') + '" style="border-color:#094102"></div>' +
+          '<div class="field"><label>Tâches principales</label><textarea name="exp_' + expCount + '_taches" rows="3" style="border-color:#094102">' + esc(exp.taches || '') + '</textarea></div>';
+        ef.appendChild(div);
+      });
+      if (expCount === 0) { expCount = 1; ef.innerHTML = '<div class="exp-block" id="exp_1"><div class="block-title">Expérience 1</div><div class="row2"><div class="field"><label>Période</label><input type="text" name="exp_1_dates"></div><div class="field"><label>Poste</label><input type="text" name="exp_1_poste"></div></div><div class="field"><label>Entreprise</label><input type="text" name="exp_1_entreprise"></div><div class="field"><label>Tâches</label><textarea name="exp_1_taches" rows="3"></textarea></div></div>'; }
     }
-    fillFm('diplome', d.fm_diplome);
-    fillFm('serie', d.fm_serie);
-    fillFm('date', d.fm_date);
-    fillFm('etab', d.fm_etablissement);
+  }
+
+  // ── Formations — UN bloc par formation ───────────────────────────────────
+  if (d.formations && d.formations.length) {
+    var hasFm = d.formations.some(function(f){ return f.diplome || f.etablissement; });
+    if (hasFm) {
+      document.getElementById('rub_form').checked = true;
+      toggleSec('sec_form', true);
+      var ff = document.getElementById('fmContainer');
+      ff.innerHTML = '';
+      fmCount = 0;
+      d.formations.forEach(function(fm) {
+        if (!fm.diplome && !fm.etablissement) return;
+        fmCount++;
+        var div = document.createElement('div');
+        div.className = 'fm-block'; div.id = 'fm_' + fmCount;
+        div.innerHTML = (fmCount > 1 ? '<button class="remove-btn" type="button" onclick="this.parentNode.remove()">Supprimer</button>' : '') +
+          '<div class="block-title">Formation ' + fmCount + '</div>' +
+          '<div class="row2">' +
+            '<div class="field"><label>Diplôme / Formation</label><input type="text" name="fm_' + fmCount + '_diplome" value="' + esc(fm.diplome || '') + '" style="border-color:#094102"></div>' +
+            '<div class="field"><label>Filière / Série</label><input type="text" name="fm_' + fmCount + '_serie" value="' + esc(fm.serie || '') + '" style="border-color:#094102"></div>' +
+          '</div>' +
+          '<div class="row2">' +
+            '<div class="field"><label>Année et lieu</label><input type="text" name="fm_' + fmCount + '_date" value="' + esc(fm.date || '') + '" style="border-color:#094102"></div>' +
+            '<div class="field"><label>Établissement</label><input type="text" name="fm_' + fmCount + '_etab" value="' + esc(fm.etablissement || '') + '" style="border-color:#094102"></div>' +
+          '</div>';
+        ff.appendChild(div);
+      });
+      if (fmCount === 0) { fmCount = 1; ff.innerHTML = '<div class="fm-block" id="fm_1"><div class="block-title">Formation 1</div><div class="row2"><div class="field"><label>Diplôme</label><input type="text" name="fm_1_diplome"></div><div class="field"><label>Filière</label><input type="text" name="fm_1_serie"></div></div><div class="row2"><div class="field"><label>Date</label><input type="text" name="fm_1_date"></div><div class="field"><label>Établissement</label><input type="text" name="fm_1_etab"></div></div></div>'; }
+    }
   }
 
   // ── Compétences ───────────────────────────────────────────────────────────
@@ -1352,12 +1386,6 @@ function applyResults() {
   if (d.nom_prenom || d.telephone || d.email || d.adresse) {
     document.getElementById('rub_infos').checked = true;
     toggleSec('sec_infos', true);
-    // Pré-remplir aussi identification si vide
-    function sfIfEmpty(id, val) {
-      if (!val || !val.trim()) return;
-      var el = document.getElementById(id);
-      if (el && !el.value.trim()) { el.value = val; el.style.borderColor = '#094102'; }
-    }
     sfIfEmpty('f_nom_prenom', d.nom_prenom);
     sfIfEmpty('f_telephone', d.telephone);
     sfIfEmpty('f_email', d.email);
