@@ -9,443 +9,729 @@
   <link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;600;700;800&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet" />
 
   <style>
-    /* ============================================================
-       VARIABLES & RESET
-    ============================================================ */
     :root {
-      --green-dark:   #094102;
-      --green-mid:    #0d5203;
-      --orange:       #FF5700;
-      --orange-light: #ff7a35;
-      --bg:           #f2f4f0;
-      --surface:      #ffffff;
-      --text:         #1a1a1a;
-      --text-muted:   #6b7280;
-      --border:       #e5e7eb;
+      --green-dark:#094102;--green-mid:#0d5203;--orange:#FF5700;--orange-light:#ff7a35;
+      --bg:#f2f4f0;--surface:#ffffff;--text:#1a1a1a;--text-muted:#6b7280;--border:#e5e7eb;
+      --grad:linear-gradient(135deg,var(--green-dark) 0%,var(--orange) 100%);
+      --grad-soft:linear-gradient(135deg,#094102ee 0%,#FF5700cc 100%);
+      --radius-sm:12px;--radius-md:18px;--radius-lg:24px;--radius-xl:32px;
+      --gutter:20px;--col-margin:20px;
+    }
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+    html{font-size:16px;-webkit-text-size-adjust:100%;}
+    body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);overflow-x:hidden;padding-bottom:80px;}
+    a{text-decoration:none;color:inherit;}
+    button{cursor:pointer;border:none;background:none;font-family:inherit;}
+    img{display:block;max-width:100%;}
+    .grad-text{background:var(--grad);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+    .header{position:sticky;top:0;z-index:100;background:var(--surface);box-shadow:0 2px 12px rgba(9,65,2,.08);padding:12px var(--col-margin) 10px;}
+    .header__inner{display:flex;align-items:center;justify-content:space-between;gap:10px;max-width:480px;margin:0 auto 10px;}
+    .logo{display:flex;align-items:center;gap:10px;font-family:'Sora',sans-serif;font-weight:800;font-size:1.05rem;color:var(--green-dark);white-space:nowrap;text-decoration:none;flex-shrink:0;}
+    .logo__icon{width:36px;height:36px;background:var(--grad);border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+    .header__actions{display:flex;align-items:center;gap:8px;flex-shrink:0;}
+    .header__btn{width:40px;height:40px;border-radius:50%;background:var(--bg);display:flex;align-items:center;justify-content:center;color:var(--green-dark);transition:background .2s;flex-shrink:0;border:none;cursor:pointer;text-decoration:none;}
+    .header__btn:hover{background:#e5ebe4;}
+    .search-wrap{max-width:480px;margin:0 auto;position:relative;}
+    .search-input{width:100%;height:42px;border-radius:100px;border:1.5px solid var(--border);background:var(--bg);padding:0 16px 0 44px;font-size:.9rem;font-family:inherit;color:var(--text);outline:none;transition:border-color .2s,box-shadow .2s;display:block;box-sizing:border-box;}
+    .search-input:focus{border-color:var(--green-dark);box-shadow:0 0 0 3px rgba(9,65,2,.1);}
+    .search-input::placeholder{color:var(--text-muted);}
+    .search-icon{position:absolute;left:14px;top:50%;transform:translateY(-50%);color:var(--text-muted);pointer-events:none;display:flex;align-items:center;}
+    .search-results{position:absolute;top:calc(100% + 8px);left:0;right:0;background:var(--surface);border-radius:var(--radius-md);box-shadow:0 8px 30px rgba(0,0,0,.12);max-height:260px;overflow-y:auto;z-index:200;display:none;}
+    .search-result-item{padding:12px 16px;cursor:pointer;border-bottom:1px solid var(--border);transition:background .15s;font-size:.9rem;}
+    .search-result-item:last-child{border-bottom:none;}
+    .search-result-item:hover{background:var(--bg);}
+    .search-result-item strong{color:var(--green-dark);display:block;}
+    .search-result-item small{color:var(--text-muted);}
+    .main{max-width:480px;margin:0 auto;padding:20px var(--col-margin) 0;display:flex;flex-direction:column;gap:24px;}
+    .hero{border-radius:var(--radius-xl);overflow:hidden;position:relative;height:190px;width:100%;display:block;background:var(--grad);}
+    .hero__img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center center;display:block;}
+    .hero__img-placeholder{position:absolute;inset:0;width:100%;height:100%;background:linear-gradient(160deg,#0d6b03 0%,#1a8c05 40%,#FF5700 100%);display:none;align-items:center;justify-content:center;}
+    .hero__img-placeholder.visible{display:flex;}
+    .hero__overlay{position:absolute;inset:0;background:linear-gradient(to top,rgba(9,65,2,.92) 0%,rgba(9,65,2,.5) 50%,transparent 100%);}
+    .hero__content{position:absolute;bottom:0;right:0;padding:20px;color:white;text-align:right;display:flex;flex-direction:column;align-items:flex-end;max-width:60%;}
+    .hero__slogan{font-family:'Sora',sans-serif;font-size:.78rem;font-weight:700;line-height:1.25;margin-bottom:10px;text-shadow:0 1px 4px rgba(0,0,0,.3);}
+    .hero__slogan em{font-style:normal;color:#ffd0b0;}
+    .hero__cta{display:inline-flex;align-items:center;gap:8px;background:var(--orange);color:white;font-family:'Sora',sans-serif;font-weight:700;font-size:.75rem;padding:8px 16px;border-radius:100px;box-shadow:0 4px 16px rgba(255,87,0,.45);transition:transform .2s,box-shadow .2s;}
+    .hero__cta:active{transform:scale(.96);}
+    .hero__cta svg{flex-shrink:0;}
+    .section-title{font-family:'Sora',sans-serif;font-size:1.05rem;font-weight:700;color:var(--green-dark);margin-bottom:16px;}
+    .services-marquee-wrap{margin-left:calc(-1 * var(--col-margin));margin-right:calc(-1 * var(--col-margin));overflow:hidden;width:calc(100% + 2 * var(--col-margin));}
+    .services-marquee-track{display:flex;gap:20px;padding:6px var(--col-margin);animation:marquee-svc 20s linear infinite;width:max-content;}
+    .services-marquee-track:hover{animation-play-state:paused;}
+    @keyframes marquee-svc{from{transform:translateX(0);}to{transform:translateX(-50%);}}
+    .service-chip{display:flex;flex-direction:column;align-items:center;gap:8px;cursor:pointer;flex:0 0 80px;width:80px;text-decoration:none;-webkit-tap-highlight-color:transparent;}
+    .service-chip__icon{width:62px;height:62px;border-radius:50%;background:var(--surface);box-shadow:0 4px 14px rgba(9,65,2,.13);display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden;transition:box-shadow .2s,transform .2s;}
+    .service-chip__icon::before{content:'';position:absolute;inset:0;background:var(--grad);opacity:0;transition:opacity .25s;}
+    .service-chip:hover .service-chip__icon{transform:translateY(-3px);box-shadow:0 8px 20px rgba(9,65,2,.22);}
+    .service-chip:hover .service-chip__icon::before{opacity:1;}
+    .service-chip:hover .service-chip__icon svg{color:white;}
+    .service-chip__icon svg{position:relative;z-index:1;color:var(--green-dark);transition:color .25s;}
+    .service-chip__label{font-size:.67rem;font-weight:600;color:var(--text);text-align:center;line-height:1.25;width:78px;}
+    .stats-row{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;}
+    .stat-card{background:var(--surface);border-radius:var(--radius-md);padding:16px 12px;text-align:center;box-shadow:0 2px 10px rgba(9,65,2,.07);position:relative;overflow:hidden;}
+    .stat-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:var(--grad);}
+    .stat-card__value{font-family:'Sora',sans-serif;font-size:1.5rem;font-weight:800;background:var(--grad);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;line-height:1;margin-bottom:4px;}
+    .stat-card__label{font-size:.7rem;color:var(--text-muted);font-weight:500;line-height:1.2;}
+    .promo-card{background:var(--grad);border-radius:var(--radius-xl);padding:22px 20px;color:white;display:flex;align-items:center;justify-content:space-between;gap:16px;position:relative;overflow:hidden;}
+    .promo-card::after{content:'';position:absolute;width:140px;height:140px;background:rgba(255,255,255,.07);border-radius:50%;top:-40px;right:-30px;}
+    .promo-card__text{flex:1;min-width:0;}
+    .promo-card__eyebrow{font-size:.72rem;font-weight:600;text-transform:uppercase;letter-spacing:.06em;opacity:.8;margin-bottom:4px;}
+    .promo-card__title{font-family:'Sora',sans-serif;font-size:1rem;font-weight:800;line-height:1.25;margin-bottom:12px;}
+    .promo-card__btn{display:inline-flex;align-items:center;gap:6px;background:white;color:var(--green-dark);font-family:'Sora',sans-serif;font-size:.8rem;font-weight:700;padding:9px 18px;border-radius:100px;transition:transform .2s;}
+    .promo-card__btn:active{transform:scale(.95);}
+    .promo-card__icon-wrap{width:64px;height:64px;background:rgba(255,255,255,.15);border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;position:relative;z-index:1;}
+    .update-card{background:var(--surface);border-radius:var(--radius-xl);padding:20px;border:1.5px solid var(--border);box-shadow:0 2px 10px rgba(9,65,2,.06);}
+    .update-card__eyebrow{font-size:.7rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--orange);margin-bottom:6px;}
+    .update-card__title{font-family:'Sora',sans-serif;font-size:.95rem;font-weight:700;color:var(--green-dark);margin-bottom:6px;line-height:1.3;}
+    .update-card__desc{font-size:.78rem;color:var(--text-muted);line-height:1.55;margin-bottom:16px;}
+    .update-card__btn{display:inline-flex;align-items:center;gap:8px;background:var(--green-dark);color:white;font-family:'Sora',sans-serif;font-size:.8rem;font-weight:700;padding:10px 20px;border-radius:100px;transition:background .2s,transform .2s;text-decoration:none;}
+    .update-card__btn:hover{background:var(--green-mid);}
+    .update-card__btn:active{transform:scale(.96);}
+    .quick-list{display:flex;flex-direction:column;gap:10px;}
+    .quick-item{background:var(--surface);border-radius:var(--radius-md);padding:14px 16px;display:flex;align-items:center;gap:14px;box-shadow:0 2px 8px rgba(9,65,2,.06);transition:transform .2s,box-shadow .2s;cursor:pointer;}
+    .quick-item:hover{transform:translateX(4px);box-shadow:0 4px 16px rgba(9,65,2,.12);}
+    .quick-item__icon{width:44px;height:44px;border-radius:var(--radius-sm);background:linear-gradient(135deg,rgba(9,65,2,.08) 0%,rgba(255,87,0,.08) 100%);display:flex;align-items:center;justify-content:center;flex-shrink:0;color:var(--green-dark);}
+    .quick-item__text{flex:1;min-width:0;}
+    .quick-item__title{font-weight:600;font-size:.9rem;color:var(--text);margin-bottom:2px;}
+    .quick-item__desc{font-size:.78rem;color:var(--text-muted);}
+    .quick-item__arrow{color:var(--text-muted);flex-shrink:0;}
+    .gallery-wrap{margin-left:calc(-1 * var(--col-margin));margin-right:calc(-1 * var(--col-margin));}
+    .carousel-track-outer{overflow:hidden;width:100%;}
+    .carousel-track{display:flex;gap:12px;padding:4px var(--col-margin);animation:marquee 28s linear infinite;width:max-content;}
+    .carousel-track:hover{animation-play-state:paused;}
+    @keyframes marquee{from{transform:translateX(0);}to{transform:translateX(-50%);}}
+    .carousel-item{flex:0 0 200px;height:130px;border-radius:var(--radius-md);overflow:hidden;box-shadow:0 4px 12px rgba(0,0,0,.1);}
+    .carousel-item img{width:100%;height:100%;object-fit:cover;}
+    .carousel-item--placeholder{background:var(--grad);display:flex;align-items:center;justify-content:center;}
+    .carousel-item--placeholder svg{color:rgba(255,255,255,.5);}
+    .contact-strip{background:var(--green-dark);border-radius:var(--radius-xl);padding:20px;display:flex;align-items:center;justify-content:space-between;gap:12px;}
+    .contact-strip__info{color:rgba(255,255,255,.7);font-size:.8rem;line-height:1.5;}
+    .contact-strip__info strong{color:white;font-size:.85rem;}
+    .contact-strip__btn{display:inline-flex;align-items:center;gap:6px;background:#25D366;color:white;font-weight:700;font-size:.82rem;padding:10px 16px;border-radius:100px;white-space:nowrap;flex-shrink:0;}
+    .bottom-nav{position:fixed;bottom:0;left:0;right:0;background:var(--surface);border-top:1px solid var(--border);padding:8px 0 12px;z-index:100;box-shadow:0 -4px 20px rgba(0,0,0,.08);}
+    .bottom-nav__inner{display:grid;grid-template-columns:repeat(4,1fr);max-width:480px;margin:0 auto;padding:0 var(--col-margin);}
+    .bottom-nav__item{display:flex;flex-direction:column;align-items:center;gap:4px;padding:4px 2px;cursor:pointer;color:var(--text-muted);transition:color .2s;text-decoration:none;-webkit-tap-highlight-color:transparent;}
+    .bottom-nav__item.active{color:var(--green-dark);}
+    .bottom-nav__item:hover{color:var(--orange);}
+    .bottom-nav__icon-wrap{position:relative;width:36px;height:36px;display:flex;align-items:center;justify-content:center;border-radius:10px;transition:background .2s;}
+    .bottom-nav__item.active .bottom-nav__icon-wrap{background:linear-gradient(135deg,rgba(9,65,2,.12) 0%,rgba(255,87,0,.1) 100%);}
+    .bottom-nav__label{font-size:.62rem;font-weight:600;text-align:center;line-height:1.1;}
+    .modal-backdrop{display:none;position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:200;align-items:flex-end;}
+    .modal-backdrop.open{display:flex;}
+    .modal-sheet{background:var(--surface);border-radius:var(--radius-xl) var(--radius-xl) 0 0;width:100%;max-width:480px;margin:0 auto;padding:24px 20px;max-height:85vh;overflow-y:auto;animation:slideUp .3s ease;}
+    @keyframes slideUp{from{transform:translateY(100%);}to{transform:translateY(0);}}
+    .modal-handle{width:40px;height:4px;background:var(--border);border-radius:2px;margin:0 auto 20px;}
+    .modal-title{font-family:'Sora',sans-serif;font-size:1.1rem;font-weight:700;color:var(--green-dark);margin-bottom:16px;}
+    .contact-row{display:flex;align-items:center;gap:12px;padding:14px;background:var(--bg);border-radius:var(--radius-md);margin-bottom:10px;}
+    .contact-row__icon{width:40px;height:40px;border-radius:var(--radius-sm);background:var(--grad);display:flex;align-items:center;justify-content:center;color:white;flex-shrink:0;}
+    .contact-row__label{font-size:.78rem;color:var(--text-muted);}
+    .contact-row__value{font-weight:600;font-size:.9rem;}
+    .toast{position:fixed;top:80px;right:16px;left:16px;max-width:440px;margin:0 auto;background:var(--green-dark);color:white;padding:14px 18px;border-radius:var(--radius-md);font-size:.88rem;font-weight:500;box-shadow:0 6px 24px rgba(9,65,2,.35);z-index:300;display:flex;align-items:center;gap:10px;animation:slideDown .4s ease,fadeOut .4s ease 4.6s forwards;}
+    @keyframes slideDown{from{transform:translateY(-20px);opacity:0;}to{transform:translateY(0);opacity:1;}}
+    @keyframes fadeOut{from{opacity:1;}to{opacity:0;pointer-events:none;}}
 
-      --grad: linear-gradient(135deg, var(--green-dark) 0%, var(--orange) 100%);
-      --grad-soft: linear-gradient(135deg, #094102ee 0%, #FF5700cc 100%);
+    /* RESPONSIVE INDEX */
+    @media(min-width:481px){.header{padding:14px calc((100vw - 480px)/2 + 20px);}.main{max-width:480px;}.bottom-nav__inner{max-width:480px;}}
+    @media(max-width:768px){:root{--col-margin:16px;--gutter:16px;}.logo{font-size:.95rem;gap:8px;}.logo__icon{width:32px;height:32px;}.header__btn{width:36px;height:36px;}.search-input{height:40px;font-size:.85rem;}.hero{height:175px;}.stats-row{gap:10px;}.stat-card{padding:14px 10px;}.stat-card__value{font-size:1.3rem;}.stat-card__label{font-size:.65rem;}.section-title{font-size:1rem;margin-bottom:14px;}.service-chip{flex:0 0 72px;width:72px;}.service-chip__icon{width:56px;height:56px;}.service-chip__label{font-size:.63rem;width:70px;}.promo-card{padding:18px 16px;}.promo-card__title{font-size:.9rem;}.promo-card__btn{font-size:.75rem;padding:8px 14px;}.promo-card__icon-wrap{width:54px;height:54px;}.quick-item{padding:12px 14px;gap:12px;}.quick-item__icon{width:40px;height:40px;}.quick-item__title{font-size:.85rem;}.quick-item__desc{font-size:.73rem;}.carousel-item{flex:0 0 180px;height:115px;}.contact-strip{padding:16px;gap:10px;}.contact-strip__info{font-size:.75rem;}.contact-strip__btn{font-size:.78rem;padding:9px 14px;}.bottom-nav{padding:6px 0 10px;}.bottom-nav__label{font-size:.6rem;}.bottom-nav__icon-wrap{width:32px;height:32px;}}
+    @media(max-width:480px){:root{--col-margin:14px;--gutter:14px;}body{padding-bottom:75px;}.header{padding:12px var(--col-margin);}.logo{font-size:.9rem;gap:7px;}.logo__icon{width:30px;height:30px;}.search-input{height:38px;font-size:.82rem;padding:0 38px 0 38px;}.search-icon{left:12px;width:16px;height:16px;}.main{padding:16px var(--col-margin) 0;gap:20px;}.hero{height:160px;}.hero__content{padding:16px;}.hero__slogan{font-size:.75rem;margin-bottom:10px;}.hero__cta{font-size:.72rem;padding:7px 14px;}.stats-row{gap:8px;}.stat-card{padding:12px 8px;border-radius:var(--radius-sm);}.stat-card__value{font-size:1.2rem;}.stat-card__label{font-size:.62rem;}.service-chip{flex:0 0 68px;width:68px;}.service-chip__icon{width:52px;height:52px;}.service-chip__label{font-size:.6rem;width:66px;}.services-marquee-track{gap:16px;}.promo-card{padding:16px 14px;border-radius:var(--radius-lg);}.promo-card__title{font-size:.88rem;margin-bottom:10px;}.promo-card__btn{font-size:.72rem;padding:7px 12px;}.promo-card__icon-wrap{width:48px;height:48px;}.section-title{font-size:.95rem;margin-bottom:12px;}.quick-item{padding:11px 13px;gap:10px;border-radius:var(--radius-sm);}.quick-item__icon{width:38px;height:38px;border-radius:10px;}.quick-item__title{font-size:.82rem;}.quick-item__desc{font-size:.7rem;}.gallery-wrap{margin-left:calc(-1 * var(--col-margin));margin-right:calc(-1 * var(--col-margin));}.carousel-item{flex:0 0 160px;height:105px;border-radius:var(--radius-sm);}.carousel-track{gap:10px;padding:4px var(--col-margin);}.contact-strip{padding:14px;border-radius:var(--radius-lg);gap:8px;}.contact-strip__info{font-size:.72rem;}.contact-strip__btn{font-size:.74rem;padding:8px 12px;}.bottom-nav{padding:5px 0 8px;}.bottom-nav__inner{padding:0 8px;}.bottom-nav__item{gap:3px;}.bottom-nav__label{font-size:.58rem;}.bottom-nav__icon-wrap{width:30px;height:30px;border-radius:8px;}.modal-sheet{padding:20px 16px;border-radius:var(--radius-lg) var(--radius-lg) 0 0;}.modal-title{font-size:1rem;}}
+    @media(max-width:375px){:root{--col-margin:12px;--gutter:12px;}body{padding-bottom:70px;}.logo{font-size:.82rem;gap:6px;}.logo__icon{width:28px;height:28px;}.header__btn{width:32px;height:32px;}.search-input{height:36px;font-size:.8rem;padding:0 36px 0 34px;}.hero{height:148px;}.hero__slogan{font-size:.6rem;line-height:1.2;}.hero__cta{font-size:.68rem;padding:7px 12px;gap:5px;}.stat-card__value{font-size:1.1rem;}.service-chip{flex:0 0 62px;width:62px;}.service-chip__icon{width:48px;height:48px;}.service-chip__label{font-size:.58rem;width:60px;}.services-marquee-track{gap:14px;}.promo-card__title{font-size:.82rem;}.promo-card__icon-wrap{width:44px;height:44px;display:none;}.quick-item__title{font-size:.8rem;}.quick-item__desc{font-size:.68rem;}.carousel-item{flex:0 0 140px;height:95px;}.contact-strip{flex-direction:column;align-items:flex-start;gap:10px;}.contact-strip__btn{align-self:stretch;justify-content:center;}.bottom-nav__label{font-size:.54rem;}}
+    @media(max-width:320px){:root{--col-margin:10px;--gutter:10px;}body{padding-bottom:65px;}.logo span{display:none;}.header{padding:10px var(--col-margin);}.hero{height:132px;}.hero__content{padding:12px;}.hero__slogan{font-size:.65rem;margin-bottom:8px;line-height:1.2;}.hero__cta{font-size:.62rem;padding:6px 10px;}.stats-row{gap:6px;}.stat-card{padding:10px 6px;}.stat-card__value{font-size:1rem;}.service-chip{flex:0 0 58px;width:58px;}.service-chip__icon{width:44px;height:44px;}.service-chip__label{font-size:.55rem;width:56px;}.promo-card{padding:12px;}.promo-card__title{font-size:.78rem;}.promo-card__btn{font-size:.68rem;padding:6px 10px;}.quick-item{padding:10px;}.quick-item__icon{width:34px;height:34px;}.quick-item__title{font-size:.76rem;}.quick-item__desc{font-size:.64rem;}.carousel-item{flex:0 0 120px;height:82px;}.bottom-nav__inner{padding:0 4px;}.bottom-nav__label{font-size:.5rem;}.bottom-nav__icon-wrap{width:28px;height:28px;}}
+    @media(max-width:280px){.header{flex-wrap:wrap;gap:6px;}.header__btn:last-child{display:none;}.search-input{font-size:.72rem;}.hero__slogan{font-size:.6rem;line-height:1.2;}.promo-card__icon-wrap{display:none;}.quick-item__desc{display:none;}.bottom-nav__label{display:none;}.bottom-nav__icon-wrap{width:32px;height:32px;border-radius:50%;}}
 
-      --radius-sm: 12px;
-      --radius-md: 18px;
-      --radius-lg: 24px;
-      --radius-xl: 32px;
+    /* ====================================================
+       ONBOARDING
+    ==================================================== */
+    #csOb {
+      position: fixed;
+      inset: 0;
+      width: 100vw;
+      height: 100dvh;
+      z-index: 9999;
+      background: #fff;
+      font-family: 'Sora','DM Sans',system-ui,sans-serif;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+    #csOb .ob-topbar {
+      height: 5px;
+      background: linear-gradient(90deg,#094102,#FF5700);
+      flex-shrink: 0;
+    }
+    #csOb .ob-slide {
+      display: none;
+      flex-direction: column;
+      flex: 1;
+      overflow: hidden;
+      min-height: 0;
+    }
+    #csOb .ob-slide.on {
+      display: flex;
+      animation: obFade .32s ease;
+    }
+    @keyframes obFade{from{opacity:0;transform:translateX(12px);}to{opacity:1;transform:translateX(0);}}
 
-      --gutter: 20px;
-      --col-margin: 20px;
+    /* ILLUSTRATION */
+    #csOb .ob-illus {
+      flex: 0 0 44%;
+      min-height: 0;
+      max-height: 52vh;
+      background: #f0f2ee;
+      overflow: hidden;
+      position: relative;
+    }
+    #csOb .ob-illus svg {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      display: block;
     }
 
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-    html { font-size: 16px; -webkit-text-size-adjust: 100%; }
-    body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--text); overflow-x: hidden; padding-bottom: 80px; }
-    a { text-decoration: none; color: inherit; }
-    button { cursor: pointer; border: none; background: none; font-family: inherit; }
-    img { display: block; max-width: 100%; }
-
-    .grad-text { background: var(--grad); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
-
-    /* HEADER */
-    .header { position: sticky; top: 0; z-index: 100; background: var(--surface); box-shadow: 0 2px 12px rgba(9,65,2,.08); padding: 12px var(--col-margin) 10px; }
-    .header__inner { display: flex; align-items: center; justify-content: space-between; gap: 10px; max-width: 480px; margin: 0 auto 10px; }
-    .logo { display: flex; align-items: center; gap: 10px; font-family: 'Sora', sans-serif; font-weight: 800; font-size: 1.05rem; color: var(--green-dark); white-space: nowrap; text-decoration: none; flex-shrink: 0; }
-    .logo__icon { width: 36px; height: 36px; background: var(--grad); border-radius: 50%; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
-    .header__actions { display: flex; align-items: center; gap: 8px; flex-shrink: 0; }
-    .header__btn { width: 40px; height: 40px; border-radius: 50%; background: var(--bg); display: flex; align-items: center; justify-content: center; color: var(--green-dark); transition: background .2s; flex-shrink: 0; border: none; cursor: pointer; text-decoration: none; }
-    .header__btn:hover { background: #e5ebe4; }
-
-    /* SEARCH */
-    .search-wrap { max-width: 480px; margin: 0 auto; position: relative; }
-    .search-input { width: 100%; height: 42px; border-radius: 100px; border: 1.5px solid var(--border); background: var(--bg); padding: 0 16px 0 44px; font-size: .9rem; font-family: inherit; color: var(--text); outline: none; transition: border-color .2s, box-shadow .2s; display: block; box-sizing: border-box; }
-    .search-input:focus { border-color: var(--green-dark); box-shadow: 0 0 0 3px rgba(9,65,2,.1); }
-    .search-input::placeholder { color: var(--text-muted); }
-    .search-icon { position: absolute; left: 14px; top: 50%; transform: translateY(-50%); color: var(--text-muted); pointer-events: none; display: flex; align-items: center; }
-    .search-results { position: absolute; top: calc(100% + 8px); left: 0; right: 0; background: var(--surface); border-radius: var(--radius-md); box-shadow: 0 8px 30px rgba(0,0,0,.12); max-height: 260px; overflow-y: auto; z-index: 200; display: none; }
-    .search-result-item { padding: 12px 16px; cursor: pointer; border-bottom: 1px solid var(--border); transition: background .15s; font-size: .9rem; }
-    .search-result-item:last-child { border-bottom: none; }
-    .search-result-item:hover { background: var(--bg); }
-    .search-result-item strong { color: var(--green-dark); display: block; }
-    .search-result-item small { color: var(--text-muted); }
-
-    /* MAIN */
-    .main { max-width: 480px; margin: 0 auto; padding: 20px var(--col-margin) 0; display: flex; flex-direction: column; gap: 24px; }
-
-    /* HERO */
-    .hero { border-radius: var(--radius-xl); overflow: hidden; position: relative; height: 190px; width: 100%; display: block; background: var(--grad); }
-    .hero__img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: center center; display: block; }
-    .hero__img-placeholder { position: absolute; inset: 0; width: 100%; height: 100%; background: linear-gradient(160deg, #0d6b03 0%, #1a8c05 40%, #FF5700 100%); display: none; align-items: center; justify-content: center; }
-    .hero__img-placeholder.visible { display: flex; }
-    .hero__overlay { position: absolute; inset: 0; background: linear-gradient(to top, rgba(9,65,2,.92) 0%, rgba(9,65,2,.5) 50%, transparent 100%); }
-    .hero__content { position: absolute; bottom: 0; right: 0; padding: 20px; color: white; text-align: right; display: flex; flex-direction: column; align-items: flex-end; max-width: 60%; }
-    .hero__slogan { font-family: 'Sora', sans-serif; font-size: .78rem; font-weight: 700; line-height: 1.25; margin-bottom: 10px; text-shadow: 0 1px 4px rgba(0,0,0,.3); }
-    .hero__slogan em { font-style: normal; color: #ffd0b0; }
-    .hero__cta { display: inline-flex; align-items: center; gap: 8px; background: var(--orange); color: white; font-family: 'Sora', sans-serif; font-weight: 700; font-size: .75rem; padding: 8px 16px; border-radius: 100px; box-shadow: 0 4px 16px rgba(255,87,0,.45); transition: transform .2s, box-shadow .2s; }
-    .hero__cta:active { transform: scale(.96); }
-    .hero__cta svg { flex-shrink: 0; }
-
-    /* SECTION TITLE */
-    .section-title { font-family: 'Sora', sans-serif; font-size: 1.05rem; font-weight: 700; color: var(--green-dark); margin-bottom: 16px; }
-
-    /* SERVICES MARQUEE */
-    .services-marquee-wrap { margin-left: calc(-1 * var(--col-margin)); margin-right: calc(-1 * var(--col-margin)); overflow: hidden; width: calc(100% + 2 * var(--col-margin)); }
-    .services-marquee-track { display: flex; gap: 20px; padding: 6px var(--col-margin); animation: marquee-svc 20s linear infinite; width: max-content; }
-    .services-marquee-track:hover { animation-play-state: paused; }
-    @keyframes marquee-svc { from { transform: translateX(0); } to { transform: translateX(-50%); } }
-    .service-chip { display: flex; flex-direction: column; align-items: center; gap: 8px; cursor: pointer; flex: 0 0 80px; width: 80px; text-decoration: none; -webkit-tap-highlight-color: transparent; }
-    .service-chip__icon { width: 62px; height: 62px; border-radius: 50%; background: var(--surface); box-shadow: 0 4px 14px rgba(9,65,2,.13); display: flex; align-items: center; justify-content: center; position: relative; overflow: hidden; transition: box-shadow .2s, transform .2s; }
-    .service-chip__icon::before { content: ''; position: absolute; inset: 0; background: var(--grad); opacity: 0; transition: opacity .25s; }
-    .service-chip:hover .service-chip__icon { transform: translateY(-3px); box-shadow: 0 8px 20px rgba(9,65,2,.22); }
-    .service-chip:hover .service-chip__icon::before { opacity: 1; }
-    .service-chip:hover .service-chip__icon svg { color: white; }
-    .service-chip__icon svg { position: relative; z-index: 1; color: var(--green-dark); transition: color .25s; }
-    .service-chip__label { font-size: .67rem; font-weight: 600; color: var(--text); text-align: center; line-height: 1.25; width: 78px; }
-
-    /* STATS */
-    .stats-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
-    .stat-card { background: var(--surface); border-radius: var(--radius-md); padding: 16px 12px; text-align: center; box-shadow: 0 2px 10px rgba(9,65,2,.07); position: relative; overflow: hidden; }
-    .stat-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px; background: var(--grad); }
-    .stat-card__value { font-family: 'Sora', sans-serif; font-size: 1.5rem; font-weight: 800; background: var(--grad); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; line-height: 1; margin-bottom: 4px; }
-    .stat-card__label { font-size: .7rem; color: var(--text-muted); font-weight: 500; line-height: 1.2; }
-
-    /* PROMO CARD */
-    .promo-card { background: var(--grad); border-radius: var(--radius-xl); padding: 22px 20px; color: white; display: flex; align-items: center; justify-content: space-between; gap: 16px; position: relative; overflow: hidden; }
-    .promo-card::after { content: ''; position: absolute; width: 140px; height: 140px; background: rgba(255,255,255,.07); border-radius: 50%; top: -40px; right: -30px; }
-    .promo-card__text { flex: 1; min-width: 0; }
-    .promo-card__eyebrow { font-size: .72rem; font-weight: 600; text-transform: uppercase; letter-spacing: .06em; opacity: .8; margin-bottom: 4px; }
-    .promo-card__title { font-family: 'Sora', sans-serif; font-size: 1rem; font-weight: 800; line-height: 1.25; margin-bottom: 12px; }
-    .promo-card__btn { display: inline-flex; align-items: center; gap: 6px; background: white; color: var(--green-dark); font-family: 'Sora', sans-serif; font-size: .8rem; font-weight: 700; padding: 9px 18px; border-radius: 100px; transition: transform .2s; }
-    .promo-card__btn:active { transform: scale(.95); }
-    .promo-card__icon-wrap { width: 64px; height: 64px; background: rgba(255,255,255,.15); border-radius: 50%; display: flex; align-items: center; justify-content: center; flex-shrink: 0; position: relative; z-index: 1; }
-
-    /* ── CARTE MISE À JOUR CV ── */
-    .update-card {
-      background: var(--surface);
-      border-radius: var(--radius-xl);
-      padding: 20px;
-      border: 1.5px solid var(--border);
-      box-shadow: 0 2px 10px rgba(9,65,2,.06);
+    /* TEXTE */
+    #csOb .ob-bottom {
+      flex: 1;
+      min-height: 0;
+      background: #fff;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      padding: clamp(12px,3vw,22px) clamp(16px,5vw,32px) 0;
+      overflow: hidden;
     }
-    .update-card__eyebrow {
-      font-size: .7rem;
+    #csOb .ob-eyebrow {
+      font-size: clamp(.58rem,2vw,.7rem);
       font-weight: 700;
+      letter-spacing: .1em;
       text-transform: uppercase;
-      letter-spacing: .08em;
-      color: var(--orange);
-      margin-bottom: 6px;
+      color: #FF5700;
+      margin-bottom: 4px;
+      flex-shrink: 0;
     }
-    .update-card__title {
-      font-family: 'Sora', sans-serif;
-      font-size: .95rem;
-      font-weight: 700;
-      color: var(--green-dark);
+    #csOb .ob-title {
+      font-size: clamp(.92rem,3.8vw,1.25rem);
+      font-weight: 800;
+      color: #094102;
+      line-height: 1.22;
       margin-bottom: 6px;
-      line-height: 1.3;
+      flex-shrink: 0;
     }
-    .update-card__desc {
-      font-size: .78rem;
-      color: var(--text-muted);
+    #csOb .ob-desc {
+      font-size: clamp(.72rem,2.7vw,.86rem);
+      color: #4b5563;
       line-height: 1.55;
-      margin-bottom: 16px;
+      overflow: hidden;
+      display: -webkit-box;
+      -webkit-box-orient: vertical;
+      -webkit-line-clamp: 4;
+      flex-shrink: 0;
     }
-    .update-card__btn {
+    #csOb .ob-desc strong{color:#094102;}
+    #csOb .ob-chip {
       display: inline-flex;
       align-items: center;
-      gap: 8px;
-      background: var(--green-dark);
-      color: white;
-      font-family: 'Sora', sans-serif;
-      font-size: .8rem;
-      font-weight: 700;
-      padding: 10px 20px;
+      gap: 4px;
+      padding: clamp(4px,.8vh,6px) clamp(10px,2.5vw,14px);
       border-radius: 100px;
-      transition: background .2s, transform .2s;
-      text-decoration: none;
+      font-size: clamp(.58rem,2vw,.7rem);
+      font-weight: 600;
+      border: 1.5px solid currentColor;
+      margin-top: 8px;
+      flex-shrink: 0;
+      white-space: nowrap;
+      width: fit-content;
+      max-width: 100%;
+      overflow: hidden;
+      text-overflow: ellipsis;
     }
-    .update-card__btn:hover { background: var(--green-mid); }
-    .update-card__btn:active { transform: scale(.96); }
+    #csOb .ob-chip.g{color:#094102;}
+    #csOb .ob-chip.o{color:#FF5700;}
 
-    /* QUICK LIST */
-    .quick-list { display: flex; flex-direction: column; gap: 10px; }
-    .quick-item { background: var(--surface); border-radius: var(--radius-md); padding: 14px 16px; display: flex; align-items: center; gap: 14px; box-shadow: 0 2px 8px rgba(9,65,2,.06); transition: transform .2s, box-shadow .2s; cursor: pointer; }
-    .quick-item:hover { transform: translateX(4px); box-shadow: 0 4px 16px rgba(9,65,2,.12); }
-    .quick-item__icon { width: 44px; height: 44px; border-radius: var(--radius-sm); background: linear-gradient(135deg, rgba(9,65,2,.08) 0%, rgba(255,87,0,.08) 100%); display: flex; align-items: center; justify-content: center; flex-shrink: 0; color: var(--green-dark); }
-    .quick-item__text { flex: 1; min-width: 0; }
-    .quick-item__title { font-weight: 600; font-size: .9rem; color: var(--text); margin-bottom: 2px; }
-    .quick-item__desc { font-size: .78rem; color: var(--text-muted); }
-    .quick-item__arrow { color: var(--text-muted); flex-shrink: 0; }
+    /* NAVIGATION */
+    #csOb .ob-nav {
+      flex-shrink: 0;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: clamp(10px,2vw,14px) clamp(16px,5vw,32px);
+      padding-bottom: calc(clamp(10px,2vw,14px) + env(safe-area-inset-bottom,0px));
+      background: #fff;
+      border-top: 1px solid #f3f4f6;
+    }
+    #csOb .ob-dots{display:flex;gap:5px;align-items:center;}
+    #csOb .ob-dot{width:7px;height:7px;border-radius:4px;background:#e5e7eb;transition:all .28s cubic-bezier(.4,0,.2,1);}
+    #csOb .ob-dot.on{width:22px;background:#094102;}
+    #csOb .ob-dot.done{background:#a7f3d0;}
+    #csOb .ob-nav-right{display:flex;align-items:center;gap:8px;}
+    #csOb .ob-skip-btn{font-size:clamp(.72rem,2.6vw,.85rem);color:#9ca3af;background:none;border:none;cursor:pointer;font-family:inherit;padding:6px 8px;white-space:nowrap;}
+    #csOb .ob-prev-btn{width:clamp(34px,9vw,42px);height:clamp(34px,9vw,42px);border-radius:50%;border:1.5px solid #e5e7eb;background:#fff;color:#374151;font-size:.9rem;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .2s;font-family:inherit;flex-shrink:0;}
+    #csOb .ob-prev-btn:hover{border-color:#094102;color:#094102;}
+    #csOb .ob-prev-btn.ob-hidden{display:none!important;}
+    #csOb .ob-next-btn{height:clamp(38px,9vw,46px);padding:0 clamp(14px,3.5vw,24px);border-radius:100px;background:linear-gradient(135deg,#094102 0%,#FF5700 100%);color:#fff;font-family:inherit;font-size:clamp(.76rem,2.8vw,.9rem);font-weight:700;border:none;cursor:pointer;display:flex;align-items:center;gap:6px;white-space:nowrap;box-shadow:0 4px 14px rgba(9,65,2,.22);transition:opacity .2s,transform .15s;flex-shrink:0;}
+    #csOb .ob-next-btn:hover{opacity:.88;transform:translateY(-1px);}
+    #csOb .ob-next-btn:active{transform:scale(.97);}
+    #csOb.closing{animation:obClose .32s ease forwards;}
+    @keyframes obClose{from{opacity:1;}to{opacity:0;pointer-events:none;}}
 
-    /* GALLERY */
-    .gallery-wrap { margin-left: calc(-1 * var(--col-margin)); margin-right: calc(-1 * var(--col-margin)); }
-    .carousel-track-outer { overflow: hidden; width: 100%; }
-    .carousel-track { display: flex; gap: 12px; padding: 4px var(--col-margin); animation: marquee 28s linear infinite; width: max-content; }
-    .carousel-track:hover { animation-play-state: paused; }
-    @keyframes marquee { from { transform: translateX(0); } to { transform: translateX(-50%); } }
-    .carousel-item { flex: 0 0 200px; height: 130px; border-radius: var(--radius-md); overflow: hidden; box-shadow: 0 4px 12px rgba(0,0,0,.1); }
-    .carousel-item img { width: 100%; height: 100%; object-fit: cover; }
-    .carousel-item--placeholder { background: var(--grad); display: flex; align-items: center; justify-content: center; }
-    .carousel-item--placeholder svg { color: rgba(255,255,255,.5); }
-
-    /* CONTACT STRIP */
-    .contact-strip { background: var(--green-dark); border-radius: var(--radius-xl); padding: 20px; display: flex; align-items: center; justify-content: space-between; gap: 12px; }
-    .contact-strip__info { color: rgba(255,255,255,.7); font-size: .8rem; line-height: 1.5; }
-    .contact-strip__info strong { color: white; font-size: .85rem; }
-    .contact-strip__btn { display: inline-flex; align-items: center; gap: 6px; background: #25D366; color: white; font-weight: 700; font-size: .82rem; padding: 10px 16px; border-radius: 100px; white-space: nowrap; flex-shrink: 0; }
-
-    /* BOTTOM NAV */
-    .bottom-nav { position: fixed; bottom: 0; left: 0; right: 0; background: var(--surface); border-top: 1px solid var(--border); padding: 8px 0 12px; z-index: 100; box-shadow: 0 -4px 20px rgba(0,0,0,.08); }
-    .bottom-nav__inner { display: grid; grid-template-columns: repeat(4, 1fr); max-width: 480px; margin: 0 auto; padding: 0 var(--col-margin); }
-    .bottom-nav__item { display: flex; flex-direction: column; align-items: center; gap: 4px; padding: 4px 2px; cursor: pointer; color: var(--text-muted); transition: color .2s; text-decoration: none; -webkit-tap-highlight-color: transparent; }
-    .bottom-nav__item.active { color: var(--green-dark); }
-    .bottom-nav__item:hover { color: var(--orange); }
-    .bottom-nav__icon-wrap { position: relative; width: 36px; height: 36px; display: flex; align-items: center; justify-content: center; border-radius: 10px; transition: background .2s; }
-    .bottom-nav__item.active .bottom-nav__icon-wrap { background: linear-gradient(135deg, rgba(9,65,2,.12) 0%, rgba(255,87,0,.1) 100%); }
-    .bottom-nav__label { font-size: .62rem; font-weight: 600; text-align: center; line-height: 1.1; }
-
-    /* MODAL */
-    .modal-backdrop { display: none; position: fixed; inset: 0; background: rgba(0,0,0,.55); z-index: 200; align-items: flex-end; }
-    .modal-backdrop.open { display: flex; }
-    .modal-sheet { background: var(--surface); border-radius: var(--radius-xl) var(--radius-xl) 0 0; width: 100%; max-width: 480px; margin: 0 auto; padding: 24px 20px; max-height: 85vh; overflow-y: auto; animation: slideUp .3s ease; }
-    @keyframes slideUp { from { transform: translateY(100%); } to { transform: translateY(0); } }
-    .modal-handle { width: 40px; height: 4px; background: var(--border); border-radius: 2px; margin: 0 auto 20px; }
-    .modal-title { font-family: 'Sora', sans-serif; font-size: 1.1rem; font-weight: 700; color: var(--green-dark); margin-bottom: 16px; }
-    .contact-row { display: flex; align-items: center; gap: 12px; padding: 14px; background: var(--bg); border-radius: var(--radius-md); margin-bottom: 10px; }
-    .contact-row__icon { width: 40px; height: 40px; border-radius: var(--radius-sm); background: var(--grad); display: flex; align-items: center; justify-content: center; color: white; flex-shrink: 0; }
-    .contact-row__label { font-size: .78rem; color: var(--text-muted); }
-    .contact-row__value { font-weight: 600; font-size: .9rem; }
-
-    /* TOAST */
-    .toast { position: fixed; top: 80px; right: 16px; left: 16px; max-width: 440px; margin: 0 auto; background: var(--green-dark); color: white; padding: 14px 18px; border-radius: var(--radius-md); font-size: .88rem; font-weight: 500; box-shadow: 0 6px 24px rgba(9,65,2,.35); z-index: 300; display: flex; align-items: center; gap: 10px; animation: slideDown .4s ease, fadeOut .4s ease 4.6s forwards; }
-    @keyframes slideDown { from { transform: translateY(-20px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
-    @keyframes fadeOut { from { opacity: 1; } to { opacity: 0; pointer-events: none; } }
-
-    /* RESPONSIVE */
-    @media (min-width: 481px) { .header { padding: 14px calc((100vw - 480px) / 2 + 20px); } .main { max-width: 480px; } .bottom-nav__inner { max-width: 480px; } }
-    @media (max-width: 768px) { :root { --col-margin: 16px; --gutter: 16px; } .logo { font-size: .95rem; gap: 8px; } .logo__icon { width: 32px; height: 32px; } .header__btn { width: 36px; height: 36px; } .search-input { height: 40px; font-size: .85rem; } .hero { height: 175px; } .stats-row { gap: 10px; } .stat-card { padding: 14px 10px; } .stat-card__value { font-size: 1.3rem; } .stat-card__label { font-size: .65rem; } .section-title { font-size: 1rem; margin-bottom: 14px; } .service-chip { flex: 0 0 72px; width: 72px; } .service-chip__icon { width: 56px; height: 56px; } .service-chip__label { font-size: .63rem; width: 70px; } .promo-card { padding: 18px 16px; } .promo-card__title { font-size: .9rem; } .promo-card__btn { font-size: .75rem; padding: 8px 14px; } .promo-card__icon-wrap { width: 54px; height: 54px; } .quick-item { padding: 12px 14px; gap: 12px; } .quick-item__icon { width: 40px; height: 40px; } .quick-item__title { font-size: .85rem; } .quick-item__desc { font-size: .73rem; } .carousel-item { flex: 0 0 180px; height: 115px; } .contact-strip { padding: 16px; gap: 10px; } .contact-strip__info { font-size: .75rem; } .contact-strip__btn { font-size: .78rem; padding: 9px 14px; } .bottom-nav { padding: 6px 0 10px; } .bottom-nav__label { font-size: .6rem; } .bottom-nav__icon-wrap { width: 32px; height: 32px; } }
-    @media (max-width: 480px) { :root { --col-margin: 14px; --gutter: 14px; } body { padding-bottom: 75px; } .header { padding: 12px var(--col-margin); } .logo { font-size: .9rem; gap: 7px; } .logo__icon { width: 30px; height: 30px; } .search-input { height: 38px; font-size: .82rem; padding: 0 38px 0 38px; } .search-icon { left: 12px; width: 16px; height: 16px; } .main { padding: 16px var(--col-margin) 0; gap: 20px; } .hero { height: 160px; } .hero__content { padding: 16px; } .hero__slogan { font-size: .75rem; margin-bottom: 10px; } .hero__cta { font-size: .72rem; padding: 7px 14px; } .stats-row { gap: 8px; } .stat-card { padding: 12px 8px; border-radius: var(--radius-sm); } .stat-card__value { font-size: 1.2rem; } .stat-card__label { font-size: .62rem; } .service-chip { flex: 0 0 68px; width: 68px; } .service-chip__icon { width: 52px; height: 52px; } .service-chip__label { font-size: .6rem; width: 66px; } .services-marquee-track { gap: 16px; } .promo-card { padding: 16px 14px; border-radius: var(--radius-lg); } .promo-card__title { font-size: .88rem; margin-bottom: 10px; } .promo-card__btn { font-size: .72rem; padding: 7px 12px; } .promo-card__icon-wrap { width: 48px; height: 48px; } .section-title { font-size: .95rem; margin-bottom: 12px; } .quick-item { padding: 11px 13px; gap: 10px; border-radius: var(--radius-sm); } .quick-item__icon { width: 38px; height: 38px; border-radius: 10px; } .quick-item__title { font-size: .82rem; } .quick-item__desc { font-size: .7rem; } .gallery-wrap { margin-left: calc(-1 * var(--col-margin)); margin-right: calc(-1 * var(--col-margin)); } .carousel-item { flex: 0 0 160px; height: 105px; border-radius: var(--radius-sm); } .carousel-track { gap: 10px; padding: 4px var(--col-margin); } .contact-strip { padding: 14px; border-radius: var(--radius-lg); gap: 8px; } .contact-strip__info { font-size: .72rem; } .contact-strip__btn { font-size: .74rem; padding: 8px 12px; } .bottom-nav { padding: 5px 0 8px; } .bottom-nav__inner { padding: 0 8px; } .bottom-nav__item { gap: 3px; } .bottom-nav__label { font-size: .58rem; } .bottom-nav__icon-wrap { width: 30px; height: 30px; border-radius: 8px; } .modal-sheet { padding: 20px 16px; border-radius: var(--radius-lg) var(--radius-lg) 0 0; } .modal-title { font-size: 1rem; } }
-    @media (max-width: 375px) { :root { --col-margin: 12px; --gutter: 12px; } body { padding-bottom: 70px; } .logo { font-size: .82rem; gap: 6px; } .logo__icon { width: 28px; height: 28px; } .header__btn { width: 32px; height: 32px; } .search-input { height: 36px; font-size: .8rem; padding: 0 36px 0 34px; } .hero { height: 148px; } .hero__slogan { font-size: .6rem; line-height: 1.2; } .hero__cta { font-size: .68rem; padding: 7px 12px; gap: 5px; } .stat-card__value { font-size: 1.1rem; } .service-chip { flex: 0 0 62px; width: 62px; } .service-chip__icon { width: 48px; height: 48px; } .service-chip__label { font-size: .58rem; width: 60px; } .services-marquee-track { gap: 14px; } .promo-card__title { font-size: .82rem; } .promo-card__icon-wrap { width: 44px; height: 44px; display: none; } .quick-item__title { font-size: .8rem; } .quick-item__desc { font-size: .68rem; } .carousel-item { flex: 0 0 140px; height: 95px; } .contact-strip { flex-direction: column; align-items: flex-start; gap: 10px; } .contact-strip__btn { align-self: stretch; justify-content: center; } .bottom-nav__label { font-size: .54rem; } }
-    @media (max-width: 320px) { :root { --col-margin: 10px; --gutter: 10px; } body { padding-bottom: 65px; } .logo span { display: none; } .header { padding: 10px var(--col-margin); } .hero { height: 132px; } .hero__content { padding: 12px; } .hero__slogan { font-size: .65rem; margin-bottom: 8px; line-height: 1.2; } .hero__cta { font-size: .62rem; padding: 6px 10px; } .stats-row { gap: 6px; } .stat-card { padding: 10px 6px; } .stat-card__value { font-size: 1rem; } .service-chip { flex: 0 0 58px; width: 58px; } .service-chip__icon { width: 44px; height: 44px; } .service-chip__label { font-size: .55rem; width: 56px; } .promo-card { padding: 12px; } .promo-card__title { font-size: .78rem; } .promo-card__btn { font-size: .68rem; padding: 6px 10px; } .quick-item { padding: 10px; } .quick-item__icon { width: 34px; height: 34px; } .quick-item__title { font-size: .76rem; } .quick-item__desc { font-size: .64rem; } .carousel-item { flex: 0 0 120px; height: 82px; } .bottom-nav__inner { padding: 0 4px; } .bottom-nav__label { font-size: .5rem; } .bottom-nav__icon-wrap { width: 28px; height: 28px; } }
-    @media (max-width: 280px) { .header { flex-wrap: wrap; gap: 6px; } .header__btn:last-child { display: none; } .search-input { font-size: .72rem; } .hero__slogan { font-size: .6rem; line-height: 1.2; } .promo-card__icon-wrap { display: none; } .quick-item__desc { display: none; } .bottom-nav__label { display: none; } .bottom-nav__icon-wrap { width: 32px; height: 32px; border-radius: 50%; } }
+    /* RESPONSIVE ONBOARDING */
+    @media(max-width:480px){
+      #csOb .ob-illus{flex:0 0 40%;max-height:46vh;}
+      #csOb .ob-bottom{padding:10px 16px 0;}
+      #csOb .ob-nav{padding:8px 16px calc(8px + env(safe-area-inset-bottom,0px));}
+    }
+    @media(max-width:375px){
+      #csOb .ob-illus{flex:0 0 36%;max-height:42vh;}
+      #csOb .ob-title{font-size:clamp(.86rem,4.2vw,1rem);}
+      #csOb .ob-desc{font-size:clamp(.7rem,3vw,.8rem);-webkit-line-clamp:3;}
+      #csOb .ob-chip{font-size:clamp(.54rem,2.3vw,.64rem);padding:3px 9px;}
+      #csOb .ob-prev-btn{width:32px;height:32px;}
+      #csOb .ob-next-btn{height:36px;}
+    }
+    @media(max-width:320px){
+      #csOb .ob-illus{flex:0 0 32%;}
+      #csOb .ob-chip{display:none;}
+      #csOb .ob-desc{-webkit-line-clamp:3;}
+      #csOb .ob-bottom{padding:8px 12px 0;}
+    }
+    @media(min-height:800px){
+      #csOb .ob-illus{flex:0 0 46%;max-height:50vh;}
+      #csOb .ob-desc{-webkit-line-clamp:5;}
+    }
+    @media(orientation:landscape) and (max-height:500px){
+      #csOb .ob-slide{flex-direction:row;}
+      #csOb .ob-illus{flex:0 0 45%;max-height:100vh;height:100%;}
+      #csOb .ob-bottom{padding:8px 18px 0;}
+      #csOb .ob-desc{-webkit-line-clamp:2;}
+      #csOb .ob-chip{display:none;}
+    }
+    @media(min-width:860px){
+      #csOb .ob-slide{flex-direction:row;}
+      #csOb .ob-illus{flex:0 0 52%;max-height:100vh;height:calc(100dvh - 5px);}
+      #csOb .ob-bottom{flex:1;padding:clamp(36px,5vw,72px) clamp(32px,4vw,60px) 0;justify-content:center;}
+      #csOb .ob-nav{position:fixed;bottom:0;right:0;width:48%;padding:14px clamp(32px,4vw,60px) 22px;background:#fff;border-top:1px solid #f3f4f6;}
+      #csOb .ob-desc{-webkit-line-clamp:6;}
+    }
+    @media(min-width:860px) and (max-height:700px){
+      #csOb .ob-bottom{padding:20px 36px 0;}
+      #csOb .ob-desc{-webkit-line-clamp:4;}
+    }
   </style>
 </head>
 <body>
 
+  <div id="csOb" role="dialog" aria-modal="true" aria-label="Présentation Chronos Services">
+    <div class="ob-topbar"></div>
+
+    <!-- SLIDE 1 -->
+    <div class="ob-slide on">
+      <div class="ob-illus">
+        <svg viewBox="0 0 580 340" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice">
+          <rect width="580" height="340" fill="#f0f2ee"/>
+          <circle cx="80" cy="80" r="52" fill="#e8ebe5"/><circle cx="490" cy="240" r="62" fill="#fde8df" opacity=".7"/><circle cx="520" cy="60" r="34" fill="#e8ebe5" opacity=".6"/>
+          <rect x="170" y="40" width="220" height="262" rx="14" fill="white" stroke="#e5e7eb" stroke-width="1.5"/>
+          <circle cx="260" cy="102" r="34" fill="#f0f2ee" stroke="#e5e7eb" stroke-width="1.5"/>
+          <circle cx="260" cy="102" r="22" fill="#dcfce7" stroke="#a7f3d0" stroke-width="1.5"/>
+          <line x1="260" y1="102" x2="260" y2="87" stroke="#094102" stroke-width="2" stroke-linecap="round"/>
+          <line x1="260" y1="102" x2="270" y2="108" stroke="#FF5700" stroke-width="2" stroke-linecap="round"/>
+          <circle cx="260" cy="102" r="3" fill="#094102"/>
+          <rect x="195" y="148" width="130" height="7" rx="3.5" fill="#094102" opacity=".25"/>
+          <rect x="210" y="161" width="100" height="5" rx="2.5" fill="#e5e7eb"/>
+          <rect x="195" y="176" width="130" height="4" rx="2" fill="#f0f2ee"/><rect x="195" y="185" width="110" height="4" rx="2" fill="#f0f2ee"/><rect x="195" y="194" width="120" height="4" rx="2" fill="#f0f2ee"/>
+          <rect x="195" y="207" width="130" height="4" rx="2" fill="#e5e7eb"/><rect x="195" y="216" width="90" height="4" rx="2" fill="#f0f2ee"/><rect x="195" y="225" width="105" height="4" rx="2" fill="#f0f2ee"/>
+          <rect x="228" y="242" width="44" height="18" rx="9" fill="#FF5700" opacity=".15"/>
+          <text x="250" y="254.5" text-anchor="middle" font-family="'Sora',sans-serif" font-size="9" font-weight="700" fill="#FF5700">PRO</text>
+          <rect x="60" y="130" width="90" height="5" rx="2.5" fill="#e5e7eb"/><rect x="60" y="141" width="70" height="5" rx="2.5" fill="#e5e7eb"/>
+          <rect x="412" y="110" width="80" height="5" rx="2.5" fill="#e5e7eb"/><rect x="420" y="121" width="64" height="5" rx="2.5" fill="#e5e7eb"/>
+        </svg>
+      </div>
+      <div class="ob-bottom">
+        <div class="ob-eyebrow">Bienvenue</div>
+        <div class="ob-title">Votre CV rédigé par des professionnels</div>
+        <div class="ob-desc">Vous nous transmettez vos informations via formulaire — <strong>nous rédigeons et mettons en forme votre CV</strong> de A à Z. Professionnel, soigné, prêt à décrocher un entretien.</div>
+        <span class="ob-chip g">✓ 562+ clients accompagnés depuis 2021</span>
+      </div>
+      <div class="ob-nav">
+        <div class="ob-dots"></div>
+        <div class="ob-nav-right">
+          <button class="ob-skip-btn">Passer</button>
+          <button class="ob-prev-btn ob-hidden">←</button>
+          <button class="ob-next-btn">Suivant →</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- SLIDE 2 -->
+    <div class="ob-slide">
+      <div class="ob-illus">
+        <svg viewBox="0 0 580 340" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice">
+          <rect width="580" height="340" fill="#f0f2ee"/>
+          <rect x="48" y="30" width="210" height="280" rx="14" fill="white" stroke="#e5e7eb" stroke-width="1.5"/>
+          <rect x="48" y="30" width="210" height="46" rx="14" fill="#f8fafc"/><rect x="48" y="60" width="210" height="16" fill="#f8fafc"/>
+          <text x="153" y="48" text-anchor="middle" font-family="'Sora',sans-serif" font-size="10" font-weight="700" fill="#374151">Formulaire de demande CV</text>
+          <rect x="66" y="84" width="174" height="22" rx="11" fill="#f3f4f6" stroke="#e5e7eb" stroke-width="1"/><rect x="154" y="91" width="70" height="8" rx="4" fill="#FF5700" opacity=".35"/>
+          <rect x="66" y="112" width="174" height="22" rx="11" fill="#f3f4f6" stroke="#e5e7eb" stroke-width="1"/><rect x="154" y="119" width="55" height="8" rx="4" fill="#FF5700" opacity=".25"/>
+          <rect x="66" y="140" width="174" height="22" rx="11" fill="#f3f4f6" stroke="#e5e7eb" stroke-width="1"/><rect x="154" y="147" width="65" height="8" rx="4" fill="#FF5700" opacity=".2"/>
+          <rect x="66" y="168" width="174" height="22" rx="11" fill="#f3f4f6" stroke="#e5e7eb" stroke-width="1"/><rect x="154" y="175" width="48" height="8" rx="4" fill="#FF5700" opacity=".18"/>
+          <rect x="66" y="196" width="174" height="22" rx="11" fill="#f3f4f6" stroke="#e5e7eb" stroke-width="1"/><rect x="154" y="203" width="60" height="8" rx="4" fill="#FF5700" opacity=".18"/>
+          <rect x="86" y="232" width="134" height="32" rx="16" fill="#094102"/>
+          <text x="153" y="251.5" text-anchor="middle" font-family="'Sora',sans-serif" font-size="10.5" font-weight="700" fill="white">Envoyer ma demande</text>
+          <line x1="270" y1="168" x2="308" y2="168" stroke="#FF5700" stroke-width="2.5" stroke-dasharray="5 4"/><polygon points="308,163 320,168 308,173" fill="#FF5700"/>
+          <rect x="324" y="80" width="200" height="190" rx="14" fill="white" stroke="#e5e7eb" stroke-width="1.5"/>
+          <rect x="324" y="80" width="200" height="42" rx="14" fill="#f8fafc"/><rect x="324" y="108" width="200" height="14" fill="#f8fafc"/>
+          <text x="424" y="97" text-anchor="middle" font-family="'Sora',sans-serif" font-size="10" font-weight="700" fill="#374151">Votre CV Pro</text>
+          <text x="424" y="115" text-anchor="middle" font-family="'DM Sans',sans-serif" font-size="8.5" fill="#9ca3af">Rédigé &amp; mis en forme</text>
+          <rect x="340" y="130" width="168" height="5" rx="2.5" fill="#e5e7eb"/><rect x="340" y="141" width="130" height="4.5" rx="2" fill="#f0f2ee"/><rect x="340" y="151" width="148" height="4.5" rx="2" fill="#f0f2ee"/>
+          <rect x="340" y="165" width="168" height="4.5" rx="2" fill="#e5e7eb"/><rect x="340" y="175" width="110" height="4.5" rx="2" fill="#f0f2ee"/>
+          <rect x="340" y="196" width="46" height="18" rx="9" fill="#e8f0fe"/><text x="363" y="208.5" text-anchor="middle" font-family="'Sora',sans-serif" font-size="8.5" font-weight="700" fill="#2563eb">Word</text>
+          <rect x="392" y="196" width="58" height="18" rx="9" fill="#fff3ee"/><text x="421" y="208.5" text-anchor="middle" font-family="'Sora',sans-serif" font-size="8.5" font-weight="700" fill="#FF5700">PPT</text>
+          <rect x="456" y="196" width="40" height="18" rx="9" fill="#fef2f2"/><text x="476" y="208.5" text-anchor="middle" font-family="'Sora',sans-serif" font-size="8.5" font-weight="700" fill="#dc2626">PDF</text>
+          <rect x="354" y="224" width="140" height="24" rx="12" fill="#f0fdf4" stroke="#a7f3d0" stroke-width="1"/>
+          <text x="424" y="239.5" text-anchor="middle" font-family="'Sora',sans-serif" font-size="9" font-weight="700" fill="#094102">Expert Rédaction ✓</text>
+        </svg>
+      </div>
+      <div class="ob-bottom">
+        <div class="ob-eyebrow">Étape 1 — Demande de CV</div>
+        <div class="ob-title">Vous remplissez, nous rédigeons</div>
+        <div class="ob-desc">Complétez le formulaire en 6 étapes. Nos experts <strong>rédigent et mettent en forme votre CV</strong> — livré en Word ou PowerPoint &amp; PDF sous 48h selon le modèle choisi.</div>
+        <span class="ob-chip g">40+ modèles · Optimisé ATS · 48h chrono</span>
+      </div>
+      <div class="ob-nav">
+        <div class="ob-dots"></div>
+        <div class="ob-nav-right">
+          <button class="ob-skip-btn">Passer</button>
+          <button class="ob-prev-btn">←</button>
+          <button class="ob-next-btn">Suivant →</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- SLIDE 3 -->
+    <div class="ob-slide">
+      <div class="ob-illus">
+        <svg viewBox="0 0 580 340" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice">
+          <rect width="580" height="340" fill="#f0f2ee"/>
+          <rect x="30" y="50" width="158" height="210" rx="14" fill="white" stroke="#e5e7eb" stroke-width="1.5"/>
+          <rect x="30" y="50" width="158" height="42" rx="14" fill="#fef2f2"/><rect x="30" y="78" width="158" height="14" fill="#fef2f2"/>
+          <text x="109" y="68" text-anchor="middle" font-family="'Sora',sans-serif" font-size="9.5" font-weight="700" fill="#dc2626">CV_actuel.pdf</text>
+          <rect x="48" y="100" width="122" height="6" rx="3" fill="#f3f4f6"/><rect x="48" y="112" width="100" height="5" rx="2.5" fill="#f3f4f6"/><rect x="48" y="122" width="114" height="5" rx="2.5" fill="#f3f4f6"/>
+          <rect x="48" y="136" width="122" height="6" rx="3" fill="#f3f4f6"/><rect x="48" y="148" width="88" height="5" rx="2.5" fill="#f3f4f6"/><rect x="48" y="158" width="106" height="5" rx="2.5" fill="#f3f4f6"/>
+          <rect x="48" y="172" width="122" height="6" rx="3" fill="#f3f4f6"/><rect x="48" y="184" width="96" height="5" rx="2.5" fill="#f3f4f6"/>
+          <rect x="48" y="210" width="46" height="20" rx="10" fill="#fef2f2" stroke="#fca5a5" stroke-width="1"/><text x="71" y="223.5" text-anchor="middle" font-family="'Sora',sans-serif" font-size="9" font-weight="700" fill="#dc2626">PDF</text>
+          <rect x="100" y="210" width="46" height="20" rx="10" fill="#f8fafc" stroke="#e5e7eb" stroke-width="1"/><text x="123" y="223.5" text-anchor="middle" font-family="'Sora',sans-serif" font-size="9" font-weight="700" fill="#6b7280">IMG</text>
+          <line x1="196" y1="155" x2="224" y2="155" stroke="#9ca3af" stroke-width="2" stroke-dasharray="5 4"/><polygon points="224,150 234,155 224,160" fill="#9ca3af"/>
+          <rect x="234" y="105" width="114" height="100" rx="14" fill="white" stroke="#e5e7eb" stroke-width="1.5"/>
+          <text x="291" y="155" text-anchor="middle" font-family="'Sora',sans-serif" font-size="14" font-weight="800" fill="#094102">IA</text>
+          <line x1="352" y1="155" x2="378" y2="155" stroke="#9ca3af" stroke-width="2" stroke-dasharray="5 4"/><polygon points="378,150 388,155 378,160" fill="#9ca3af"/>
+          <rect x="388" y="38" width="164" height="262" rx="14" fill="white" stroke="#a7f3d0" stroke-width="2"/>
+          <rect x="388" y="38" width="164" height="38" rx="14" fill="#f0fdf4"/><rect x="388" y="62" width="164" height="14" fill="#f0fdf4"/>
+          <text x="470" y="54" text-anchor="middle" font-family="'Sora',sans-serif" font-size="9" font-weight="700" fill="#094102">Formulaire pré-rempli ✓</text>
+          <text x="404" y="90" font-family="'DM Sans',sans-serif" font-size="9" fill="#374151">✓  Jean DUPONT</text><rect x="400" y="96" width="136" height="1" fill="#f0f2ee"/>
+          <text x="404" y="111" font-family="'DM Sans',sans-serif" font-size="9" fill="#374151">✓  Chef de projet · Libreville</text><rect x="400" y="117" width="136" height="1" fill="#f0f2ee"/>
+          <text x="404" y="132" font-family="'DM Sans',sans-serif" font-size="9" fill="#374151">✓  3 expériences pro.</text><rect x="400" y="138" width="136" height="1" fill="#f0f2ee"/>
+          <text x="404" y="153" font-family="'DM Sans',sans-serif" font-size="9" fill="#374151">✓  2 formations détectées</text><rect x="400" y="159" width="136" height="1" fill="#f0f2ee"/>
+          <text x="404" y="174" font-family="'DM Sans',sans-serif" font-size="9" fill="#374151">✓  Langues · Compétences</text><rect x="400" y="180" width="136" height="1" fill="#f0f2ee"/>
+          <text x="404" y="195" font-family="'DM Sans',sans-serif" font-size="9" fill="#374151">✓  N°ONE / PNPE reconnu</text>
+          <rect x="410" y="252" width="120" height="24" rx="12" fill="#fff3ee"/>
+          <text x="470" y="267.5" text-anchor="middle" font-family="'Sora',sans-serif" font-size="8.5" font-weight="700" fill="#FF5700">Analyse en quelques sec.</text>
+        </svg>
+      </div>
+      <div class="ob-bottom">
+        <div class="ob-eyebrow">Nouveauté — Scanner IA</div>
+        <div class="ob-title">Votre ancien CV importé en 1 clic</div>
+        <div class="ob-desc">Déposez votre CV existant (PDF ou photo). Notre IA extrait toutes vos infos et remplit le formulaire automatiquement — <strong>vous n'avez qu'à vérifier et envoyer</strong>.</div>
+        <span class="ob-chip o">Scanner IA · OCR intégré · Analyse rapide</span>
+      </div>
+      <div class="ob-nav">
+        <div class="ob-dots"></div>
+        <div class="ob-nav-right">
+          <button class="ob-skip-btn">Passer</button>
+          <button class="ob-prev-btn">←</button>
+          <button class="ob-next-btn">Suivant →</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- SLIDE 4 -->
+    <div class="ob-slide">
+      <div class="ob-illus">
+        <svg viewBox="0 0 580 340" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice">
+          <rect width="580" height="340" fill="#f0f2ee"/>
+          <rect x="40" y="50" width="178" height="230" rx="14" fill="white" stroke="#e5e7eb" stroke-width="1.5"/>
+          <text x="129" y="76" text-anchor="middle" font-family="'Sora',sans-serif" font-size="9.5" font-weight="600" fill="#6b7280">Ancien CV — v1</text>
+          <rect x="58" y="86" width="142" height="5.5" rx="2.75" fill="#f3f4f6"/><rect x="58" y="97" width="110" height="5" rx="2.5" fill="#f3f4f6"/><rect x="58" y="107" width="128" height="5" rx="2.5" fill="#f3f4f6"/>
+          <rect x="58" y="121" width="142" height="5.5" rx="2.75" fill="#f3f4f6"/><rect x="58" y="132" width="96" height="5" rx="2.5" fill="#f3f4f6"/><rect x="58" y="142" width="116" height="5" rx="2.5" fill="#f3f4f6"/>
+          <rect x="58" y="156" width="142" height="5.5" rx="2.75" fill="#f3f4f6"/><rect x="58" y="167" width="84" height="5" rx="2.5" fill="#f3f4f6"/>
+          <rect x="78" y="228" width="102" height="24" rx="12" fill="#fef2f2" stroke="#fca5a5" stroke-width="1"/>
+          <text x="129" y="243.5" text-anchor="middle" font-family="'Sora',sans-serif" font-size="9.5" font-weight="700" fill="#dc2626">Dépassé</text>
+          <circle cx="290" cy="165" r="42" fill="white" stroke="#e5e7eb" stroke-width="1.5"/>
+          <text x="290" y="162" text-anchor="middle" font-family="'Sora',sans-serif" font-size="10" font-weight="800" fill="#094102">Mise</text>
+          <text x="290" y="176" text-anchor="middle" font-family="'Sora',sans-serif" font-size="10" font-weight="800" fill="#FF5700">à jour</text>
+          <line x1="220" y1="165" x2="248" y2="165" stroke="#e5e7eb" stroke-width="2"/><polygon points="248,160 258,165 248,170" fill="#e5e7eb"/>
+          <line x1="332" y1="165" x2="360" y2="165" stroke="#e5e7eb" stroke-width="2"/><polygon points="360,160 370,165 360,170" fill="#e5e7eb"/>
+          <rect x="370" y="50" width="178" height="230" rx="14" fill="white" stroke="#a7f3d0" stroke-width="2"/>
+          <text x="459" y="76" text-anchor="middle" font-family="'Sora',sans-serif" font-size="9.5" font-weight="600" fill="#094102">CV mis à jour — v2</text>
+          <rect x="388" y="86" width="142" height="5.5" rx="2.75" fill="#f3f4f6"/><rect x="388" y="97" width="110" height="5" rx="2.5" fill="#f3f4f6"/><rect x="388" y="107" width="128" height="5" rx="2.5" fill="#f3f4f6"/>
+          <rect x="388" y="121" width="142" height="5.5" rx="2.75" fill="#f3f4f6"/><rect x="388" y="132" width="96" height="5" rx="2.5" fill="#f3f4f6"/>
+          <rect x="388" y="148" width="142" height="20" rx="10" fill="#f0fdf4" stroke="#a7f3d0" stroke-width="1"/><text x="396" y="161.5" font-family="'DM Sans',sans-serif" font-size="8.5" fill="#094102">✦ Nouveau poste ajouté</text>
+          <rect x="388" y="174" width="142" height="20" rx="10" fill="#f0fdf4" stroke="#a7f3d0" stroke-width="1"/><text x="396" y="187.5" font-family="'DM Sans',sans-serif" font-size="8.5" fill="#094102">✦ Formation mise à jour</text>
+          <rect x="388" y="200" width="142" height="20" rx="10" fill="#f0fdf4" stroke="#a7f3d0" stroke-width="1"/><text x="396" y="213.5" font-family="'DM Sans',sans-serif" font-size="8.5" fill="#094102">✦ Nouvelle adresse</text>
+          <text x="459" y="248" text-anchor="middle" font-family="'DM Sans',sans-serif" font-size="8" fill="#9ca3af">Même modèle · Livré sous 48h</text>
+        </svg>
+      </div>
+      <div class="ob-bottom">
+        <div class="ob-eyebrow">Déjà client ?</div>
+        <div class="ob-title">Mise à jour de votre CV existant</div>
+        <div class="ob-desc">Nouveau poste, nouvelle formation, nouvelle adresse ? Indiquez-nous ce qui a changé — <strong>nous mettons à jour votre CV</strong> sur votre modèle d'origine et vous le livrons en Word ou PowerPoint &amp; PDF.</div>
+        <span class="ob-chip g">Modification rapide · Même design conservé</span>
+      </div>
+      <div class="ob-nav">
+        <div class="ob-dots"></div>
+        <div class="ob-nav-right">
+          <button class="ob-skip-btn">Passer</button>
+          <button class="ob-prev-btn">←</button>
+          <button class="ob-next-btn">Suivant →</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- SLIDE 5 -->
+    <div class="ob-slide">
+      <div class="ob-illus">
+        <svg viewBox="0 0 580 340" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice">
+          <rect width="580" height="340" fill="#f0f2ee"/>
+          <rect x="148" y="30" width="288" height="240" rx="16" fill="white" stroke="#e5e7eb" stroke-width="1.5"/>
+          <text x="210" y="64" font-family="'DM Sans',sans-serif" font-size="10" fill="#9ca3af">Madame, Monsieur,</text>
+          <rect x="170" y="76" width="244" height="5.5" rx="2.75" fill="#f3f4f6"/><rect x="170" y="87" width="220" height="5" rx="2.5" fill="#f3f4f6"/><rect x="170" y="97" width="234" height="5" rx="2.5" fill="#f3f4f6"/><rect x="170" y="107" width="200" height="5" rx="2.5" fill="#f3f4f6"/>
+          <rect x="170" y="121" width="244" height="5.5" rx="2.75" fill="#f3f4f6"/><rect x="170" y="132" width="186" height="5" rx="2.5" fill="#f3f4f6"/><rect x="170" y="142" width="218" height="5" rx="2.5" fill="#f3f4f6"/>
+          <text x="210" y="170" font-family="'DM Sans',sans-serif" font-size="10" fill="#9ca3af">Cordialement,</text>
+          <rect x="170" y="188" width="84" height="22" rx="11" fill="#f0fdf4" stroke="#a7f3d0" stroke-width="1"/><text x="212" y="202.5" text-anchor="middle" font-family="'Sora',sans-serif" font-size="9" font-weight="700" fill="#094102">Leadership</text>
+          <rect x="262" y="188" width="106" height="22" rx="11" fill="#f0fdf4" stroke="#a7f3d0" stroke-width="1"/><text x="315" y="202.5" text-anchor="middle" font-family="'Sora',sans-serif" font-size="9" font-weight="700" fill="#094102">Communication</text>
+          <rect x="376" y="188" width="80" height="22" rx="11" fill="#f0fdf4" stroke="#a7f3d0" stroke-width="1"/><text x="416" y="202.5" text-anchor="middle" font-family="'Sora',sans-serif" font-size="9" font-weight="700" fill="#094102">Rigueur</text>
+          <rect x="170" y="218" width="138" height="22" rx="11" fill="#fff3ee" stroke="#fdc7a4" stroke-width="1"/><text x="239" y="232.5" text-anchor="middle" font-family="'Sora',sans-serif" font-size="9" font-weight="700" fill="#FF5700">Candidature spontanée</text>
+          <rect x="316" y="218" width="120" height="22" rx="11" fill="#f8fafc" stroke="#e5e7eb" stroke-width="1"/><text x="376" y="232.5" text-anchor="middle" font-family="'Sora',sans-serif" font-size="9" font-weight="600" fill="#6b7280">Réponse à une offre</text>
+        </svg>
+      </div>
+      <div class="ob-bottom">
+        <div class="ob-eyebrow">Lettre de motivation</div>
+        <div class="ob-title">Rédigée sur mesure pour votre poste</div>
+        <div class="ob-desc">Renseignez l'entreprise, l'objet, vos compétences. Nos experts <strong>rédigent une lettre personnalisée</strong> qui valorise votre profil. Candidature spontanée ou réponse à offre.</div>
+        <span class="ob-chip o">⚡ Option Premium : livraison prioritaire</span>
+      </div>
+      <div class="ob-nav">
+        <div class="ob-dots"></div>
+        <div class="ob-nav-right">
+          <button class="ob-skip-btn">Passer</button>
+          <button class="ob-prev-btn">←</button>
+          <button class="ob-next-btn">Suivant →</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- SLIDE 6 -->
+    <div class="ob-slide">
+      <div class="ob-illus">
+        <svg viewBox="0 0 580 340" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice">
+          <rect width="580" height="340" fill="#f0f2ee"/>
+          <rect x="30" y="30" width="112" height="178" rx="12" fill="white" stroke="#e5e7eb" stroke-width="1.5"/>
+          <rect x="30" y="30" width="112" height="88" rx="12" fill="#f8fafc"/><rect x="30" y="102" width="112" height="16" fill="#f8fafc"/>
+          <circle cx="86" cy="74" r="22" fill="#e8ebe5"/>
+          <rect x="46" y="122" width="80" height="5.5" rx="2.75" fill="#e5e7eb"/><rect x="46" y="133" width="60" height="5" rx="2.5" fill="#f3f4f6"/><rect x="46" y="143" width="72" height="5" rx="2.5" fill="#f3f4f6"/>
+          <text x="86" y="170" text-anchor="middle" font-family="'Sora',sans-serif" font-size="8.5" font-weight="600" fill="#9ca3af">N°018</text>
+          <rect x="50" y="180" width="72" height="20" rx="10" fill="#f3f4f6"/><text x="86" y="193" text-anchor="middle" font-family="'DM Sans',sans-serif" font-size="8.5" fill="#6b7280">Choisir</text>
+          <rect x="158" y="14" width="130" height="210" rx="14" fill="white" stroke="#FF5700" stroke-width="2.5"/>
+          <rect x="158" y="14" width="130" height="100" rx="14" fill="#fff3ee"/><rect x="158" y="98" width="130" height="16" fill="#fff3ee"/>
+          <circle cx="223" cy="64" r="26" fill="#fde8df"/>
+          <rect x="186" y="118" width="94" height="5.5" rx="2.75" fill="#e5e7eb"/><rect x="186" y="129" width="72" height="5" rx="2.5" fill="#f3f4f6"/><rect x="186" y="139" width="84" height="5" rx="2.5" fill="#f3f4f6"/>
+          <text x="223" y="162" text-anchor="middle" font-family="'Sora',sans-serif" font-size="9" font-weight="700" fill="#374151">N°030</text>
+          <rect x="174" y="172" width="98" height="24" rx="12" fill="#FF5700"/>
+          <text x="223" y="187" text-anchor="middle" font-family="'Sora',sans-serif" font-size="9.5" font-weight="700" fill="white">⭐ Populaire</text>
+          <rect x="304" y="30" width="112" height="178" rx="12" fill="white" stroke="#e5e7eb" stroke-width="1.5"/>
+          <rect x="304" y="30" width="112" height="88" rx="12" fill="#f8fafc"/><rect x="304" y="102" width="112" height="16" fill="#f8fafc"/>
+          <circle cx="360" cy="74" r="22" fill="#e8ebe5"/>
+          <rect x="320" y="122" width="80" height="5.5" rx="2.75" fill="#e5e7eb"/><rect x="320" y="133" width="60" height="5" rx="2.5" fill="#f3f4f6"/><rect x="320" y="143" width="72" height="5" rx="2.5" fill="#f3f4f6"/>
+          <text x="360" y="170" text-anchor="middle" font-family="'Sora',sans-serif" font-size="8.5" font-weight="600" fill="#9ca3af">N°001</text>
+          <rect x="324" y="180" width="72" height="20" rx="10" fill="#f3f4f6"/><text x="360" y="193" text-anchor="middle" font-family="'DM Sans',sans-serif" font-size="8.5" fill="#6b7280">Choisir</text>
+          <rect x="432" y="30" width="112" height="178" rx="12" fill="white" stroke="#e5e7eb" stroke-width="1.5"/>
+          <rect x="432" y="30" width="112" height="88" rx="12" fill="#f8fafc"/><rect x="432" y="102" width="112" height="16" fill="#f8fafc"/>
+          <circle cx="488" cy="74" r="22" fill="#e8ebe5"/>
+          <rect x="448" y="122" width="80" height="5.5" rx="2.75" fill="#e5e7eb"/><rect x="448" y="133" width="60" height="5" rx="2.5" fill="#f3f4f6"/>
+          <text x="488" y="170" text-anchor="middle" font-family="'Sora',sans-serif" font-size="8.5" font-weight="600" fill="#9ca3af">N°032</text>
+          <rect x="452" y="180" width="72" height="20" rx="10" fill="#f3f4f6"/><text x="488" y="193" text-anchor="middle" font-family="'DM Sans',sans-serif" font-size="8.5" fill="#6b7280">Choisir</text>
+          <rect x="30" y="224" width="524" height="40" rx="20" fill="white" stroke="#e5e7eb" stroke-width="1.5"/>
+          <rect x="38" y="232" width="74" height="24" rx="12" fill="#094102"/><text x="75" y="247" text-anchor="middle" font-family="'Sora',sans-serif" font-size="9.5" font-weight="700" fill="white">Tous (43)</text>
+          <rect x="120" y="232" width="76" height="24" rx="12" fill="#f3f4f6"/><text x="158" y="247" text-anchor="middle" font-family="'DM Sans',sans-serif" font-size="9.5" fill="#6b7280">Moderne</text>
+          <rect x="204" y="232" width="84" height="24" rx="12" fill="#f3f4f6"/><text x="246" y="247" text-anchor="middle" font-family="'DM Sans',sans-serif" font-size="9.5" fill="#6b7280">Classique</text>
+          <rect x="296" y="232" width="68" height="24" rx="12" fill="#f3f4f6"/><text x="330" y="247" text-anchor="middle" font-family="'DM Sans',sans-serif" font-size="9.5" fill="#6b7280">Créatif</text>
+          <rect x="372" y="232" width="68" height="24" rx="12" fill="#f3f4f6"/><text x="406" y="247" text-anchor="middle" font-family="'DM Sans',sans-serif" font-size="9.5" fill="#6b7280">Minimal</text>
+          <text x="530" y="247" text-anchor="middle" font-family="'Sora',sans-serif" font-size="9.5" font-weight="700" fill="#FF5700">Zoom ⊕</text>
+          <rect x="30" y="278" width="56" height="22" rx="11" fill="#e8f0fe"/><text x="58" y="292.5" text-anchor="middle" font-family="'Sora',sans-serif" font-size="9" font-weight="700" fill="#2563eb">Word</text>
+          <rect x="94" y="278" width="76" height="22" rx="11" fill="#fff3ee"/><text x="132" y="292.5" text-anchor="middle" font-family="'Sora',sans-serif" font-size="9" font-weight="700" fill="#FF5700">PowerPoint</text>
+          <rect x="178" y="278" width="52" height="22" rx="11" fill="#fef2f2"/><text x="204" y="292.5" text-anchor="middle" font-family="'Sora',sans-serif" font-size="9" font-weight="700" fill="#dc2626">PDF</text>
+        </svg>
+      </div>
+      <div class="ob-bottom">
+        <div class="ob-eyebrow">Catalogue de CV</div>
+        <div class="ob-title">Choisissez votre design favori</div>
+        <div class="ob-desc">43 modèles Word &amp; PowerPoint. Filtrez par style, zoomez, comparez côte à côte. Notez le numéro du modèle dans votre formulaire — <strong>nous l'utilisons pour réaliser votre CV</strong>.</div>
+        <span class="ob-chip g">Moderne · Classique · Créatif · Minimal</span>
+      </div>
+      <div class="ob-nav">
+        <div class="ob-dots"></div>
+        <div class="ob-nav-right">
+          <button class="ob-skip-btn">Passer</button>
+          <button class="ob-prev-btn">←</button>
+          <button class="ob-next-btn">Suivant →</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- SLIDE 7 -->
+    <div class="ob-slide">
+      <div class="ob-illus">
+        <svg viewBox="0 0 580 340" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice">
+          <rect width="580" height="340" fill="#f0f2ee"/>
+          <rect x="30" y="28" width="240" height="282" rx="16" fill="white" stroke="#e5e7eb" stroke-width="1.5"/>
+          <text x="150" y="56" text-anchor="middle" font-family="'Sora',sans-serif" font-size="11" font-weight="700" fill="#374151">Facture de Service</text>
+          <text x="150" y="71" text-anchor="middle" font-family="'DM Sans',sans-serif" font-size="8.5" fill="#9ca3af">N° CV-20241018–042</text>
+          <rect x="46" y="80" width="208" height="48" rx="10" fill="#f8fafc"/>
+          <text x="60" y="97" font-family="'Sora',sans-serif" font-size="10.5" font-weight="700" fill="#374151">Jean DUPONT</text>
+          <text x="60" y="114" font-family="'DM Sans',sans-serif" font-size="8.5" fill="#9ca3af">+241 06 00 00 00</text>
+          <text x="46" y="144" font-family="'DM Sans',sans-serif" font-size="8.5" fill="#6b7280">Rédaction CV professionnel</text>
+          <text x="238" y="144" text-anchor="end" font-family="'DM Sans',sans-serif" font-size="8.5" fill="#374151">2 050 FCFA</text>
+          <line x1="46" y1="150" x2="238" y2="150" stroke="#f3f4f6" stroke-width="1.5"/>
+          <rect x="148" y="158" width="90" height="22" rx="11" fill="#fff3ee"/>
+          <text x="193" y="172.5" text-anchor="middle" font-family="'Sora',sans-serif" font-size="10" font-weight="700" fill="#FF5700">2 050 FCFA</text>
+          <text x="46" y="200" font-family="'Sora',sans-serif" font-size="9" font-weight="700" fill="#374151">Modes de paiement</text>
+          <rect x="46" y="208" width="100" height="34" rx="10" fill="#fef2f2" stroke="#fca5a5" stroke-width="1"/>
+          <text x="96" y="222" text-anchor="middle" font-family="'Sora',sans-serif" font-size="8.5" font-weight="700" fill="#dc2626">Airtel Money</text>
+          <text x="96" y="234" text-anchor="middle" font-family="'DM Sans',sans-serif" font-size="8" fill="#6b7280">077 101 378</text>
+          <rect x="154" y="208" width="100" height="34" rx="10" fill="#f0fdf4" stroke="#a7f3d0" stroke-width="1"/>
+          <text x="204" y="222" text-anchor="middle" font-family="'Sora',sans-serif" font-size="8.5" font-weight="700" fill="#094102">Moov Money</text>
+          <text x="204" y="234" text-anchor="middle" font-family="'DM Sans',sans-serif" font-size="8" fill="#6b7280">065 370 882</text>
+          <text x="150" y="268" text-anchor="middle" font-family="'Sora',sans-serif" font-size="8.5" font-weight="700" fill="#094102">Bénéficiaire : Nel MANKOU</text>
+          <rect x="316" y="28" width="240" height="282" rx="16" fill="white" stroke="#a7f3d0" stroke-width="2"/>
+          <text x="436" y="56" text-anchor="middle" font-family="'Sora',sans-serif" font-size="11" font-weight="700" fill="#094102">Votre CV est prêt ! ✓</text>
+          <text x="436" y="71" text-anchor="middle" font-family="'DM Sans',sans-serif" font-size="8.5" fill="#9ca3af">Jean DUPONT · Modèle N°030</text>
+          <rect x="332" y="82" width="208" height="6" rx="3" fill="#e5e7eb"/><rect x="332" y="94" width="160" height="5" rx="2.5" fill="#f3f4f6"/><rect x="332" y="104" width="180" height="5" rx="2.5" fill="#f3f4f6"/>
+          <rect x="332" y="118" width="208" height="6" rx="3" fill="#e5e7eb"/><rect x="332" y="130" width="140" height="5" rx="2.5" fill="#f3f4f6"/>
+          <rect x="332" y="148" width="54" height="22" rx="11" fill="#e8f0fe"/><text x="359" y="162.5" text-anchor="middle" font-family="'Sora',sans-serif" font-size="9" font-weight="700" fill="#2563eb">Word</text>
+          <rect x="394" y="148" width="70" height="22" rx="11" fill="#fff3ee"/><text x="429" y="162.5" text-anchor="middle" font-family="'Sora',sans-serif" font-size="9" font-weight="700" fill="#FF5700">PPT</text>
+          <rect x="472" y="148" width="54" height="22" rx="11" fill="#fef2f2"/><text x="499" y="162.5" text-anchor="middle" font-family="'Sora',sans-serif" font-size="9" font-weight="700" fill="#dc2626">PDF</text>
+          <rect x="340" y="192" width="192" height="34" rx="17" fill="#25D366"/>
+          <text x="436" y="212.5" text-anchor="middle" font-family="'Sora',sans-serif" font-size="11" font-weight="700" fill="white">Envoyé via WhatsApp ✓</text>
+          <text x="436" y="258" text-anchor="middle" font-family="'Sora',sans-serif" font-size="18" fill="#FF5700">★ ★ ★ ★ ★</text>
+        </svg>
+      </div>
+      <div class="ob-bottom">
+        <div class="ob-eyebrow">Paiement &amp; livraison</div>
+        <div class="ob-title">Simple, transparent, rapide</div>
+        <div class="ob-desc">Payez via Airtel Money ou Moov Money. Une <strong>facture PDF est générée automatiquement</strong>. Votre CV rédigé par nos experts est livré en Word ou PowerPoint &amp; PDF via WhatsApp.</div>
+        <span class="ob-chip g">✓ Bénéficiaire : Nel MANKOU</span>
+      </div>
+      <div class="ob-nav">
+        <div class="ob-dots"></div>
+        <div class="ob-nav-right">
+          <button class="ob-skip-btn">Passer</button>
+          <button class="ob-prev-btn">←</button>
+          <button class="ob-next-btn">C'est parti !</button>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /#csOb -->
+
+  <!-- PAGE D'ACCUEIL -->
   <header class="header">
     <div class="header__inner">
       <a href="index.html" class="logo">
         <div class="logo__icon">
-          <img src="Logo/Déclinaison-3-Chronos-Services.png" alt="Logo Chronos-Services" style="width: 100%; height: 100%; object-fit: cover; object-position: center; border-radius: 50%; display: block;" />
+          <img src="Logo/Déclinaison-3-Chronos-Services.png" alt="Logo Chronos-Services" style="width:100%;height:100%;object-fit:cover;object-position:center;border-radius:50%;display:block;" />
         </div>
         Chronos-Services
       </a>
       <div class="header__actions">
         <button class="header__btn" onclick="openModal('helpModal')" aria-label="Aide">
-          <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2">
-            <circle cx="12" cy="12" r="10"/>
-            <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/>
-            <circle cx="12" cy="17" r=".5" fill="currentColor"/>
-          </svg>
+          <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><circle cx="12" cy="17" r=".5" fill="currentColor"/></svg>
         </button>
         <a href="https://web.facebook.com/Chronos.Services/" target="_blank" rel="noopener" class="header__btn" aria-label="Facebook">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
-            <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/>
-          </svg>
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
         </a>
       </div>
     </div>
     <div class="search-wrap">
-      <svg class="search-icon" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2">
-        <circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/>
-      </svg>
+      <svg class="search-icon" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
       <input type="text" class="search-input" placeholder="Lancer une recherche..." id="searchInput" autocomplete="off" />
       <div class="search-results" id="searchResults"></div>
     </div>
   </header>
 
   <main class="main">
-
-    <!-- HERO -->
     <section class="hero">
       <img src="Hero banner/Pack 2  Septembre Chronos-Services1 copie 3.jpg" alt="Chronos Services 2026" class="hero__img" onerror="this.style.display='none';document.querySelector('.hero__img-placeholder').classList.add('visible');" />
-      <div class="hero__img-placeholder">
-        <svg width="70" height="70" fill="none" stroke="rgba(255,255,255,0.45)" stroke-width="1.5">
-          <circle cx="35" cy="35" r="30"/><path d="M35 18v17l10 7"/>
-        </svg>
-      </div>
+      <div class="hero__img-placeholder"><svg width="70" height="70" fill="none" stroke="rgba(255,255,255,0.45)" stroke-width="1.5"><circle cx="35" cy="35" r="30"/><path d="M35 18v17l10 7"/></svg></div>
       <div class="hero__overlay"></div>
       <div class="hero__content">
-        <p class="hero__slogan">
-          <em>Un client satisfait,</em><br>c'est une publicité de plus<br>pour nos services.
-        </p>
+        <p class="hero__slogan"><em>Un client satisfait,</em><br>c'est une publicité de plus<br>pour nos services.</p>
         <a href="formulaire-cv-scanner.html" class="hero__cta">
-          <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round">
-            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
-            <polyline points="14,2 14,8 20,8"/>
-          </svg>
+          <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14,2 14,8 20,8"/></svg>
           Demande de CV
         </a>
       </div>
     </section>
 
-    <!-- STATS -->
     <div class="stats-row">
-      <div class="stat-card">
-        <div class="stat-card__value">562+</div>
-        <div class="stat-card__label">CV mis à jour</div>
-      </div>
-      <div class="stat-card">
-        <div class="stat-card__value">40+</div>
-        <div class="stat-card__label">Modèles CV</div>
-      </div>
-      <div class="stat-card">
-        <div class="stat-card__value">2021</div>
-        <div class="stat-card__label">Depuis</div>
-      </div>
+      <div class="stat-card"><div class="stat-card__value">562+</div><div class="stat-card__label">CV mis à jour</div></div>
+      <div class="stat-card"><div class="stat-card__value">40+</div><div class="stat-card__label">Modèles CV</div></div>
+      <div class="stat-card"><div class="stat-card__value">2021</div><div class="stat-card__label">Depuis</div></div>
     </div>
 
-    <!-- SERVICES MARQUEE -->
     <section>
       <h2 class="section-title">Nos Services</h2>
       <div class="services-marquee-wrap">
         <div class="services-marquee-track" id="svcTrack">
-          <a href="formulaire-cv-scanner.html" class="service-chip">
-            <div class="service-chip__icon"><svg width="26" height="26" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14,2 14,8 20,8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg></div>
-            <span class="service-chip__label">Demande de CV</span>
-          </a>
-          <a href="formulaire-mise-a-jour-cv.html" class="service-chip">
-            <div class="service-chip__icon"><svg width="26" height="26" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14,2 14,8 20,8"/><polyline points="8,12 10,14 14,10"/></svg></div>
-            <span class="service-chip__label">Mise à jour CV</span>
-          </a>
-          <a href="formulaire-lettre.html" class="service-chip">
-            <div class="service-chip__icon"><svg width="26" height="26" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="5" width="18" height="14" rx="2"/><polyline points="3,7 12,13 21,7"/></svg></div>
-            <span class="service-chip__label">Lettre de motivation</span>
-          </a>
-          <a href="catalogue de CV.html" class="service-chip">
-            <div class="service-chip__icon"><svg width="26" height="26" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg></div>
-            <span class="service-chip__label">Catalogue de CV</span>
-          </a>
-          <div class="service-chip" onclick="showToast('Rédaction de documents — contactez-nous : 065.37.08.82')">
-            <div class="service-chip__icon"><svg width="26" height="26" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg></div>
-            <span class="service-chip__label">Rédaction docs</span>
-          </div>
-          <div class="service-chip" onclick="showToast('Affiches publicitaires — contactez-nous : 065.37.08.82')">
-            <div class="service-chip__icon"><svg width="26" height="26" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21,15 16,10 5,21"/></svg></div>
-            <span class="service-chip__label">Affiches pub</span>
-          </div>
-          <div class="service-chip" onclick="showToast('Réseaux sociaux — contactez-nous : 065.37.08.82')">
-            <div class="service-chip__icon"><svg width="26" height="26" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M17 2H7a5 5 0 0 0-5 5v10a5 5 0 0 0 5 5h10a5 5 0 0 0 5-5V7a5 5 0 0 0-5-5z"/><circle cx="12" cy="12" r="3"/><circle cx="17.5" cy="6.5" r=".5" fill="currentColor"/></svg></div>
-            <span class="service-chip__label">Réseaux sociaux</span>
-          </div>
-          <!-- Duplicate for loop -->
-          <a href="formulaire-cv-scanner.html" class="service-chip">
-            <div class="service-chip__icon"><svg width="26" height="26" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14,2 14,8 20,8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg></div>
-            <span class="service-chip__label">Demande de CV</span>
-          </a>
-          <a href="formulaire-mise-a-jour-cv.html" class="service-chip">
-            <div class="service-chip__icon"><svg width="26" height="26" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14,2 14,8 20,8"/><polyline points="8,12 10,14 14,10"/></svg></div>
-            <span class="service-chip__label">Mise à jour CV</span>
-          </a>
-          <a href="formulaire-lettre.html" class="service-chip">
-            <div class="service-chip__icon"><svg width="26" height="26" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="5" width="18" height="14" rx="2"/><polyline points="3,7 12,13 21,7"/></svg></div>
-            <span class="service-chip__label">Lettre de motivation</span>
-          </a>
-          <a href="catalogue de CV.html" class="service-chip">
-            <div class="service-chip__icon"><svg width="26" height="26" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg></div>
-            <span class="service-chip__label">Catalogue de CV</span>
-          </a>
-          <div class="service-chip" onclick="showToast('Rédaction de documents — contactez-nous : 065.37.08.82')">
-            <div class="service-chip__icon"><svg width="26" height="26" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg></div>
-            <span class="service-chip__label">Rédaction docs</span>
-          </div>
-          <div class="service-chip" onclick="showToast('Affiches publicitaires — contactez-nous : 065.37.08.82')">
-            <div class="service-chip__icon"><svg width="26" height="26" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21,15 16,10 5,21"/></svg></div>
-            <span class="service-chip__label">Affiches pub</span>
-          </div>
-          <div class="service-chip" onclick="showToast('Réseaux sociaux — contactez-nous : 065.37.08.82')">
-            <div class="service-chip__icon"><svg width="26" height="26" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M17 2H7a5 5 0 0 0-5 5v10a5 5 0 0 0 5 5h10a5 5 0 0 0 5-5V7a5 5 0 0 0-5-5z"/><circle cx="12" cy="12" r="3"/><circle cx="17.5" cy="6.5" r=".5" fill="currentColor"/></svg></div>
-            <span class="service-chip__label">Réseaux sociaux</span>
-          </div>
+          <a href="formulaire-cv-scanner.html" class="service-chip"><div class="service-chip__icon"><svg width="26" height="26" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14,2 14,8 20,8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg></div><span class="service-chip__label">Demande de CV</span></a>
+          <a href="formulaire-mise-a-jour-cv.html" class="service-chip"><div class="service-chip__icon"><svg width="26" height="26" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14,2 14,8 20,8"/><polyline points="8,12 10,14 14,10"/></svg></div><span class="service-chip__label">Mise à jour CV</span></a>
+          <a href="formulaire-lettre.html" class="service-chip"><div class="service-chip__icon"><svg width="26" height="26" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="5" width="18" height="14" rx="2"/><polyline points="3,7 12,13 21,7"/></svg></div><span class="service-chip__label">Lettre de motivation</span></a>
+          <a href="catalogue de CV.html" class="service-chip"><div class="service-chip__icon"><svg width="26" height="26" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg></div><span class="service-chip__label">Catalogue de CV</span></a>
+          <div class="service-chip" onclick="showToast('Rédaction de documents — contactez-nous : 065.37.08.82')"><div class="service-chip__icon"><svg width="26" height="26" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg></div><span class="service-chip__label">Rédaction docs</span></div>
+          <div class="service-chip" onclick="showToast('Affiches publicitaires — contactez-nous : 065.37.08.82')"><div class="service-chip__icon"><svg width="26" height="26" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21,15 16,10 5,21"/></svg></div><span class="service-chip__label">Affiches pub</span></div>
+          <div class="service-chip" onclick="showToast('Réseaux sociaux — contactez-nous : 065.37.08.82')"><div class="service-chip__icon"><svg width="26" height="26" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M17 2H7a5 5 0 0 0-5 5v10a5 5 0 0 0 5 5h10a5 5 0 0 0 5-5V7a5 5 0 0 0-5-5z"/><circle cx="12" cy="12" r="3"/><circle cx="17.5" cy="6.5" r=".5" fill="currentColor"/></svg></div><span class="service-chip__label">Réseaux sociaux</span></div>
+          <a href="formulaire-cv-scanner.html" class="service-chip"><div class="service-chip__icon"><svg width="26" height="26" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14,2 14,8 20,8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg></div><span class="service-chip__label">Demande de CV</span></a>
+          <a href="formulaire-mise-a-jour-cv.html" class="service-chip"><div class="service-chip__icon"><svg width="26" height="26" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14,2 14,8 20,8"/><polyline points="8,12 10,14 14,10"/></svg></div><span class="service-chip__label">Mise à jour CV</span></a>
+          <a href="formulaire-lettre.html" class="service-chip"><div class="service-chip__icon"><svg width="26" height="26" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="5" width="18" height="14" rx="2"/><polyline points="3,7 12,13 21,7"/></svg></div><span class="service-chip__label">Lettre de motivation</span></a>
+          <a href="catalogue de CV.html" class="service-chip"><div class="service-chip__icon"><svg width="26" height="26" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg></div><span class="service-chip__label">Catalogue de CV</span></a>
+          <div class="service-chip" onclick="showToast('Rédaction de documents — contactez-nous : 065.37.08.82')"><div class="service-chip__icon"><svg width="26" height="26" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg></div><span class="service-chip__label">Rédaction docs</span></div>
+          <div class="service-chip" onclick="showToast('Affiches publicitaires — contactez-nous : 065.37.08.82')"><div class="service-chip__icon"><svg width="26" height="26" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21,15 16,10 5,21"/></svg></div><span class="service-chip__label">Affiches pub</span></div>
+          <div class="service-chip" onclick="showToast('Réseaux sociaux — contactez-nous : 065.37.08.82')"><div class="service-chip__icon"><svg width="26" height="26" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M17 2H7a5 5 0 0 0-5 5v10a5 5 0 0 0 5 5h10a5 5 0 0 0 5-5V7a5 5 0 0 0-5-5z"/><circle cx="12" cy="12" r="3"/><circle cx="17.5" cy="6.5" r=".5" fill="currentColor"/></svg></div><span class="service-chip__label">Réseaux sociaux</span></div>
         </div>
       </div>
     </section>
 
-    <!-- PROMO CARD -->
     <div class="promo-card">
       <div class="promo-card__text">
         <p class="promo-card__eyebrow">Nouveau modèle disponible</p>
         <h3 class="promo-card__title">Optimisé ATS &<br>100 % professionnel</h3>
-        <a href="catalogue de CV.html" class="promo-card__btn">
-          <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="3" y="3" width="7" height="7"/><rect x="10" y="3" width="7" height="7"/><rect x="3" y="10" width="7" height="7"/><rect x="10" y="10" width="7" height="7"/></svg>
-          Voir le catalogue
-        </a>
+        <a href="catalogue de CV.html" class="promo-card__btn"><svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="3" y="3" width="7" height="7"/><rect x="10" y="3" width="7" height="7"/><rect x="3" y="10" width="7" height="7"/><rect x="10" y="10" width="7" height="7"/></svg>Voir le catalogue</a>
       </div>
-      <div class="promo-card__icon-wrap">
-        <svg width="32" height="32" fill="none" stroke="white" stroke-width="1.8"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14,2 14,8 20,8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
-      </div>
+      <div class="promo-card__icon-wrap"><svg width="32" height="32" fill="none" stroke="white" stroke-width="1.8"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14,2 14,8 20,8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg></div>
     </div>
 
-    <!-- ══ CARTE MISE À JOUR CV — AJOUT ══ -->
     <div class="update-card">
       <h3 class="update-card__title">Mettre à jour votre CV existant</h3>
       <p class="update-card__desc">Vous avez déjà fait réaliser votre CV par Chronos-Services ? Ce formulaire est fait pour vous. Indiquez simplement ce qui a changé — nous nous occupons du reste.</p>
-      <a href="formulaire-mise-a-jour-cv.html" class="update-card__btn">
-        Faire la mise à jour de mon CV
-        <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="5,12 10,7 5,2"/></svg>
-      </a>
+      <a href="formulaire-mise-a-jour-cv.html" class="update-card__btn">Faire la mise à jour de mon CV <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="5,12 10,7 5,2"/></svg></a>
     </div>
 
-    <!-- QUICK ACCESS -->
     <section>
       <h2 class="section-title">Accès Rapide</h2>
       <div class="quick-list">
-
-        <a href="formulaire-cv-scanner.html" class="quick-item">
-          <div class="quick-item__icon">
-            <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14,2 14,8 20,8"/></svg>
-          </div>
-          <div class="quick-item__text">
-            <div class="quick-item__title">Demande de CV</div>
-            <div class="quick-item__desc">Remplir le formulaire professionnel</div>
-          </div>
-          <svg class="quick-item__arrow" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9,6 15,12 9,18"/></svg>
-        </a>
-
-        <!-- AJOUT : Mise à jour CV dans Accès Rapide -->
-        <a href="formulaire-mise-a-jour-cv.html" class="quick-item">
-          <div class="quick-item__icon">
-            <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14,2 14,8 20,8"/><polyline points="7,12 9,14 13,10"/></svg>
-          </div>
-          <div class="quick-item__text">
-            <div class="quick-item__title">Mise à jour CV</div>
-            <div class="quick-item__desc">Modifier votre CV existant chez nous</div>
-          </div>
-          <svg class="quick-item__arrow" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9,6 15,12 9,18"/></svg>
-        </a>
-
-        <a href="formulaire-lettre.html" class="quick-item">
-          <div class="quick-item__icon">
-            <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="5" width="18" height="14" rx="2"/><polyline points="3,7 12,13 21,7"/></svg>
-          </div>
-          <div class="quick-item__text">
-            <div class="quick-item__title">Lettre de motivation</div>
-            <div class="quick-item__desc">Personnalisée pour votre poste</div>
-          </div>
-          <svg class="quick-item__arrow" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9,6 15,12 9,18"/></svg>
-        </a>
-
-        <a href="catalogue de CV.html" class="quick-item">
-          <div class="quick-item__icon">
-            <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>
-          </div>
-          <div class="quick-item__text">
-            <div class="quick-item__title">Catalogue de CV</div>
-            <div class="quick-item__desc">Plus de 40 modèles professionnels</div>
-          </div>
-          <svg class="quick-item__arrow" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9,6 15,12 9,18"/></svg>
-        </a>
-
+        <a href="formulaire-cv-scanner.html" class="quick-item"><div class="quick-item__icon"><svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14,2 14,8 20,8"/></svg></div><div class="quick-item__text"><div class="quick-item__title">Demande de CV</div><div class="quick-item__desc">Remplir le formulaire professionnel</div></div><svg class="quick-item__arrow" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9,6 15,12 9,18"/></svg></a>
+        <a href="formulaire-mise-a-jour-cv.html" class="quick-item"><div class="quick-item__icon"><svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14,2 14,8 20,8"/><polyline points="7,12 9,14 13,10"/></svg></div><div class="quick-item__text"><div class="quick-item__title">Mise à jour CV</div><div class="quick-item__desc">Modifier votre CV existant chez nous</div></div><svg class="quick-item__arrow" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9,6 15,12 9,18"/></svg></a>
+        <a href="formulaire-lettre.html" class="quick-item"><div class="quick-item__icon"><svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="5" width="18" height="14" rx="2"/><polyline points="3,7 12,13 21,7"/></svg></div><div class="quick-item__text"><div class="quick-item__title">Lettre de motivation</div><div class="quick-item__desc">Personnalisée pour votre poste</div></div><svg class="quick-item__arrow" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9,6 15,12 9,18"/></svg></a>
+        <a href="catalogue de CV.html" class="quick-item"><div class="quick-item__icon"><svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg></div><div class="quick-item__text"><div class="quick-item__title">Catalogue de CV</div><div class="quick-item__desc">Plus de 40 modèles professionnels</div></div><svg class="quick-item__arrow" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9,6 15,12 9,18"/></svg></a>
       </div>
     </section>
 
-    <!-- GALLERY -->
     <section>
       <h2 class="section-title">Notre Galerie</h2>
       <div class="gallery-wrap">
@@ -464,40 +750,21 @@
       </div>
     </section>
 
-    <!-- CONTACT STRIP -->
     <div class="contact-strip">
-      <div class="contact-strip__info">
-        <strong>Contactez-nous</strong><br>
-        065.37.08.82<br>
-        <a href="mailto:chronosservices241@gmail.com">chronosservices241@gmail.com</a>
-      </div>
+      <div class="contact-strip__info"><strong>Contactez-nous</strong><br>065.37.08.82<br><a href="mailto:chronosservices241@gmail.com">chronosservices241@gmail.com</a></div>
       <a href="https://wa.me/24165370882" target="_blank" class="contact-strip__btn">
         <svg width="16" height="16" fill="currentColor"><path d="M13.601 2.326A7.854 7.854 0 0 0 7.994 0C3.627 0 .068 3.558.064 7.926c0 1.399.366 2.76 1.057 3.965L0 16l4.204-1.102a7.933 7.933 0 0 0 3.79.965h.004c4.368 0 7.926-3.558 7.93-7.93A7.898 7.898 0 0 0 13.6 2.326zM7.994 14.521a6.573 6.573 0 0 1-3.356-.92l-.24-.144-2.494.654.666-2.433-.156-.251a6.56 6.56 0 0 1-1.007-3.505c0-3.626 2.957-6.584 6.591-6.584a6.56 6.56 0 0 1 4.66 1.931 6.557 6.557 0 0 1 1.928 4.66c-.004 3.639-2.961 6.592-6.592 6.592z"/></svg>
         WhatsApp
       </a>
     </div>
-
   </main>
 
-  <!-- BOTTOM NAV -->
   <nav class="bottom-nav" aria-label="Navigation principale">
     <div class="bottom-nav__inner">
-      <a href="index.html" class="bottom-nav__item active" data-tab="home">
-        <div class="bottom-nav__icon-wrap"><svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9,22 9,12 15,12 15,22"/></svg></div>
-        <span class="bottom-nav__label">Accueil</span>
-      </a>
-      <a href="formulaire-cv-scanner.html" class="bottom-nav__item" data-tab="cv">
-        <div class="bottom-nav__icon-wrap"><svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14,2 14,8 20,8"/></svg></div>
-        <span class="bottom-nav__label">Demande CV</span>
-      </a>
-      <a href="formulaire-lettre.html" class="bottom-nav__item" data-tab="lettre">
-        <div class="bottom-nav__icon-wrap"><svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="5" width="18" height="14" rx="2"/><polyline points="3,7 12,13 21,7"/></svg></div>
-        <span class="bottom-nav__label">Lettre</span>
-      </a>
-      <a href="catalogue de CV.html" class="bottom-nav__item" data-tab="catalogue">
-        <div class="bottom-nav__icon-wrap"><svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg></div>
-        <span class="bottom-nav__label">Catalogue</span>
-      </a>
+      <a href="index.html" class="bottom-nav__item active"><div class="bottom-nav__icon-wrap"><svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9,22 9,12 15,12 15,22"/></svg></div><span class="bottom-nav__label">Accueil</span></a>
+      <a href="formulaire-cv-scanner.html" class="bottom-nav__item"><div class="bottom-nav__icon-wrap"><svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14,2 14,8 20,8"/></svg></div><span class="bottom-nav__label">Demande CV</span></a>
+      <a href="formulaire-lettre.html" class="bottom-nav__item"><div class="bottom-nav__icon-wrap"><svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="5" width="18" height="14" rx="2"/><polyline points="3,7 12,13 21,7"/></svg></div><span class="bottom-nav__label">Lettre</span></a>
+      <a href="catalogue de CV.html" class="bottom-nav__item"><div class="bottom-nav__icon-wrap"><svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg></div><span class="bottom-nav__label">Catalogue</span></a>
     </div>
   </nav>
 
@@ -528,43 +795,108 @@
     </div>
   </div>
 
-  <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script>
   <script>
-    /* ── SEARCH — AJOUT : mise à jour CV dans les données ── */
+    /* ONBOARDING JS — identique à l'ancienne version qui fonctionne */
+    (function () {
+      var wrap   = document.getElementById('csOb');
+      if (!wrap) return;
+      var slides = wrap.querySelectorAll('.ob-slide');
+      var total  = slides.length;
+      var cur    = 0;
+
+      slides.forEach(function (sl) {
+        var dw = sl.querySelector('.ob-dots');
+        if (!dw) return;
+        for (var i = 0; i < total; i++) {
+          var d = document.createElement('div');
+          d.className = 'ob-dot' + (i === 0 ? ' on' : '');
+          dw.appendChild(d);
+        }
+      });
+
+      function updateAll() {
+        wrap.querySelectorAll('.ob-dot').forEach(function (d, idx) {
+          var pos = idx % total;
+          d.className = 'ob-dot' + (pos === cur ? ' on' : pos < cur ? ' done' : '');
+        });
+        wrap.querySelectorAll('.ob-prev-btn').forEach(function (b) {
+          b.classList.toggle('ob-hidden', cur === 0);
+        });
+      }
+
+      function close() {
+        wrap.classList.add('closing');
+        setTimeout(function () {
+          if (wrap.parentNode) wrap.parentNode.removeChild(wrap);
+          document.body.style.overflow = '';
+        }, 320);
+      }
+
+      function go(n) {
+        if (n < 0 || n >= total) return;
+        slides[cur].classList.remove('on');
+        cur = n;
+        slides[cur].classList.add('on');
+        updateAll();
+      }
+
+      slides.forEach(function (sl) {
+        sl.querySelector('.ob-next-btn').addEventListener('click', function () {
+          if (cur === total - 1) close(); else go(cur + 1);
+        });
+        sl.querySelector('.ob-skip-btn').addEventListener('click', close);
+        var prev = sl.querySelector('.ob-prev-btn');
+        if (prev) prev.addEventListener('click', function () { go(cur - 1); });
+      });
+
+      var tsX = 0;
+      wrap.addEventListener('touchstart', function (e) { tsX = e.touches[0].clientX; }, { passive: true });
+      wrap.addEventListener('touchend', function (e) {
+        var dx = e.changedTouches[0].clientX - tsX;
+        if (Math.abs(dx) > 44) { if (dx < 0) go(cur + 1); else go(cur - 1); }
+      }, { passive: true });
+
+      document.addEventListener('keydown', function (e) {
+        if (!document.getElementById('csOb')) return;
+        if (e.key === 'ArrowRight' || e.key === 'ArrowDown') go(cur + 1);
+        if (e.key === 'ArrowLeft'  || e.key === 'ArrowUp')   go(cur - 1);
+        if (e.key === 'Escape') close();
+      });
+
+      document.body.style.overflow = 'hidden';
+      updateAll();
+    })();
+
+    /* PAGE D'ACCUEIL */
     const searchData = [
-      { title: 'Demande de CV',              desc: 'Créer un CV professionnel',                    href: 'formulaire-cv-scanner.html' },
-      { title: 'Mise à jour CV',             desc: 'Modifier votre CV existant chez nous',         href: 'formulaire-mise-a-jour-cv.html' },
-      { title: 'Modifier mon CV',            desc: 'Mettre à jour votre CV existant',              href: 'formulaire-mise-a-jour-cv.html' },
-      { title: 'Mettre à jour mon CV',       desc: 'Formulaire clients existants',                 href: 'formulaire-mise-a-jour-cv.html' },
-      { title: 'Lettre de motivation',       desc: 'Rédiger une lettre sur mesure',                href: 'formulaire-lettre.html' },
-      { title: 'Catalogue de CV',            desc: 'Parcourir nos 40+ modèles',                    href: 'catalogue de CV.html' },
-      { title: 'Rédaction de documents',     desc: 'Documents professionnels',                     href: null, action: () => showToast('Contactez-nous pour ce service : 065.37.08.82') },
-      { title: 'Affiches publicitaires',     desc: 'Conception graphique',                         href: null, action: () => showToast('Contactez-nous pour ce service : 065.37.08.82') },
-      { title: 'Gestion réseaux sociaux',    desc: 'Community management',                         href: null, action: () => showToast('Contactez-nous pour ce service : 065.37.08.82') },
-      { title: 'Contact',                    desc: 'Nous joindre',                                 href: null, action: () => openModal('contactModal') },
-      { title: 'Aide',                       desc: "Centre d'aide et support",                     href: null, action: () => openModal('helpModal') },
-      { title: 'Facebook',                   desc: 'Notre page Facebook',                          href: 'https://web.facebook.com/Chronos.Services/' },
-      { title: 'WhatsApp',                   desc: 'Nous écrire sur WhatsApp',                    href: 'https://wa.me/24165370882' },
-      { title: 'ATS',                        desc: 'CV optimisé pour recruteurs',                  href: 'formulaire-cv-scanner.html' },
-      { title: 'Format Word',                desc: 'CV au format Word',                            href: 'formulaire-cv-scanner.html' },
+      { title: 'Demande de CV',           desc: 'Créer un CV professionnel',            href: 'formulaire-cv-scanner.html' },
+      { title: 'Mise à jour CV',          desc: 'Modifier votre CV existant chez nous', href: 'formulaire-mise-a-jour-cv.html' },
+      { title: 'Modifier mon CV',         desc: 'Mettre à jour votre CV existant',      href: 'formulaire-mise-a-jour-cv.html' },
+      { title: 'Mettre à jour mon CV',    desc: 'Formulaire clients existants',         href: 'formulaire-mise-a-jour-cv.html' },
+      { title: 'Lettre de motivation',    desc: 'Rédiger une lettre sur mesure',        href: 'formulaire-lettre.html' },
+      { title: 'Catalogue de CV',         desc: 'Parcourir nos 40+ modèles',           href: 'catalogue de CV.html' },
+      { title: 'Rédaction de documents',  desc: 'Documents professionnels',            href: null, action: () => showToast('Contactez-nous pour ce service : 065.37.08.82') },
+      { title: 'Affiches publicitaires',  desc: 'Conception graphique',                href: null, action: () => showToast('Contactez-nous pour ce service : 065.37.08.82') },
+      { title: 'Gestion réseaux sociaux', desc: 'Community management',                href: null, action: () => showToast('Contactez-nous pour ce service : 065.37.08.82') },
+      { title: 'Contact',                 desc: 'Nous joindre',                        href: null, action: () => openModal('contactModal') },
+      { title: 'Aide',                    desc: "Centre d'aide et support",            href: null, action: () => openModal('helpModal') },
+      { title: 'Facebook',                desc: 'Notre page Facebook',                 href: 'https://web.facebook.com/Chronos.Services/' },
+      { title: 'WhatsApp',                desc: 'Nous écrire sur WhatsApp',            href: 'https://wa.me/24165370882' },
+      { title: 'ATS',                     desc: 'CV optimisé pour recruteurs',         href: 'formulaire-cv-scanner.html' },
+      { title: 'Format Word',             desc: 'CV au format Word',                   href: 'formulaire-cv-scanner.html' },
     ];
 
-    const searchInput   = document.getElementById('searchInput');
+    const searchInput = document.getElementById('searchInput');
     const searchResults = document.getElementById('searchResults');
 
-    searchInput.addEventListener('input', function() {
+    searchInput.addEventListener('input', function () {
       const q = this.value.trim().toLowerCase();
       if (!q) { searchResults.style.display = 'none'; return; }
       const hits = searchData.filter(i => i.title.toLowerCase().includes(q) || i.desc.toLowerCase().includes(q));
       if (!hits.length) {
         searchResults.innerHTML = '<div class="search-result-item"><strong>Aucun résultat</strong></div>';
       } else {
-        searchResults.innerHTML = hits.map((item) => `
-          <div class="search-result-item" onclick="searchGo(${searchData.indexOf(item)})">
-            <strong>${item.title}</strong>
-            <small>${item.desc}</small>
-          </div>
-        `).join('');
+        searchResults.innerHTML = hits.map((item) => `<div class="search-result-item" onclick="searchGo(${searchData.indexOf(item)})"><strong>${item.title}</strong><small>${item.desc}</small></div>`).join('');
       }
       searchResults.style.display = 'block';
     });
@@ -573,14 +905,14 @@
       const item = searchData[idx];
       searchInput.value = '';
       searchResults.style.display = 'none';
-      if (item.action) { item.action(); }
-      else if (item.href) { window.location.href = item.href; }
+      if (item.action) item.action();
+      else if (item.href) window.location.href = item.href;
     }
 
     document.addEventListener('click', e => { if (!e.target.closest('.search-wrap')) searchResults.style.display = 'none'; });
     searchInput.addEventListener('keydown', e => { if (e.key === 'Enter') { const first = searchResults.querySelector('.search-result-item'); if (first) first.click(); } });
 
-    function openModal(id) { document.getElementById(id).classList.add('open'); }
+    function openModal(id)  { document.getElementById(id).classList.add('open'); }
     function closeModal(id) { document.getElementById(id).classList.remove('open'); }
     function closeModalOnBackdrop(e, id) { if (e.target === document.getElementById(id)) closeModal(id); }
 
@@ -594,15 +926,25 @@
       setTimeout(() => { if (el.parentNode) el.remove(); }, 5000);
     }
 
-    ['carouselTrack', 'svcTrack'].forEach(function(id) {
+    ['carouselTrack', 'svcTrack'].forEach(function (id) {
       var el = document.getElementById(id);
       if (!el) return;
-      el.addEventListener('touchstart', function(){ el.style.animationPlayState = 'paused'; }, {passive:true});
-      el.addEventListener('touchend', function(){ el.style.animationPlayState = 'running'; });
+      el.addEventListener('touchstart', function () { el.style.animationPlayState = 'paused'; }, { passive: true });
+      el.addEventListener('touchend',   function () { el.style.animationPlayState = 'running'; });
     });
 
-    window.addEventListener('load', function() {
-      setTimeout(function(){ showToast('Bienvenue sur Chronos-Services !'); }, 800);
+    window.addEventListener('load', function () {
+      var observer = new MutationObserver(function (mutations) {
+        mutations.forEach(function (m) {
+          m.removedNodes.forEach(function (n) {
+            if (n.id === 'csOb') {
+              setTimeout(function () { showToast('Bienvenue sur Chronos-Services !'); }, 200);
+              observer.disconnect();
+            }
+          });
+        });
+      });
+      observer.observe(document.body, { childList: true });
     });
   </script>
 </body>
