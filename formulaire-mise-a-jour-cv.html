@@ -1693,6 +1693,131 @@ function applyScannerResults() {
   t.classList.add('show');
   setTimeout(function() { t.classList.remove('show'); }, 4000);
 }
+
+/* ── GESTION DU RETOUR DEPUIS LE CATALOGUE DE CV ── */
+function saveFormDraft() {
+  try {
+    var draft = {
+      nom_prenom: (document.getElementById('f_nom_prenom') || {}).value || '',
+      telephone: (document.getElementById('f_telephone') || {}).value || '',
+      email: (document.getElementById('f_email') || {}).value || '',
+      modele_cv: (document.getElementById('f_modele') || {}).value || '',
+      message_libre: (document.getElementById('f_message') || {}).value || '',
+      urgence: (document.querySelector('input[name="urgence"]:checked') || {}).value || ''
+    };
+    sessionStorage.setItem('chronos_maj_draft', JSON.stringify(draft));
+  } catch(e) {}
+}
+
+function restoreFormDraft() {
+  try {
+    var raw = sessionStorage.getItem('chronos_maj_draft');
+    if (!raw) return;
+    var draft = JSON.parse(raw);
+    if (draft.nom_prenom && document.getElementById('f_nom_prenom') && !document.getElementById('f_nom_prenom').value) {
+      document.getElementById('f_nom_prenom').value = draft.nom_prenom;
+    }
+    if (draft.telephone && document.getElementById('f_telephone') && !document.getElementById('f_telephone').value) {
+      document.getElementById('f_telephone').value = draft.telephone;
+    }
+    if (draft.email && document.getElementById('f_email') && !document.getElementById('f_email').value) {
+      document.getElementById('f_email').value = draft.email;
+    }
+    if (draft.modele_cv && document.getElementById('f_modele') && !document.getElementById('f_modele').value) {
+      document.getElementById('f_modele').value = draft.modele_cv;
+    }
+    if (draft.message_libre && document.getElementById('f_message') && !document.getElementById('f_message').value) {
+      document.getElementById('f_message').value = draft.message_libre;
+    }
+    if (draft.urgence) {
+      var rad = document.getElementById('urg_' + draft.urgence);
+      if (rad) rad.checked = true;
+    }
+  } catch(e) {}
+}
+
+function initCatalogueReturn() {
+  restoreFormDraft();
+
+  var foundModel = null;
+  var hasRenouveauIntent = false;
+
+  // 1. Détection via les paramètres de l'URL
+  try {
+    var sp = new URLSearchParams(window.location.search);
+    var candidateKeys = ['modele', 'nouveau_modele', 'model', 'ref', 'cv', 'choix', 'nouveau', 'formule', 'code', 'id', 'selected'];
+    for (var i = 0; i < candidateKeys.length; i++) {
+      var val = sp.get(candidateKeys[i]);
+      if (val && val.trim()) {
+        foundModel = val.trim();
+        hasRenouveauIntent = true;
+        break;
+      }
+    }
+    var renParam = sp.get('renouveau');
+    if (renParam === '1' || renParam === 'true' || renParam === 'oui') {
+      hasRenouveauIntent = true;
+    }
+  } catch(e) {}
+
+  // 2. Détection via le stockage temporaire (sessionStorage / localStorage)
+  if (!foundModel) {
+    try {
+      var stKeys = ['selectedModel', 'nouveau_modele', 'modele_cv', 'modele', 'cv_modele', 'selected_cv'];
+      for (var j = 0; j < stKeys.length; j++) {
+        var sVal = sessionStorage.getItem(stKeys[j]) || localStorage.getItem(stKeys[j]);
+        if (sVal && sVal.trim()) {
+          foundModel = sVal.trim();
+          hasRenouveauIntent = true;
+          sessionStorage.removeItem(stKeys[j]);
+          localStorage.removeItem(stKeys[j]);
+          break;
+        }
+      }
+    } catch(e) {}
+  }
+
+  // 3. Activation automatique du renouveau et injection du modèle choisi
+  if (hasRenouveauIntent || foundModel !== null) {
+    var toggle = document.getElementById('toggleRenouveau');
+    if (toggle) {
+      toggle.checked = true;
+    }
+    handleRenouveauToggle(true);
+
+    if (foundModel) {
+      var inputModel = document.getElementById('f_nouveau_modele');
+      if (inputModel) {
+        inputModel.value = foundModel;
+      }
+    }
+
+    calcPrice();
+
+    // Défilement fluide vers la carte de renouveau pour rassurer le client
+    setTimeout(function() {
+      var card = document.getElementById('renouveauCard');
+      if (card) {
+        card.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      }
+    }, 350);
+  }
+}
+
+// Enregistrement des données avant départ vers le catalogue
+var catBtn = document.getElementById('catBtnRenouveau');
+if (catBtn) {
+  catBtn.addEventListener('click', function() {
+    saveFormDraft();
+  });
+}
+
+// Exécution automatique à l'ouverture de la page
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', initCatalogueReturn);
+} else {
+  initCatalogueReturn();
+}
 </script>
 </body>
 </html>
