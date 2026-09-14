@@ -505,39 +505,68 @@ textarea { resize: vertical; min-height: 78px; line-height: 1.6; }
 .modal-pdf-btn { width: 100%; padding: 12px; background: var(--orange); color: #fff; border: none; border-radius: 6px; font-family: 'Poppins', sans-serif; font-size: 0.88rem; font-weight: 700; cursor: pointer; transition: background 0.15s; }
 .modal-pdf-btn:hover { background: var(--orange-dark); }
 
-/* SCANNER MODAL OVERLAY */
-.scanner-overlay { display: none; position: fixed; inset: 0; z-index: 5000; background: rgba(0,0,0,0.65); align-items: center; justify-content: center; padding: 16px; backdrop-filter: blur(2px); }
-.scanner-overlay.show { display: flex; }
-.scanner-panel { background: #fff; border-radius: 10px; max-width: 540px; width: 100%; max-height: calc(100vh - 32px); overflow-y: auto; box-shadow: 0 16px 36px rgba(0,0,0,0.3); animation: modalIn 0.25s ease; }
-.sc-modal-head { background: linear-gradient(90deg, var(--green), #0d6b07); color: #fff; padding: 16px 20px; display: flex; align-items: center; justify-content: space-between; }
-.sc-modal-title { font-size: 0.95rem; font-weight: 700; }
-.sc-modal-sub { font-size: 0.74rem; color: rgba(255,255,255,0.8); margin-top: 2px; }
-.sc-modal-close { background: rgba(255,255,255,0.2); border: none; border-radius: 6px; color: #fff; width: 30px; height: 30px; font-size: 1.1rem; cursor: pointer; display: flex; align-items: center; justify-content: center; }
-.sc-modal-close:hover { background: rgba(255,255,255,0.35); }
-.sc-modal-body { padding: 20px 22px; }
-
-.sc-drop-area {
-  border: 2px dashed #b8d4b8; border-radius: 8px; padding: 24px 16px;
-  text-align: center; background: #fafdfa; cursor: pointer; transition: all 0.2s;
-}
-.sc-drop-area:hover, .sc-drop-area.dragover { background: #f0f8f0; border-color: var(--green); }
-.sc-drop-icon { font-size: 2rem; color: var(--green); margin-bottom: 6px; }
-.sc-drop-title { font-size: 0.88rem; font-weight: 600; color: var(--text); }
-.sc-drop-sub { font-size: 0.72rem; color: var(--muted); margin-top: 2px; }
-
-.sc-progress { display: none; margin-top: 16px; background: #f4f8f4; border-radius: 6px; padding: 14px; text-align: center; }
-.sc-progress.show { display: block; }
-.sc-spinner { width: 24px; height: 24px; border: 3px solid #ccc; border-top-color: var(--green); border-radius: 50%; animation: spin 0.8s linear infinite; margin: 0 auto 8px; }
-@keyframes spin { to { transform: rotate(360deg); } }
-.sc-prog-text { font-size: 0.78rem; font-weight: 600; color: var(--green); }
-
-.sc-results { display: none; margin-top: 16px; border-top: 1px solid #eee; padding-top: 14px; }
-.sc-results.show { display: block; }
-.sc-res-title { font-size: 0.82rem; font-weight: 700; color: var(--green); margin-bottom: 8px; }
-.sc-res-item { font-size: 0.76rem; color: var(--text); margin-bottom: 4px; padding: 6px 10px; background: #f8f8f8; border-radius: 4px; display: flex; justify-content: space-between; }
-.sc-res-item strong { color: var(--green); }
-.sc-apply-btn { width: 100%; margin-top: 14px; padding: 11px; background: var(--green); color: #fff; border: none; border-radius: 6px; font-family: 'Poppins', sans-serif; font-size: 0.85rem; font-weight: 700; cursor: pointer; }
-.sc-apply-btn:hover { background: #0d6b07; }
+/* SCANNER OVERLAY */
+#scannerOverlay { display: none; position: fixed; inset: 0; z-index: 5000; background: rgba(4,16,3,0.96); align-items: center; justify-content: center; padding: 16px; }
+#scannerOverlay.show { display: flex; }
+.scanner-panel { width: 100%; max-width: 520px; background: #0f1f0e; border: 1px solid rgba(255,255,255,0.07); border-radius: 8px; padding: 26px 24px 22px; display: flex; flex-direction: column; gap: 16px; max-height: calc(100vh - 32px); overflow-y: auto; }
+.sc-hdr { display: flex; align-items: flex-start; justify-content: space-between; padding-bottom: 14px; border-bottom: 1px solid rgba(255,255,255,0.07); }
+.sc-title { font-size: 1rem; font-weight: 600; color: #fff; }
+.sc-sub { font-size: 0.73rem; color: rgba(255,255,255,0.38); margin-top: 3px; }
+.sc-close { background: none; border: 1px solid rgba(255,255,255,0.14); border-radius: 4px; width: 30px; height: 30px; color: rgba(255,255,255,0.5); cursor: pointer; font-size: 0.85rem; display: flex; align-items: center; justify-content: center; flex-shrink: 0; transition: all 0.15s; font-family: 'Poppins', sans-serif; }
+.sc-close:hover { background: rgba(255,255,255,0.07); color: #fff; }
+.drop-zone { border: 1px dashed rgba(255,255,255,0.18); border-radius: 6px; padding: 28px 20px; text-align: center; cursor: pointer; transition: all 0.18s; background: rgba(255,255,255,0.02); }
+.drop-zone:hover, .drop-zone.dragover { border-color: rgba(255,87,0,0.5); background: rgba(255,87,0,0.04); }
+.drop-text { color: rgba(255,255,255,0.7); font-size: 0.84rem; font-weight: 500; margin-bottom: 8px; }
+.drop-sub { color: rgba(255,255,255,0.3); font-size: 0.7rem; margin-bottom: 10px; }
+.drop-types { display: flex; gap: 6px; justify-content: center; flex-wrap: wrap; }
+.drop-type { background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-radius: 3px; padding: 2px 8px; font-size: 0.64rem; color: rgba(255,255,255,0.4); letter-spacing: 0.02em; }
+#fileInputScanner { display: none; }
+.file-preview { background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.07); border-radius: 6px; padding: 11px 14px; display: none; align-items: center; gap: 12px; }
+.file-preview.show { display: flex; }
+.fp-info { flex: 1; min-width: 0; }
+.fp-name { color: #fff; font-size: 0.83rem; font-weight: 500; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.fp-size { color: rgba(255,255,255,0.32); font-size: 0.7rem; margin-top: 1px; }
+.fp-rm { background: none; border: none; color: rgba(255,255,255,0.28); cursor: pointer; font-size: 0.82rem; font-family: 'Poppins', sans-serif; transition: color 0.15s; }
+.fp-rm:hover { color: rgba(255,87,0,0.8); }
+#btnAnalyze { background: var(--orange); color: #fff; border: none; border-radius: 5px; padding: 12px; font-size: 0.86rem; font-weight: 600; cursor: pointer; width: 100%; font-family: 'Poppins', sans-serif; display: none; transition: background 0.18s; }
+#btnAnalyze.show { display: block; }
+#btnAnalyze:hover:not(:disabled) { background: var(--orange-dark); }
+#btnAnalyze:disabled { opacity: 0.5; cursor: not-allowed; }
+.ap { display: none; flex-direction: column; gap: 10px; }
+.ap.show { display: flex; }
+.ap-bar-wrap { background: rgba(255,255,255,0.07); border-radius: 2px; height: 3px; overflow: hidden; }
+.ap-bar { height: 100%; border-radius: 2px; background: var(--orange); transition: width 0.5s ease; width: 0%; }
+.ap-row { display: flex; align-items: center; gap: 10px; }
+.ap-icon { width: 20px; height: 20px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 0.62rem; font-weight: 700; flex-shrink: 0; background: rgba(255,255,255,0.07); color: rgba(255,255,255,0.25); transition: all 0.3s; }
+.ap-icon.done { background: var(--green); color: #fff; }
+.ap-icon.active { background: var(--orange); color: #fff; }
+.ap-lbl { color: rgba(255,255,255,0.35); font-size: 0.76rem; transition: color 0.3s; }
+.ap-lbl.active { color: rgba(255,255,255,0.85); font-weight: 500; }
+.ap-lbl.done { color: rgba(255,255,255,0.2); }
+.sc-error { border-left: 3px solid var(--orange); background: rgba(255,87,0,0.06); border-radius: 0 4px 4px 0; padding: 9px 12px; color: rgba(255,200,180,0.9); font-size: 0.77rem; display: none; line-height: 1.5; }
+.sc-error.show { display: block; }
+.sc-results { display: none; flex-direction: column; gap: 12px; }
+.sc-results.show { display: flex; }
+.sr-label { font-size: 0.62rem; color: rgba(255,255,255,0.38); font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; }
+.sr-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 7px; }
+.sr-card { background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.07); border-radius: 4px; padding: 9px 11px; }
+.sr-card.full { grid-column: 1 / -1; }
+.sr-field { font-size: 0.59rem; text-transform: uppercase; letter-spacing: 0.08em; color: rgba(255,255,255,0.3); font-weight: 700; margin-bottom: 3px; }
+.sr-val { font-size: 0.77rem; color: rgba(255,255,255,0.75); line-height: 1.4; }
+.sr-val.empty { color: rgba(255,255,255,0.18); font-style: italic; }
+.sr-check { color: #4caf50; font-size: 0.65rem; margin-left: 4px; }
+.sc-apply { background: var(--green); color: #fff; border: none; border-radius: 5px; padding: 12px; font-size: 0.86rem; font-weight: 600; cursor: pointer; width: 100%; font-family: 'Poppins', sans-serif; transition: background 0.18s; }
+.sc-apply:hover { background: #0a5c02; }
+.sc-retry { background: none; color: rgba(255,255,255,0.4); border: 1px solid rgba(255,255,255,0.1); border-radius: 5px; padding: 10px; font-size: 0.78rem; font-weight: 500; cursor: pointer; width: 100%; font-family: 'Poppins', sans-serif; transition: all 0.18s; }
+.sc-retry:hover { color: rgba(255,255,255,0.7); border-color: rgba(255,255,255,0.2); }
+.sc-instr-item { display: flex; align-items: flex-start; gap: 10px; padding: 10px 12px; border: 1px solid rgba(255,255,255,0.1); border-radius: 5px; cursor: pointer; transition: all 0.15s; background: rgba(255,255,255,0.03); }
+.sc-instr-item:hover { border-color: rgba(255,255,255,0.22); background: rgba(255,255,255,0.05); }
+.sc-instr-item input[type="radio"] { margin-top: 3px; flex-shrink: 0; accent-color: var(--orange); cursor: pointer; }
+.sc-instr-item:has(input:checked) { border-color: var(--orange); background: rgba(255,87,0,0.07); }
+.sc-instr-label { display: flex; flex-direction: column; gap: 2px; }
+.sc-instr-name { font-size: 0.82rem; font-weight: 600; color: rgba(255,255,255,0.8); line-height: 1.3; }
+.sc-instr-desc { font-size: 0.7rem; color: rgba(255,255,255,0.35); line-height: 1.4; }
+.sc-tip { border-top: 1px solid rgba(255,255,255,0.05); padding-top: 12px; font-size: 0.7rem; color: rgba(255,255,255,0.25); line-height: 1.6; }
 
 /* TOAST */
 #toast { display: none; position: fixed; top: 20px; left: 50%; transform: translateX(-50%); z-index: 9000; background: var(--green); color: #fff; padding: 12px 18px; border-radius: 6px; font-size: 0.82rem; font-weight: 500; text-align: center; max-width: calc(100vw - 32px); box-shadow: 0 6px 20px rgba(0,0,0,0.25); }
@@ -951,35 +980,76 @@ textarea { resize: vertical; min-height: 78px; line-height: 1.6; }
   </div>
 </div>
 
-<!-- SCANNER MODAL OVERLAY (ASSISTANT D'ANALYSE IA) -->
-<div class="scanner-overlay" id="scannerOverlay">
+<!-- SCANNER OVERLAY -->
+<div id="scannerOverlay">
   <div class="scanner-panel">
-    <div class="sc-modal-head">
+    <div class="sc-hdr">
       <div>
-        <div class="sc-modal-title">Scanner et analyser un document</div>
-        <div class="sc-modal-sub">Pré-remplissage automatique par lecture intelligente</div>
+        <div class="sc-title">Importer un document</div>
+        <div class="sc-sub">L'IA extrait uniquement ce que vous lui demandez</div>
       </div>
-      <button class="sc-modal-close" type="button" onclick="closeScanner()">&#x2715;</button>
+      <button class="sc-close" type="button" onclick="closeScanner()">&#x2715;</button>
     </div>
-    <div class="sc-modal-body">
-      <div class="sc-drop-area" id="scDropArea" onclick="document.getElementById('scFileInput').click()">
-        <input type="file" id="scFileInput" accept=".pdf,.png,.jpg,.jpeg" style="display:none;" onchange="handleScannerFile(this.files)">
-        <div class="sc-drop-icon">📄</div>
-        <div class="sc-drop-title">Cliquez pour importer votre ancien CV ou document</div>
-        <div class="sc-drop-sub">PDF ou Image (JPG, PNG) • Analyse instantanée</div>
-      </div>
-
-      <div class="sc-progress" id="scProgress">
-        <div class="sc-spinner"></div>
-        <div class="sc-prog-text" id="scProgText">Lecture et analyse du document…</div>
-      </div>
-
-      <div class="sc-results" id="scResults">
-        <div class="sc-res-title">Données détectées :</div>
-        <div id="scResItems"></div>
-        <button type="button" class="sc-apply-btn" onclick="applyScannerResults()">Appliquer au formulaire</button>
+    <div class="drop-zone" id="dropZone" onclick="document.getElementById('fileInputScanner').click()">
+      <div class="drop-text">Glissez votre document ici ou cliquez pour parcourir</div>
+      <div class="drop-sub">Contrat, diplôme, attestation, photo d'un document — Taille max : 10 Mo</div>
+      <div class="drop-types">
+        <span class="drop-type">PDF</span>
+        <span class="drop-type">JPG</span>
+        <span class="drop-type">PNG</span>
       </div>
     </div>
+    <input type="file" id="fileInputScanner" accept=".pdf,.jpg,.jpeg,.png">
+    <div class="file-preview" id="filePreview">
+      <div class="fp-info">
+        <div class="fp-name" id="fpName">—</div>
+        <div class="fp-size" id="fpSize">—</div>
+      </div>
+      <button class="fp-rm" type="button" onclick="removeFile()">Supprimer</button>
+    </div>
+
+    <div id="scanInstructBox" style="display:none;">
+      <div style="font-size:0.72rem;font-weight:700;color:rgba(255,255,255,0.45);text-transform:uppercase;letter-spacing:0.1em;margin-bottom:10px;">Que voulez-vous extraire ?</div>
+      <div style="display:flex;flex-direction:column;gap:7px;" id="scanInstructList">
+        <label class="sc-instr-item">
+          <input type="radio" name="sc_instruct" value="auto" checked>
+          <span class="sc-instr-label"><span class="sc-instr-name">Détecter automatiquement</span><span class="sc-instr-desc">L'IA identifie le type de document et extrait ce qui est utile</span></span>
+        </label>
+        <label class="sc-instr-item">
+          <input type="radio" name="sc_instruct" value="experience">
+          <span class="sc-instr-label"><span class="sc-instr-name">Extraire une expérience professionnelle</span><span class="sc-instr-desc">Poste, entreprise, dates, tâches</span></span>
+        </label>
+        <label class="sc-instr-item">
+          <input type="radio" name="sc_instruct" value="formation">
+          <span class="sc-instr-label"><span class="sc-instr-name">Extraire une formation / diplôme</span><span class="sc-instr-desc">Diplôme, filière, date, établissement</span></span>
+        </label>
+        <label class="sc-instr-item">
+          <input type="radio" name="sc_instruct" value="competences">
+          <span class="sc-instr-label"><span class="sc-instr-name">Extraire des compétences</span><span class="sc-instr-desc">Langues, logiciels, domaines</span></span>
+        </label>
+        <label class="sc-instr-item">
+          <input type="radio" name="sc_instruct" value="infos">
+          <span class="sc-instr-label"><span class="sc-instr-name">Extraire les informations personnelles</span><span class="sc-instr-desc">Nom, téléphone, adresse, email</span></span>
+        </label>
+      </div>
+    </div>
+
+    <button id="btnAnalyze" type="button" onclick="analyzeDoc()">Analyser le document</button>
+    <div class="ap" id="apBox">
+      <div class="ap-bar-wrap"><div class="ap-bar" id="apBar"></div></div>
+      <div class="ap-row"><div class="ap-icon" id="ai1">1</div><div class="ap-lbl" id="al1">Lecture du document</div></div>
+      <div class="ap-row"><div class="ap-icon" id="ai2">2</div><div class="ap-lbl" id="al2">Extraction du texte</div></div>
+      <div class="ap-row"><div class="ap-icon" id="ai3">3</div><div class="ap-lbl" id="al3">Analyse par l'IA</div></div>
+      <div class="ap-row"><div class="ap-icon" id="ai4">4</div><div class="ap-lbl" id="al4">Préparation des champs</div></div>
+    </div>
+    <div class="sc-error" id="scError"></div>
+    <div class="sc-results" id="scResults">
+      <div class="sr-label">Informations détectées</div>
+      <div class="sr-grid" id="srGrid"></div>
+      <button class="sc-apply" type="button" onclick="applyResults()">Appliquer dans le formulaire</button>
+      <button class="sc-retry" type="button" onclick="resetScanner()">Importer un autre document</button>
+    </div>
+    <div class="sc-tip">Formats acceptés : contrat de travail, bulletin d'embauche, diplôme, relevé de notes, attestation de formation. PDF numérique de préférence — les photos doivent être nettes et lisibles.</div>
   </div>
 </div>
 
@@ -1561,138 +1631,243 @@ function downloadPDF() {
   } catch(err) { console.error(err); alert('Erreur lors de la génération du PDF.'); }
 }
 
-/* ── ASSISTANT SCANNER IA ── */
-function openScanner() {
-  document.getElementById('scannerOverlay').classList.add('show');
-  document.body.style.overflow = 'hidden';
+/* ── SCANNER ── */
+function openScanner()  { document.getElementById('scannerOverlay').classList.add('show'); document.body.style.overflow = 'hidden'; }
+function closeScanner() { document.getElementById('scannerOverlay').classList.remove('show'); document.body.style.overflow = ''; }
+
+var GROQ_MODEL     = 'qwen/qwen3.6-27b';
+var GROQ_PROXY_URL = '/.netlify/functions/groq-proxy';
+var selectedFile = null, extractedData = null;
+
+document.addEventListener('DOMContentLoaded', function() {
+  var dz = document.getElementById('dropZone');
+  var fi = document.getElementById('fileInputScanner');
+  if (fi) {
+    fi.addEventListener('change', function() { if (fi.files.length) handleFile(fi.files[0]); });
+  }
+  if (dz) {
+    dz.addEventListener('dragover', function(e) { e.preventDefault(); dz.classList.add('dragover'); });
+    dz.addEventListener('dragleave', function() { dz.classList.remove('dragover'); });
+    dz.addEventListener('drop', function(e) { e.preventDefault(); dz.classList.remove('dragover'); if (e.dataTransfer.files.length) handleFile(e.dataTransfer.files[0]); });
+  }
+});
+
+function handleFile(file) {
+  if (file.size > 10*1024*1024) { scErr('Fichier trop volumineux (max 10 Mo).'); return; }
+  if (!file.name.match(/\.(pdf|jpg|jpeg|png)$/i)) { scErr('Format non supporté. Utilisez PDF, JPG ou PNG.'); return; }
+  selectedFile = file;
+  document.getElementById('fpName').textContent = file.name;
+  document.getElementById('fpSize').textContent = fmtB(file.size);
+  document.getElementById('filePreview').classList.add('show');
+  document.getElementById('scanInstructBox').style.display = 'block';
+  document.getElementById('btnAnalyze').classList.add('show');
+  document.getElementById('scError').classList.remove('show');
+  document.getElementById('scResults').classList.remove('show');
+  document.getElementById('apBox').classList.remove('show');
 }
-function closeScanner() {
-  document.getElementById('scannerOverlay').classList.remove('show');
-  document.body.style.overflow = '';
+function removeFile() {
+  selectedFile = null;
+  document.getElementById('filePreview').classList.remove('show');
+  document.getElementById('btnAnalyze').classList.remove('show');
+  document.getElementById('scanInstructBox').style.display = 'none';
+  document.getElementById('fileInputScanner').value = '';
 }
+function fmtB(b) { if (b<1024) return b+' o'; if (b<1048576) return (b/1024).toFixed(1)+' Ko'; return (b/1048576).toFixed(1)+' Mo'; }
+function scErr(msg) { var e = document.getElementById('scError'); e.textContent = msg; e.classList.add('show'); }
+function setStep(n) {
+  document.getElementById('apBar').style.width = [0,25,50,75,95][n] + '%';
+  for (var i=1;i<=4;i++) {
+    var ic=document.getElementById('ai'+i), lb=document.getElementById('al'+i);
+    ic.classList.remove('active','done'); lb.classList.remove('active','done');
+    if (i<n) { ic.classList.add('done'); ic.textContent='✓'; lb.classList.add('done'); }
+    else if (i===n) { ic.classList.add('active'); lb.classList.add('active'); }
+  }
+}
+function setLbl(n,t) { var e=document.getElementById('al'+n); if(e) e.textContent=t; }
+function delay(ms) { return new Promise(function(r){setTimeout(r,ms);}); }
+function toB64(file) { return new Promise(function(res,rej){ var r=new FileReader(); r.onload=function(e){res(e.target.result.split(',')[1]);}; r.onerror=rej; r.readAsDataURL(file); }); }
+function loadScript(src) { return new Promise(function(res,rej){ if(document.querySelector('script[src="'+src+'"]')){res();return;} var s=document.createElement('script');s.src=src;s.onload=res;s.onerror=rej;document.head.appendChild(s); }); }
 
-async function handleScannerFile(files) {
-  if (!files || !files.length) return;
-  var file = files[0];
-  scannedFile = file;
-  var prog = document.getElementById('scProgress');
-  var progText = document.getElementById('scProgText');
-  var resArea = document.getElementById('scResults');
-  var resItems = document.getElementById('scResItems');
-
-  prog.classList.add('show');
-  resArea.classList.remove('show');
-  progText.textContent = 'Extraction du contenu de ' + file.name + '…';
-
-  var extractedText = '';
-
+async function extractPDF(b64) {
   try {
-    if (file.type === 'application/pdf' || file.name.endsWith('.pdf')) {
-      progText.textContent = 'Lecture du fichier PDF…';
-      var arrayBuffer = await file.arrayBuffer();
-      var pdf = await pdfjsLib.getDocument({ data: arrayBuffer }).promise;
-      var textPages = [];
-      for (var p = 1; p <= Math.min(pdf.numPages, 3); p++) {
-        var page = await pdf.getPage(p);
-        var textContent = await page.getTextContent();
-        var pageStr = textContent.items.map(function(item) { return item.str; }).join(' ');
-        textPages.push(pageStr);
-      }
-      extractedText = textPages.join('\n');
-    } else {
-      progText.textContent = 'Reconnaissance optique de texte (OCR)…';
-      if (window.Tesseract) {
-        var worker = await Tesseract.createWorker('fra');
-        var ret = await worker.recognize(file);
-        extractedText = ret.data.text;
-        await worker.terminate();
-      } else {
-        extractedText = 'Nom: Client Chronos\nTéléphone: +241 65 00 00 00';
-      }
-    }
-
-    progText.textContent = 'Analyse et structuration des informations…';
-    parseCVText(extractedText);
-
-    prog.classList.remove('show');
-    resArea.classList.add('show');
-
-    resItems.innerHTML = '';
-    for (var k in detectedData) {
-      if (detectedData[k]) {
-        var div = document.createElement('div');
-        div.className = 'sc-res-item';
-        div.innerHTML = '<strong>' + k + '</strong><span>' + detectedData[k].slice(0, 50) + (detectedData[k].length > 50 ? '…' : '') + '</span>';
-        resItems.appendChild(div);
-      }
-    }
-
-    // Analyse terminée
-  } catch(e) {
-    console.error(e);
-    prog.classList.remove('show');
-    alert('Impossible d\'extraire les données du document. Vous pouvez remplir les champs manuellement.');
-  }
+    if (typeof pdfjsLib==='undefined') { await loadScript('https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js'); window.pdfjsLib.GlobalWorkerOptions.workerSrc='https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js'; }
+    var bin=atob(b64), arr=new Uint8Array(bin.length);
+    for(var i=0;i<bin.length;i++) arr[i]=bin.charCodeAt(i);
+    var pdf=await pdfjsLib.getDocument({data:arr}).promise, txt='';
+    for(var p=1;p<=Math.min(pdf.numPages,8);p++){ var page=await pdf.getPage(p); var c=await page.getTextContent(); var ly=null; c.items.forEach(function(it){ if(ly!==null&&Math.abs(it.transform[5]-ly)>5) txt+='\n'; txt+=it.str+' '; ly=it.transform[5]; }); txt+='\n'; }
+    return txt.trim();
+  } catch(e){ console.warn(e); return ''; }
 }
-
-function parseCVText(text) {
-  detectedData = {};
-  if (!text) return;
-
-  // Téléphone
-  var telMatch = text.match(/(?:\+241|00241|0)[67][0-9](?:[\s.-]?[0-9]{2}){3}/);
-  if (telMatch) detectedData['Téléphone'] = telMatch[0];
-
-  // Email
-  var emailMatch = text.match(/[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}/);
-  if (emailMatch) detectedData['Email'] = emailMatch[0];
-
-  // Lignes pour nom
-  var lines = text.split('\n').map(function(l) { return l.trim(); }).filter(function(l) { return l.length > 2; });
-  if (lines.length) {
-    for (var i = 0; i < Math.min(lines.length, 5); i++) {
-      var l = lines[i];
-      if (!l.includes('@') && !l.match(/[0-9]{4}/) && l.length < 40 && l.length > 3) {
-        detectedData['Nom'] = l;
-        break;
-      }
+async function runOCR(file) {
+  try {
+    if(typeof Tesseract==='undefined') await loadScript('https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js');
+    var r=await Tesseract.recognize(file,'fra+eng',{logger:function(m){if(m.status==='recognizing text') setLbl(2,'OCR : '+Math.round((m.progress||0)*100)+'%…');}});
+    return r.data.text||'';
+  } catch(e){ console.warn(e); return ''; }
+}
+async function callGroq(text) {
+  var instrEl  = document.querySelector('input[name="sc_instruct"]:checked');
+  var instruct = instrEl ? instrEl.value : 'auto';
+  var prompts  = {
+    auto: 'Tu es un assistant expert en lecture de documents professionnels francophones. Analyse le texte fourni et extrais toutes les informations utiles pour mettre à jour un CV. Réponds UNIQUEMENT en JSON valide sans texte ni balises markdown. Structure EXACTE :\n{"type_document":"","experiences":[{"dates":"","poste":"","entreprise":"","taches":""}],"formations":[{"diplome":"","serie":"","date":"","etablissement":""}],"langues":"","logiciels":"","domaines":"","nom_prenom":"","telephone":"","adresse":"","email":"","infos_comp":""}\ntype_document = "experience", "formation", "competences", "infos" ou "mixte". Crée UN objet séparé par expérience et par formation. Si une information est absente, laisse vide. Ne jamais inventer.',
+    experience: 'Tu es un assistant expert. Extrais toutes les expériences professionnelles de ce document. Réponds UNIQUEMENT en JSON valide sans texte ni balises markdown. Structure EXACTE :\n{"type_document":"experience","experiences":[{"dates":"","poste":"","entreprise":"","taches":""}],"formations":[],"langues":"","logiciels":"","domaines":"","nom_prenom":"","telephone":"","adresse":"","email":"","infos_comp":""}\nCrée UN objet par expérience distincte. Ne jamais inventer.',
+    formation: 'Tu es un assistant expert. Extrais toutes les formations et diplômes de ce document. Réponds UNIQUEMENT en JSON valide sans texte ni balises markdown. Structure EXACTE :\n{"type_document":"formation","experiences":[],"formations":[{"diplome":"","serie":"","date":"","etablissement":""}],"langues":"","logiciels":"","domaines":"","nom_prenom":"","telephone":"","adresse":"","email":"","infos_comp":""}\nCrée UN objet par diplôme/formation distinct. Ne jamais inventer.',
+    competences: 'Tu es un assistant expert. Extrais uniquement les compétences de ce document. Réponds UNIQUEMENT en JSON valide sans texte ni balises markdown. Structure EXACTE :\n{"type_document":"competences","experiences":[],"formations":[],"langues":"","logiciels":"","domaines":"","nom_prenom":"","telephone":"","adresse":"","email":"","infos_comp":""}\nNe jamais inventer.',
+    infos: 'Tu es un assistant expert. Extrais uniquement les informations personnelles de contact. Réponds UNIQUEMENT en JSON valide sans texte ni balises markdown. Structure EXACTE :\n{"type_document":"infos","experiences":[],"formations":[],"langues":"","logiciels":"","domaines":"","nom_prenom":"","telephone":"","adresse":"","email":"","infos_comp":""}\nNe jamais inventer.'
+  };
+  var payload = { model: GROQ_MODEL, messages: [{ role: 'system', content: prompts[instruct] || prompts.auto }, { role: 'user', content: 'Texte du document :\n\n' + text.slice(0, 8000) }], temperature: 0.1, max_tokens: 4096, reasoning_effort: 'none', response_format: { type: 'json_object' } };
+  var r = await fetch(GROQ_PROXY_URL, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) });
+  if (!r.ok) {
+    var ed = await r.json().catch(function(){return{};});
+    var em = 'Erreur Groq API';
+    if (ed.error) {
+      if (ed.error.code === 'invalid_api_key') em = 'Clé Groq invalide.';
+      else if (ed.error.code === 'rate_limit_exceeded') em = 'Limite Groq atteinte, réessayez dans quelques secondes.';
+      else if (ed.error.code === 'json_validate_failed') em = 'Le document est trop complexe pour être analysé en une fois. Réessayez, ou raccourcissez le document.';
+      else em = ed.error.message || em;
+    }
+    throw new Error(em);
+  }
+  var data = await r.json(), raw = data.choices[0].message.content || '';
+  raw = raw.replace(/```json|```/g, '').trim();
+  var p = JSON.parse(raw);
+  if (!Array.isArray(p.experiences)) p.experiences = p.experiences ? [p.experiences] : [];
+  if (!Array.isArray(p.formations))  p.formations  = p.formations  ? [p.formations]  : [];
+  return p;
+}
+async function analyzeDoc() {
+  if(!selectedFile){ scErr('Veuillez sélectionner un fichier.'); return; }
+  document.getElementById('scError').classList.remove('show');
+  document.getElementById('scResults').classList.remove('show');
+  var btn=document.getElementById('btnAnalyze');
+  btn.disabled=true; btn.textContent='Analyse en cours…';
+  document.getElementById('apBox').classList.add('show'); setStep(1);
+  try {
+    var isImg=selectedFile.name.match(/\.(jpg|jpeg|png)$/i), isPDF=selectedFile.name.match(/\.pdf$/i), txt='';
+    var b64=await toB64(selectedFile); await delay(300); setStep(2);
+    if(isPDF){ setLbl(2,'Extraction PDF…'); txt=await extractPDF(b64); }
+    if(isImg||(isPDF&&txt.trim().length<50)){ setLbl(2,'OCR en cours…'); var ocr=await runOCR(selectedFile); if(ocr&&ocr.trim().length>txt.trim().length) txt=ocr; }
+    if(!txt||txt.trim().length<20) throw new Error('Impossible d\'extraire du texte. Essayez un PDF numérique ou une image plus nette.');
+    await delay(200); setStep(3);
+    var ai=await callGroq(txt); await delay(300); setStep(4);
+    extractedData=ai; await delay(400);
+    document.getElementById('apBar').style.width='100%';
+    for(var i=1;i<=4;i++){ var ic=document.getElementById('ai'+i); ic.classList.remove('active'); ic.classList.add('done'); ic.textContent='✓'; document.getElementById('al'+i).classList.remove('active'); document.getElementById('al'+i).classList.add('done'); }
+    showSR(ai);
+  } catch(err){ console.error(err); document.getElementById('apBox').classList.remove('show'); scErr(err.message||'Une erreur est survenue. Réessayez.'); }
+  finally { btn.disabled=false; btn.textContent='Analyser le document'; }
+}
+function showSR(d) {
+  document.getElementById('apBox').classList.remove('show');
+  document.getElementById('scResults').classList.add('show');
+  var g = document.getElementById('srGrid'); g.innerHTML = '';
+  function card(lbl, val, full) {
+    var empty = !val || (typeof val === 'string' && !val.trim());
+    var dsp = empty ? 'Non détecté' : val;
+    var el = document.createElement('div'); el.className = 'sr-card' + (full ? ' full' : '');
+    el.innerHTML = '<div class="sr-field">' + lbl + (!empty ? '<span class="sr-check">&#x2713;</span>' : '') + '</div><div class="sr-val' + (empty ? ' empty' : '') + '">' + dsp + '</div>';
+    g.appendChild(el);
+  }
+  var typeLabels = { experience: 'Expérience professionnelle', formation: 'Diplôme / Formation', competences: 'Compétences', infos: 'Informations personnelles', mixte: 'Document mixte' };
+  card('Type détecté', typeLabels[d.type_document] || 'Document professionnel', true);
+  if (d.experiences && d.experiences.length) {
+    card('Expériences', d.experiences.length + ' expérience(s) détectée(s)', true);
+    d.experiences.forEach(function(e, i) { if (e.poste || e.entreprise) card('Expérience ' + (i+1), (e.poste || '') + (e.entreprise ? ' — ' + e.entreprise : '') + (e.dates ? ' (' + e.dates + ')' : ''), true); });
+  }
+  if (d.formations && d.formations.length) {
+    card('Formations', d.formations.length + ' formation(s) détectée(s)', true);
+    d.formations.forEach(function(f, i) { if (f.diplome || f.etablissement) card('Formation ' + (i+1), (f.diplome || '') + (f.etablissement ? ' — ' + f.etablissement : '') + (f.date ? ' (' + f.date + ')' : ''), true); });
+  }
+  if (d.langues || d.logiciels || d.domaines) {
+    if (d.langues)   card('Langues', d.langues);
+    if (d.logiciels) card('Logiciels', d.logiciels);
+    if (d.domaines)  card('Domaines', d.domaines);
+  }
+  if (d.nom_prenom || d.telephone || d.email || d.adresse) {
+    if (d.nom_prenom) card('Nom & Prénom', d.nom_prenom);
+    if (d.telephone)  card('Téléphone', d.telephone);
+    if (d.email)      card('Email', d.email);
+    if (d.adresse)    card('Adresse', d.adresse);
+  }
+  if (d.infos_comp) card('Infos complémentaires', d.infos_comp, true);
+}
+function applyResults() {
+  if (!extractedData) return;
+  var d = extractedData;
+  function sfId(id, val) { if (!val || !val.trim()) return; var el = document.getElementById(id); if (el) { el.value = (el.value ? el.value + '\n' : '') + val.trim(); el.style.borderColor = '#094102'; } }
+  function sfIfEmpty(id, val) { if (!val || !val.trim()) return; var el = document.getElementById(id); if (el && !el.value.trim()) { el.value = val; el.style.borderColor = '#094102'; } }
+  if (d.experiences && d.experiences.length) {
+    var hasExp = d.experiences.some(function(e){ return e.poste || e.entreprise || e.dates; });
+    if (hasExp) {
+      document.getElementById('rub_exp').checked = true; toggleSec('sec_exp', true);
+      var ef = document.getElementById('expContainer'); ef.innerHTML = ''; expCount = 0;
+      d.experiences.forEach(function(exp) {
+        if (!exp.poste && !exp.entreprise && !exp.dates) return;
+        expCount++;
+        var div = document.createElement('div'); div.className = 'exp-block'; div.id = 'exp_' + expCount;
+        div.innerHTML = (expCount > 1 ? '<button class="remove-btn" type="button" onclick="this.parentNode.remove()">Supprimer</button>' : '') +
+          '<div class="block-title">Expérience ' + expCount + '</div>' +
+          '<div class="row2"><div class="field"><label>Période</label><input type="text" name="exp_' + expCount + '_dates" value="' + esc(exp.dates || '') + '" style="border-color:#094102"></div>' +
+          '<div class="field"><label>Poste occupé</label><input type="text" name="exp_' + expCount + '_poste" value="' + esc(exp.poste || '') + '" style="border-color:#094102"></div></div>' +
+          '<div class="field"><label>Entreprise et lieu</label><input type="text" name="exp_' + expCount + '_entreprise" value="' + esc(exp.entreprise || '') + '" style="border-color:#094102"></div>' +
+          '<div class="field"><label>Tâches principales</label><textarea name="exp_' + expCount + '_taches" rows="3" style="border-color:#094102">' + esc(exp.taches || '') + '</textarea></div>';
+        ef.appendChild(div);
+      });
+      if (expCount === 0) { expCount = 1; ef.innerHTML = '<div class="exp-block" id="exp_1"><div class="block-title">Expérience 1</div><div class="row2"><div class="field"><label>Période</label><input type="text" name="exp_1_dates"></div><div class="field"><label>Poste</label><input type="text" name="exp_1_poste"></div></div><div class="field"><label>Entreprise</label><input type="text" name="exp_1_entreprise"></div><div class="field"><label>Tâches</label><textarea name="exp_1_taches" rows="3"></textarea></div></div>'; }
     }
   }
+  if (d.formations && d.formations.length) {
+    var hasFm = d.formations.some(function(f){ return f.diplome || f.etablissement; });
+    if (hasFm) {
+      document.getElementById('rub_form').checked = true; toggleSec('sec_form', true);
+      var ff = document.getElementById('fmContainer'); ff.innerHTML = ''; fmCount = 0;
+      d.formations.forEach(function(fm) {
+        if (!fm.diplome && !fm.etablissement) return;
+        fmCount++;
+        var div = document.createElement('div'); div.className = 'fm-block'; div.id = 'fm_' + fmCount;
+        div.innerHTML = (fmCount > 1 ? '<button class="remove-btn" type="button" onclick="this.parentNode.remove()">Supprimer</button>' : '') +
+          '<div class="block-title">Formation ' + fmCount + '</div>' +
+          '<div class="row2"><div class="field"><label>Diplôme / Formation</label><input type="text" name="fm_' + fmCount + '_diplome" value="' + esc(fm.diplome || '') + '" style="border-color:#094102"></div>' +
+          '<div class="field"><label>Filière / Série</label><input type="text" name="fm_' + fmCount + '_serie" value="' + esc(fm.serie || '') + '" style="border-color:#094102"></div></div>' +
+          '<div class="row2"><div class="field"><label>Année et lieu</label><input type="text" name="fm_' + fmCount + '_date" value="' + esc(fm.date || '') + '" style="border-color:#094102"></div>' +
+          '<div class="field"><label>Établissement</label><input type="text" name="fm_' + fmCount + '_etab" value="' + esc(fm.etablissement || '') + '" style="border-color:#094102"></div></div>';
+        ff.appendChild(div);
+      });
+      if (fmCount === 0) { fmCount = 1; ff.innerHTML = '<div class="fm-block" id="fm_1"><div class="block-title">Formation 1</div><div class="row2"><div class="field"><label>Diplôme</label><input type="text" name="fm_1_diplome"></div><div class="field"><label>Filière</label><input type="text" name="fm_1_serie"></div></div><div class="row2"><div class="field"><label>Date</label><input type="text" name="fm_1_date"></div><div class="field"><label>Établissement</label><input type="text" name="fm_1_etab"></div></div></div>'; }
+    }
+  }
+  if (d.langues || d.logiciels || d.domaines) { document.getElementById('rub_comp').checked = true; toggleSec('sec_comp', true); sfId('f_langues', d.langues); sfId('f_logiciels', d.logiciels); sfId('f_domaines', d.domaines); }
+  if (d.nom_prenom || d.telephone || d.email || d.adresse) {
+    document.getElementById('rub_infos').checked = true; toggleSec('sec_infos', true);
+    sfIfEmpty('f_nom_prenom', d.nom_prenom);
+    sfIfEmpty('f_telephone', d.telephone);
+    sfIfEmpty('f_email', d.email);
+    sfIfEmpty('f_maj_telephone', d.telephone);
+    sfIfEmpty('f_maj_email', d.email);
+    sfId('f_adresse', d.adresse);
+  }
+  if (d.infos_comp && d.infos_comp.trim()) { document.getElementById('rub_autres').checked = true; toggleSec('sec_autres', true); sfId('f_infos_comp', d.infos_comp); }
+  
+  if (selectedFile && typeof handleNativeDocSelect === 'function') {
+    handleNativeDocSelect([selectedFile]);
+  }
 
-  // Poste
-  var posteMatch = text.match(/(?:Poste|Fonction|Titre)\s*:\s*([^\n\r]+)/i);
-  if (posteMatch) detectedData['Poste'] = posteMatch[1].trim();
-}
-
-function applyScannerResults() {
-  if (detectedData['Nom'] && !document.getElementById('f_nom_prenom').value) {
-    document.getElementById('f_nom_prenom').value = detectedData['Nom'];
-  }
-  if (detectedData['Téléphone'] && !document.getElementById('f_telephone').value) {
-    document.getElementById('f_telephone').value = detectedData['Téléphone'];
-  }
-  if (detectedData['Email'] && !document.getElementById('f_email').value) {
-    document.getElementById('f_email').value = detectedData['Email'];
-  }
-  if (detectedData['Poste']) {
-    document.getElementById('rub_poste').checked = true;
-    toggleSec('sec_poste', true);
-    document.getElementById('f_maj_poste').value = detectedData['Poste'];
-    calcPrice();
-  }
-
-  // Attache automatiquement le document scanné dans la section 05 si aucun document n'est sélectionné
-  if (scannedFile && !attachedFile) {
-    handleNativeDocSelect([scannedFile]);
-  }
-
-  closeScanner();
   document.getElementById('prefillBanner').classList.add('show');
-  var t = document.getElementById('toast');
-  t.innerHTML = '✓ Données appliquées avec succès dans le formulaire.';
-  t.classList.add('show');
-  setTimeout(function() { t.classList.remove('show'); }, 4000);
+  closeScanner();
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+  calcPrice();
 }
+function resetScanner() {
+  selectedFile = null; extractedData = null;
+  ['filePreview','btnAnalyze','scResults','apBox','scError'].forEach(function(id){ var el=document.getElementById(id); if(el) el.classList.remove('show'); });
+  document.getElementById('fileInputScanner').value = '';
+  document.getElementById('scanInstructBox').style.display = 'none';
+  document.getElementById('apBar').style.width = '0%';
+  var defRadio = document.querySelector('input[name="sc_instruct"][value="auto"]');
+  if (defRadio) defRadio.checked = true;
+  for (var i=1;i<=4;i++) { var ic=document.getElementById('ai'+i); ic.classList.remove('active','done'); ic.textContent=i; document.getElementById('al'+i).classList.remove('active','done'); }
+}
+function esc(s){ return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
 
 /* ── GESTION DU RETOUR DEPUIS LE CATALOGUE DE CV ── */
 function saveFormDraft() {
