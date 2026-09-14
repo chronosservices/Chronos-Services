@@ -4,18 +4,20 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Mise à jour CV – Chronos Services</title>
-<meta name="description" content="Formulaire de mise à jour de votre CV existant avec téléversement direct de documents et devis instantané – Chronos Services.">
-<link rel="manifest" href="/manifest.json">
+<meta name="description" content="Formulaire de mise à jour de CV avec importation de documents et devis instantané – Chronos Services.">
+<meta property="og:title" content="Mise à jour CV – Chronos Services">
+<meta property="og:description" content="Formulaire de mise à jour de CV avec importation de documents et devis instantané – Chronos Services.">
+<meta property="og:type" content="website">
 <meta name="theme-color" content="#094102">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-<!-- Bibliothèques PDF, OCR et Facturation -->
+<!-- Bibliothèques externes PDF et OCR -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js"></script>
 <script async src="https://tally.so/widgets/embed.js"></script>
-
+<!-- Styles intégrés directement dans le fichier HTML -->
 <style>
 :root {
   --green: #094102;
@@ -32,7 +34,7 @@
 }
 
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-body { font-family: 'Poppins', sans-serif; background: var(--bg-page); color: var(--text); min-height: 100vh; line-height: 1.5; }
+body { font-family: 'Poppins', sans-serif; background: var(--bg-page); color: var(--text); min-height: 100vh; line-height: 1.5; -webkit-font-smoothing: antialiased; }
 
 /* HEADER */
 .header { background: var(--green); padding: 0 32px; height: 56px; display: flex; align-items: center; justify-content: space-between; }
@@ -43,7 +45,7 @@ body { font-family: 'Poppins', sans-serif; background: var(--bg-page); color: va
 /* BANNER */
 .banner { background: linear-gradient(100deg, var(--green) 0%, #0d5c06 100%); padding: 40px 32px 48px; }
 .banner-inner { max-width: 760px; margin: 0 auto; }
-.banner h1 { color: #fff; font-size: clamp(1.4rem, 3.5vw, 2rem); font-weight: 700; line-height: 1.25; margin-bottom: 10px; }
+.banner h1 { color: #fff; font-size: clamp(1.35rem, 3.5vw, 2rem); font-weight: 700; line-height: 1.25; margin-bottom: 10px; }
 .banner h1 em { color: var(--orange); font-style: normal; }
 .banner p { color: rgba(255,255,255,0.78); font-size: 0.88rem; font-weight: 400; line-height: 1.6; max-width: 560px; }
 
@@ -56,9 +58,9 @@ body { font-family: 'Poppins', sans-serif; background: var(--bg-page); color: va
 .card-head-title { font-size: 0.95rem; font-weight: 600; color: var(--green); }
 .card-head-sub { font-size: 0.76rem; color: var(--muted); margin-top: 2px; font-weight: 400; }
 .card-head-right { margin-left: auto; flex-shrink: 0; }
-.badge-required { font-size: 0.65rem; font-weight: 600; color: var(--orange); background: #fff3ee; border: 1px solid #ffd5c0; padding: 2px 8px; border-radius: 3px; text-transform: uppercase; letter-spacing: 0.04em; }
-.badge-optional { font-size: 0.65rem; font-weight: 600; color: var(--muted); background: #f5f5f5; border: 1px solid var(--border); padding: 2px 8px; border-radius: 3px; text-transform: uppercase; letter-spacing: 0.04em; }
-.badge-confirmed { font-size: 0.65rem; font-weight: 600; color: #0a5c02; background: #eaf8ea; border: 1px solid #b8e0b8; padding: 2px 8px; border-radius: 3px; text-transform: uppercase; letter-spacing: 0.04em; }
+.badge-required { font-size: 0.65rem; font-weight: 600; color: var(--orange); background: #fff3ee; border: 1px solid #ffd5c0; padding: 2px 8px; border-radius: 3px; text-transform: uppercase; letter-spacing: 0.04em; white-space: nowrap; }
+.badge-optional { font-size: 0.65rem; font-weight: 600; color: var(--muted); background: #f5f5f5; border: 1px solid var(--border); padding: 2px 8px; border-radius: 3px; text-transform: uppercase; letter-spacing: 0.04em; white-space: nowrap; }
+.badge-confirmed { font-size: 0.65rem; font-weight: 600; color: #0a5c02; background: #eaf8ea; border: 1px solid #b8e0b8; padding: 2px 8px; border-radius: 3px; text-transform: uppercase; letter-spacing: 0.04em; white-space: nowrap; }
 .card-body { padding: 22px 24px; }
 
 /* FIELDS */
@@ -74,7 +76,7 @@ input[type="text"], input[type="email"], input[type="tel"], select, textarea {
 input:focus, select:focus, textarea:focus { outline: none; border-color: var(--green); box-shadow: 0 0 0 3px rgba(9,65,2,0.08); background: #fff; }
 textarea { resize: vertical; min-height: 78px; line-height: 1.6; }
 .row2 { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
-@media(max-width:560px) { .row2 { grid-template-columns: 1fr; } }
+@media(max-width:560px) { .row2 { grid-template-columns: 1fr; gap: 10px; } }
 .note { font-size: 0.76rem; color: var(--muted); background: #f8f8f8; border-left: 3px solid var(--border); padding: 10px 14px; border-radius: 0 4px 4px 0; margin-top: 10px; line-height: 1.55; }
 
 /* BANNIÈRE PRÉ-REMPLISSAGE SCANNER */
@@ -172,11 +174,13 @@ textarea { resize: vertical; min-height: 78px; line-height: 1.6; }
   font-size: 0.92rem;
   font-weight: 700;
   color: #111111;
+  word-break: break-word;
 }
 .sc-ib-sub {
   font-size: 0.76rem;
   color: #777777;
   margin-top: 2px;
+  line-height: 1.4;
 }
 .sc-ib-right {
   display: flex;
@@ -192,6 +196,7 @@ textarea { resize: vertical; min-height: 78px; line-height: 1.6; }
   padding: 4px 10px;
   border-radius: 12px;
   letter-spacing: 0.02em;
+  white-space: nowrap;
 }
 .sc-ib-arrow {
   width: 32px;
@@ -250,7 +255,12 @@ textarea { resize: vertical; min-height: 78px; line-height: 1.6; }
 }
 .renouveau-icon svg { width: 20px; height: 20px; }
 .renouveau-head-left { flex: 1; min-width: 0; }
-.renouveau-head-title { font-size: 0.95rem; font-weight: 700; color: #421b05; }
+.renouveau-head-title {
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: #421b05;
+  white-space: nowrap;
+}
 .renouveau-head-sub { font-size: 0.78rem; color: #b75525; margin-top: 2px; }
 .renouveau-badge {
   font-size: 0.72rem;
@@ -308,6 +318,7 @@ textarea { resize: vertical; min-height: 78px; line-height: 1.6; }
 /* RUBRIQUES */
 .rubrique-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
 @media(max-width:540px) { .rubrique-grid { grid-template-columns: 1fr 1fr; } }
+@media(max-width:360px) { .rubrique-grid { grid-template-columns: 1fr; } }
 .rub-item { position: relative; }
 .rub-item input[type="checkbox"] { position: absolute; opacity: 0; width: 0; height: 0; }
 .rub-label { display: flex; align-items: center; gap: 8px; padding: 11px 12px; border: 1px solid var(--border); border-radius: 6px; cursor: pointer; font-size: 0.8rem; font-weight: 500; color: var(--muted); background: var(--bg-input); transition: all 0.15s; user-select: none; }
@@ -352,59 +363,108 @@ textarea { resize: vertical; min-height: 78px; line-height: 1.6; }
 .price-row.total span:last-child { color: var(--orange); }
 .price-note { font-size: 0.72rem; color: var(--muted); }
 
-/* ── 05 JOINDRE UN DOCUMENT OU CV (STYLE INTÉGRÉ & ÉPURÉ) ── */
+/* ── 05 JOINDRE UN DOCUMENT OU CV ── */
+.card-head-info {
+  flex: 1;
+  min-width: 0;
+}
+#cardDocument .card-head-title {
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: var(--green);
+  white-space: nowrap;
+}
+#cardDocument .card-head-sub {
+  font-size: 0.76rem;
+  color: var(--muted);
+  margin-top: 2px;
+  white-space: nowrap;
+}
+
 .native-dropzone {
-  border: 2px dashed #b8d4b8;
-  border-radius: 8px;
-  padding: 24px 18px;
+  border: 1.5px dashed #b2dbb2;
+  border-radius: 12px;
+  padding: 22px 18px;
   text-align: center;
-  background: #fafdfa;
+  background: linear-gradient(180deg, #fbfefb 0%, #f4f9f4 100%);
   cursor: pointer;
-  transition: all 0.2s ease;
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   gap: 8px;
+  box-shadow: 0 1px 4px rgba(9, 65, 2, 0.03);
 }
 .native-dropzone:hover, .native-dropzone.drag-over {
-  background: #f0f8f0;
+  background: #edf7ed;
   border-color: var(--green);
+  box-shadow: 0 4px 14px rgba(9, 65, 2, 0.08);
+  transform: translateY(-1px);
 }
 .ndz-icon {
   width: 44px;
   height: 44px;
   border-radius: 50%;
-  background: #eaf5ea;
+  background: #e3f2e3;
   color: var(--green);
   display: flex;
   align-items: center;
   justify-content: center;
   margin-bottom: 2px;
+  box-shadow: 0 2px 6px rgba(9, 65, 2, 0.06);
+  transition: transform 0.2s ease;
+}
+.native-dropzone:hover .ndz-icon {
+  transform: scale(1.06);
+  background: #d5ebd5;
 }
 .ndz-icon svg { width: 22px; height: 22px; }
+.ndz-text {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 5px;
+}
 .ndz-title {
   font-size: 0.88rem;
   font-weight: 600;
   color: var(--text);
+  line-height: 1.3;
+  white-space: nowrap;
 }
 .ndz-title span {
   color: var(--green);
   text-decoration: underline;
+  text-underline-offset: 3px;
+  font-weight: 700;
 }
 .ndz-sub {
-  font-size: 0.72rem;
-  color: var(--muted);
+  font-size: 0.73rem;
+  color: #2b5f26;
+  background: #e8f4e8;
+  padding: 3px 12px;
+  border-radius: 20px;
+  line-height: 1.3;
+  white-space: nowrap;
+  display: inline-block;
+  font-weight: 500;
 }
+
+/* CARTE FICHIER PRÊT À L'ENVOI - ULTRA LISIBLE SUR PETIT ÉCRAN */
 .doc-ready-card {
-  display: flex;
-  align-items: center;
   background: #f4faf4;
-  border: 1px solid #b8e0b8;
-  border-radius: 8px;
+  border: 1.5px solid #a8d5a8;
+  border-radius: 10px;
   padding: 14px 16px;
-  gap: 14px;
   animation: slideDown 0.2s ease;
+  width: 100%;
+}
+.drc-top {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  width: 100%;
 }
 .drc-icon {
   width: 40px;
@@ -416,36 +476,56 @@ textarea { resize: vertical; min-height: 78px; line-height: 1.6; }
   align-items: center;
   justify-content: center;
   flex-shrink: 0;
+  margin-top: 1px;
 }
 .drc-icon svg { width: 20px; height: 20px; }
-.drc-info { flex: 1; min-width: 0; }
+.drc-info {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
 .drc-name {
-  font-size: 0.86rem;
+  font-size: 0.88rem;
   font-weight: 600;
-  color: var(--text);
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
+  color: #111111;
+  line-height: 1.4;
+  word-break: break-word;
+  overflow-wrap: anywhere;
 }
 .drc-meta {
-  font-size: 0.72rem;
+  font-size: 0.74rem;
   color: var(--muted);
-  margin-top: 2px;
   display: flex;
   align-items: center;
   gap: 8px;
+  flex-wrap: wrap;
+  margin-top: 2px;
+}
+.drc-size {
+  font-weight: 500;
+  color: #555555;
+  white-space: nowrap;
+}
+.drc-sep {
+  color: #a0a0a0;
+  font-size: 0.7rem;
 }
 .drc-badge {
   background: #e0f2e0;
-  color: var(--green);
+  color: #0a5c02;
   font-weight: 600;
-  padding: 2px 7px;
+  padding: 2px 8px;
   border-radius: 4px;
-  font-size: 0.68rem;
+  font-size: 0.7rem;
+  white-space: nowrap;
+  display: inline-flex;
+  align-items: center;
 }
 .drc-remove {
-  background: none;
-  border: 1px solid #e0c8c8;
+  background: #ffffff;
+  border: 1px solid #f2c2c2;
   color: #c0392b;
   border-radius: 6px;
   padding: 6px 12px;
@@ -453,20 +533,298 @@ textarea { resize: vertical; min-height: 78px; line-height: 1.6; }
   font-weight: 600;
   cursor: pointer;
   transition: all 0.15s;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  flex-shrink: 0;
+  white-space: nowrap;
+  align-self: flex-start;
 }
 .drc-remove:hover {
   background: #ffeaea;
   border-color: #c0392b;
 }
+
+/* FOOTER D'INFORMATIONS DU DOCUMENT */
 .doc-meta-footer {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-top: 10px;
+  margin-top: 12px;
   font-size: 0.72rem;
   color: var(--muted);
   flex-wrap: wrap;
-  gap: 6px;
+  gap: 8px;
+  line-height: 1.4;
+}
+.doc-meta-footer .dmf-ssl {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+.doc-meta-footer .dmf-status {
+  font-weight: 500;
+  color: #0a5c02;
+}
+
+/* RESPONSIVE SUR MOBILE & PETITS ÉCRANS */
+@media (max-width: 540px) {
+  .header { padding: 0 16px; height: 50px; }
+  .banner { padding: 28px 16px 36px; }
+  .card-head { padding: 14px 16px 12px; }
+  .card-body { padding: 16px 14px; }
+  .wrapper { margin-top: -14px; margin-bottom: 40px; padding: 0 12px; }
+
+  /* Disposition optimisée de la carte de renouveau de modèle sur mobile */
+  .renouveau-card {
+    border-radius: 8px;
+  }
+  .renouveau-head {
+    display: grid;
+    grid-template-columns: 38px 1fr auto;
+    grid-template-rows: auto auto;
+    column-gap: 10px;
+    row-gap: 8px;
+    padding: 14px 14px 12px;
+    align-items: center;
+  }
+  .renouveau-icon {
+    grid-column: 1;
+    grid-row: 1;
+    width: 38px;
+    height: 38px;
+  }
+  .renouveau-icon svg {
+    width: 18px;
+    height: 18px;
+  }
+  .renouveau-badge {
+    grid-column: 3;
+    grid-row: 1;
+    font-size: 0.68rem;
+    padding: 3px 10px;
+    border-radius: 12px;
+    white-space: nowrap;
+    justify-self: end;
+  }
+  .renouveau-head-left {
+    grid-column: 1 / -1;
+    grid-row: 2;
+    width: 100%;
+    min-width: 0;
+  }
+  .renouveau-head-title {
+    font-size: clamp(0.70rem, 3.2vw, 0.88rem);
+    font-weight: 700;
+    color: #421b05;
+    line-height: 1.25;
+    white-space: nowrap;
+    letter-spacing: -0.015em;
+  }
+  .renouveau-head-sub {
+    font-size: 0.76rem;
+    color: #b75525;
+    margin-top: 3px;
+    line-height: 1.4;
+  }
+  .toggle-row {
+    padding: 13px 14px;
+    gap: 12px;
+    align-items: center;
+  }
+  .toggle-switch {
+    width: 42px;
+    height: 22px;
+    flex-shrink: 0;
+  }
+  .toggle-track::after {
+    width: 16px;
+    height: 16px;
+    left: 3px;
+    top: 3px;
+  }
+  .toggle-switch input:checked + .toggle-track::after {
+    transform: translateX(20px);
+  }
+  .toggle-label {
+    font-size: 0.84rem;
+    line-height: 1.35;
+    color: #421b05;
+  }
+  .renouveau-body {
+    padding: 14px 14px 16px;
+  }
+  .renouveau-model-row {
+    flex-direction: column;
+    gap: 8px;
+  }
+  .renouveau-model-row input {
+    width: 100%;
+  }
+  .cat-btn {
+    width: 100%;
+    justify-content: center;
+    padding: 11px 14px;
+    font-size: 0.8rem;
+  }
+
+  /* Disposition optimisée de la carte de fichier joint sur mobile */
+  .doc-ready-card {
+    padding: 12px 14px;
+  }
+  .drc-top {
+    display: grid;
+    grid-template-columns: 36px 1fr;
+    grid-template-rows: auto auto;
+    column-gap: 10px;
+    row-gap: 8px;
+    align-items: start;
+  }
+  .drc-icon {
+    width: 36px;
+    height: 36px;
+    grid-row: 1;
+    grid-column: 1;
+  }
+  .drc-info {
+    grid-row: 1;
+    grid-column: 2;
+    width: 100%;
+  }
+  .drc-name {
+    font-size: 0.84rem;
+    font-weight: 600;
+    line-height: 1.35;
+    word-break: break-word;
+    overflow-wrap: anywhere;
+  }
+  .drc-meta {
+    margin-top: 3px;
+    gap: 6px;
+  }
+  .drc-remove {
+    grid-row: 2;
+    grid-column: 2;
+    justify-self: start;
+    padding: 5px 10px;
+    font-size: 0.72rem;
+    background: #fff;
+  }
+
+  /* Section 05 sur mobile */
+  #cardDocument .card-head-title {
+    font-size: clamp(0.78rem, 3.4vw, 0.92rem);
+    white-space: nowrap;
+  }
+  #cardDocument .card-head-sub {
+    font-size: clamp(0.68rem, 2.7vw, 0.74rem);
+    white-space: nowrap;
+  }
+  .native-dropzone {
+    padding: 18px 12px;
+    border-radius: 10px;
+    gap: 7px;
+  }
+  .ndz-icon {
+    width: 38px;
+    height: 38px;
+  }
+  .ndz-icon svg {
+    width: 18px;
+    height: 18px;
+  }
+  .ndz-title {
+    font-size: clamp(0.74rem, 3.2vw, 0.86rem);
+    white-space: nowrap;
+  }
+  .ndz-sub {
+    font-size: clamp(0.66rem, 2.6vw, 0.72rem);
+    padding: 2.5px 10px;
+    white-space: nowrap;
+  }
+  .doc-meta-footer {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    gap: 6px;
+  }
+  .dmf-ssl {
+    font-size: clamp(0.66rem, 2.6vw, 0.72rem);
+    white-space: nowrap;
+  }
+  .dmf-status {
+    font-size: clamp(0.66rem, 2.6vw, 0.72rem);
+    white-space: nowrap;
+  }
+}
+
+@media (max-width: 380px) {
+  #cardDocument .card-head-title {
+    font-size: clamp(0.72rem, 3.1vw, 0.80rem);
+    letter-spacing: -0.015em;
+    white-space: nowrap;
+  }
+  #cardDocument .card-head-sub {
+    font-size: clamp(0.62rem, 2.6vw, 0.68rem);
+    white-space: nowrap;
+  }
+  .ndz-title {
+    font-size: clamp(0.68rem, 3.0vw, 0.76rem);
+    letter-spacing: -0.015em;
+    white-space: nowrap;
+  }
+  .ndz-sub {
+    font-size: clamp(0.60rem, 2.5vw, 0.66rem);
+    padding: 2px 8px;
+    white-space: nowrap;
+  }
+  .dmf-ssl {
+    font-size: clamp(0.60rem, 2.5vw, 0.66rem);
+    white-space: nowrap;
+  }
+  .dmf-status {
+    font-size: clamp(0.60rem, 2.5vw, 0.66rem);
+    white-space: nowrap;
+  }
+  .renouveau-head {
+    padding: 12px 12px 10px;
+    column-gap: 8px;
+    row-gap: 6px;
+  }
+  .renouveau-icon {
+    width: 34px;
+    height: 34px;
+  }
+  .renouveau-head-title {
+    font-size: clamp(0.66rem, 3.1vw, 0.76rem);
+    letter-spacing: -0.02em;
+    white-space: nowrap;
+  }
+  .renouveau-head-sub {
+    font-size: 0.72rem;
+  }
+  .toggle-row {
+    padding: 11px 12px;
+    gap: 10px;
+  }
+  .toggle-label {
+    font-size: 0.8rem;
+  }
+  .drc-top {
+    grid-template-columns: 32px 1fr;
+    column-gap: 8px;
+  }
+  .drc-icon {
+    width: 32px;
+    height: 32px;
+  }
+  .drc-name {
+    font-size: 0.8rem;
+  }
+  .drc-badge {
+    font-size: 0.66rem;
+  }
 }
 
 /* ZONE DE SOUMISSION */
@@ -524,10 +882,10 @@ textarea { resize: vertical; min-height: 78px; line-height: 1.6; }
 .file-preview { background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.07); border-radius: 6px; padding: 11px 14px; display: none; align-items: center; gap: 12px; }
 .file-preview.show { display: flex; }
 .fp-info { flex: 1; min-width: 0; }
-.fp-name { color: #fff; font-size: 0.83rem; font-weight: 500; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.fp-name { color: #fff; font-size: 0.83rem; font-weight: 500; word-break: break-word; overflow-wrap: anywhere; line-height: 1.35; }
 .fp-size { color: rgba(255,255,255,0.32); font-size: 0.7rem; margin-top: 1px; }
-.fp-rm { background: none; border: none; color: rgba(255,255,255,0.28); cursor: pointer; font-size: 0.82rem; font-family: 'Poppins', sans-serif; transition: color 0.15s; }
-.fp-rm:hover { color: rgba(255,87,0,0.8); }
+.fp-rm { background: none; border: none; color: rgba(255,255,255,0.45); cursor: pointer; font-size: 0.82rem; font-family: 'Poppins', sans-serif; transition: color 0.15s; flex-shrink: 0; }
+.fp-rm:hover { color: rgba(255,87,0,0.9); }
 #btnAnalyze { background: var(--orange); color: #fff; border: none; border-radius: 5px; padding: 12px; font-size: 0.86rem; font-weight: 600; cursor: pointer; width: 100%; font-family: 'Poppins', sans-serif; display: none; transition: background 0.18s; }
 #btnAnalyze.show { display: block; }
 #btnAnalyze:hover:not(:disabled) { background: var(--orange-dark); }
@@ -589,7 +947,7 @@ textarea { resize: vertical; min-height: 78px; line-height: 1.6; }
 
 <div class="wrapper">
 
-  <!-- BANNIÈRE SI PRÉ-REMPLI PAR LE SCANNER IA -->
+  <!-- BANNIÈRE PRÉ-REMPLI PAR LE SCANNER IA -->
   <div class="prefill-banner" id="prefillBanner">
     <div class="pb-icon">✨</div>
     <div class="pb-text">
@@ -606,7 +964,7 @@ textarea { resize: vertical; min-height: 78px; line-height: 1.6; }
         <div class="sc-card-sub">Contrat, diplôme, attestation — l'IA pré-remplit les champs à votre place</div>
       </div>
       <div class="card-head-right">
-        <span class="badge-optional" style="padding: 4px 8px; border-radius: 4px; font-weight: 600;">OPTIONNEL</span>
+        <span class="badge-optional">OPTIONNEL</span>
       </div>
     </div>
     <div class="sc-card-body">
@@ -642,7 +1000,7 @@ textarea { resize: vertical; min-height: 78px; line-height: 1.6; }
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M20 11a8 8 0 0 0-14.6-4.6M4 13a8 8 0 0 0 14.6 4.6"/><path d="M4 4v4.4h4.4M20 20v-4.4h-4.4"/></svg>
       </div>
       <div class="renouveau-head-left">
-        <div class="renouveau-head-title">Le client souhaite-t-il changer de modèle CV ?</div>
+        <div class="renouveau-head-title">Le client souhaite-t-il changer de modèle CV&nbsp;?</div>
         <div class="renouveau-head-sub">Activez si un nouveau design est demandé</div>
       </div>
       <div class="renouveau-badge">● NOUVEAU</div>
@@ -884,13 +1242,13 @@ textarea { resize: vertical; min-height: 78px; line-height: 1.6; }
       </div>
     </div>
 
-    <!-- 05 IMPORTER UN DOCUMENT OU CV (GESTION AUTOMATISÉE EN TÂCHE DE FOND) -->
+    <!-- 05 IMPORTER UN DOCUMENT OU CV -->
     <div class="card" id="cardDocument">
       <div class="card-head">
         <div class="card-head-num">05</div>
-        <div>
-          <div class="card-head-title">Importer un document ou CV <span style="font-size:.72rem;font-weight:400;color:var(--muted);">(optionnel)</span></div>
-          <div class="card-head-sub">Ancien CV, attestation, certificat de travail ou diplôme à joindre</div>
+        <div class="card-head-info">
+          <div class="card-head-title">Importer un document ou CV</div>
+          <div class="card-head-sub">Ancien CV, attestation ou diplôme</div>
         </div>
         <div class="card-head-right"><span class="badge-optional" id="badgeDocStatus">Optionnel</span></div>
       </div>
@@ -905,32 +1263,44 @@ textarea { resize: vertical; min-height: 78px; line-height: 1.6; }
             </svg>
           </div>
           <div class="ndz-text">
-            <div class="ndz-title" id="ndzTitle">Cliquez pour choisir un document ou <span>glissez-le ici</span></div>
-            <div class="ndz-sub">Formats acceptés : PDF, Word, JPG, PNG (Max 10 Mo) — Transmis directement avec votre demande</div>
+            <div class="ndz-title" id="ndzTitle">Choisir un document ou <span>glisser ici</span></div>
+            <div class="ndz-sub">PDF, Word, JPG, PNG · Max 10 Mo</div>
           </div>
         </div>
 
-        <!-- Carte fichier prêt à l'envoi -->
+        <!-- Carte fichier prêt à l'envoi - Parfaitement visible et lisible sur mobile -->
         <div class="doc-ready-card" id="docReadyCard" style="display:none;">
-          <div class="drc-icon">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
-              <polyline points="14 2 14 8 20 8"/>
-              <line x1="16" y1="13" x2="8" y2="13"/>
-              <line x1="16" y1="17" x2="8" y2="17"/>
-              <polyline points="10 9 9 9 8 9"/>
-            </svg>
+          <div class="drc-top">
+            <div class="drc-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                <polyline points="14 2 14 8 20 8"/>
+                <line x1="16" y1="13" x2="8" y2="13"/>
+                <line x1="16" y1="17" x2="8" y2="17"/>
+                <polyline points="10 9 9 9 8 9"/>
+              </svg>
+            </div>
+            <div class="drc-info">
+              <div class="drc-name" id="drcFileName" title="Nom du document">document.pdf</div>
+              <div class="drc-meta">
+                <span class="drc-size" id="drcFileSize">0&nbsp;Ko</span>
+                <span class="drc-sep">•</span>
+                <span class="drc-badge">✓&nbsp;Prêt pour l'envoi</span>
+              </div>
+            </div>
+            <button type="button" class="drc-remove" onclick="removeNativeDoc()" aria-label="Supprimer le document">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <polyline points="3 6 5 6 21 6"/>
+                <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/>
+              </svg>
+              <span>Supprimer</span>
+            </button>
           </div>
-          <div class="drc-info">
-            <div class="drc-name" id="drcFileName">document.pdf</div>
-            <div class="drc-meta"><span id="drcFileSize">0 Ko</span> • <span class="drc-badge">✓ Prêt pour l'envoi</span></div>
-          </div>
-          <button type="button" class="drc-remove" onclick="removeNativeDoc()">Supprimer</button>
         </div>
 
         <div class="doc-meta-footer">
-          <span>🔒 Chiffrement SSL &amp; transmission automatique du document sur la boîte e-mail</span>
-          <span id="dmfStatus">Aucun document joint</span>
+          <span class="dmf-ssl">🔒 Transmission directe sécurisée SSL</span>
+          <span id="dmfStatus" class="dmf-status">Aucun document joint</span>
         </div>
 
       </div>
@@ -1055,7 +1425,11 @@ textarea { resize: vertical; min-height: 78px; line-height: 1.6; }
 
 <div id="toast"></div>
 
+<div id="root"></div>
+<script type="module" src="/src/main.tsx"></script>
 <script>
+// app-logic.js - Logique formulaire, calcul de prix, OCR, scanner et téléversement Tally
+
 var PRICE_GRID = [0, 1000, 1500, 2000];
 var renouveauActif = false;
 var expCount = 1, fmCount = 1, latestInv = null;
@@ -1066,11 +1440,11 @@ var scannedFile = null;
 
 /* ── GESTION ÉPURÉE DU DOCUMENT JOINT (FACE CACHÉE TALLY) ── */
 function formatBytes(bytes) {
-  if (!bytes || bytes === 0) return '0 Ko';
+  if (!bytes || bytes === 0) return '0\u00a0Ko';
   var k = 1024;
   var sizes = ['Octets', 'Ko', 'Mo', 'Go'];
   var i = Math.floor(Math.log(bytes) / Math.log(k));
-  return parseFloat((bytes / Math.pow(k, i)).toFixed(1)) + ' ' + sizes[i];
+  return parseFloat((bytes / Math.pow(k, i)).toFixed(1)) + '\u00a0' + sizes[i];
 }
 
 function handleNativeDocSelect(files) {
@@ -1091,14 +1465,17 @@ function handleNativeDocSelect(files) {
   var dmfStatus = document.getElementById('dmfStatus');
 
   if (dropzone) dropzone.style.display = 'none';
-  if (readyCard) readyCard.style.display = 'flex';
-  if (fileNameEl) fileNameEl.textContent = file.name;
+  if (readyCard) readyCard.style.display = 'block';
+  if (fileNameEl) {
+    fileNameEl.textContent = file.name;
+    fileNameEl.setAttribute('title', file.name);
+  }
   if (fileSizeEl) fileSizeEl.textContent = formatBytes(file.size);
   if (badge) {
     badge.className = 'badge-confirmed';
     badge.textContent = '✓ Document joint';
   }
-  if (dmfStatus) dmfStatus.textContent = '✓ Prêt pour l\'envoi : ' + file.name;
+  if (dmfStatus) dmfStatus.textContent = '✓ Document prêt';
 
   var hNom = document.getElementById('h_doc_nom');
   if (hNom) hNom.value = file.name;
@@ -1134,7 +1511,7 @@ function removeNativeDoc() {
 }
 
 // Support glisser-déposer (Drag and Drop)
-(function initDropzone() {
+function initDropzone() {
   var ndz = document.getElementById('nativeDocDropzone');
   if (!ndz) return;
   ['dragenter', 'dragover'].forEach(function(evt) {
@@ -1156,9 +1533,8 @@ function removeNativeDoc() {
       handleNativeDocSelect(e.dataTransfer.files);
     }
   });
-})();
+}
 
-// Génération UUID v4
 function genUuid() {
   if (window.crypto && window.crypto.randomUUID) {
     return window.crypto.randomUUID();
@@ -1169,7 +1545,6 @@ function genUuid() {
   });
 }
 
-// Téléversement sécurisé du document vers Tally (sans déclencher de second e-mail de notification)
 async function uploadFileToTally(file) {
   var formId = "5BJV2v";
   var sessionUuid = genUuid();
@@ -1202,19 +1577,19 @@ function handleRenouveauToggle(checked) {
   var note = document.getElementById('rubRenouveauNote');
   var sub = document.getElementById('rubriquesSub');
   if (checked) {
-    body.classList.add('open');
-    note.classList.add('show');
-    sub.textContent = 'Indiquez les modifications à apporter dans le nouveau modèle';
+    if (body) body.classList.add('open');
+    if (note) note.classList.add('show');
+    if (sub) sub.textContent = 'Indiquez les modifications à apporter dans le nouveau modèle';
   } else {
-    body.classList.remove('open');
-    note.classList.remove('show');
-    sub.textContent = 'Cochez uniquement ce qui a changé';
+    if (body) body.classList.remove('open');
+    if (note) note.classList.remove('show');
+    if (sub) sub.textContent = 'Cochez uniquement ce qui a changé';
   }
   calcPrice();
 }
 
 function fmtFCFA(n) {
-  return n.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '\u00a0') + ' FCFA';
+  return n.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '\u00a0') + '\u00a0FCFA';
 }
 
 function getPalier(checked) {
@@ -1231,6 +1606,8 @@ function calcPrice() {
   var rows = document.getElementById('priceRows');
   var note = document.getElementById('priceNote');
   var hint = document.getElementById('priceHint');
+
+  if (!display || !rows || !note || !hint) return;
 
   if (renouveauActif) {
     if (!urgence) {
@@ -1303,6 +1680,7 @@ function toggleSec(id, show) {
 function addExp() {
   expCount++;
   var c = document.getElementById('expContainer');
+  if (!c) return;
   var d = document.createElement('div'); d.className = 'exp-block'; d.id = 'exp_' + expCount;
   d.innerHTML = '<button class="remove-btn" type="button" onclick="this.parentNode.remove()">Supprimer</button>' +
     '<div class="block-title">Expérience ' + expCount + '</div>' +
@@ -1316,6 +1694,7 @@ function addExp() {
 function addFm() {
   fmCount++;
   var c = document.getElementById('fmContainer');
+  if (!c) return;
   var d = document.createElement('div'); d.className = 'fm-block'; d.id = 'fm_' + fmCount;
   d.innerHTML = '<button class="remove-btn" type="button" onclick="this.parentNode.remove()">Supprimer</button>' +
     '<div class="block-title">Formation ' + fmCount + '</div>' +
@@ -1332,7 +1711,7 @@ function structureMessage() {
   var fd = new FormData(f);
   var rubriques = fd.getAll('rubriques[]').filter(Boolean);
   var isRenouveau = renouveauActif;
-  var nouveauModele = document.getElementById('f_nouveau_modele').value || '';
+  var nouveauModele = (document.getElementById('f_nouveau_modele') || {}).value || '';
 
   var msg = '══════════════════════════════\n  DEMANDE DE MISE À JOUR CV\n══════════════════════════════\n\n';
 
@@ -1443,14 +1822,21 @@ function structureMessage() {
   msg += '[ NUMÉRO DE FACTURE ]\n';
   msg += 'Facture : ' + (latestInv || genInv()) + '\n';
 
-  document.getElementById('formatted_message').value = msg;
-  document.getElementById('h_renouveau').value = isRenouveau ? (nouveauModele || 'Oui') : '';
+  var formMsg = document.getElementById('formatted_message');
+  if (formMsg) formMsg.value = msg;
+  var hRen = document.getElementById('h_renouveau');
+  if (hRen) hRen.value = isRenouveau ? (nouveauModele || 'Oui') : '';
+
   if (attachedFile) {
-    document.getElementById('h_doc_nom').value = attachedFile.name;
-    document.getElementById('h_doc_tally').value = 'Transmis avec succès sur votre e-mail via Tally (' + attachedFile.name + ')';
-    if (attachedFileUrl) document.getElementById('h_doc_lien').value = attachedFileUrl;
+    var hNom = document.getElementById('h_doc_nom');
+    if (hNom) hNom.value = attachedFile.name;
+    var hDoc = document.getElementById('h_doc_tally');
+    if (hDoc) hDoc.value = 'Transmis avec succès sur votre e-mail via Tally (' + attachedFile.name + ')';
+    var hLien = document.getElementById('h_doc_lien');
+    if (hLien && attachedFileUrl) hLien.value = attachedFileUrl;
   } else {
-    document.getElementById('h_doc_tally').value = 'Aucun document joint';
+    var hDoc2 = document.getElementById('h_doc_tally');
+    if (hDoc2) hDoc2.value = 'Aucun document joint';
   }
 
   return msg;
@@ -1461,78 +1847,13 @@ function genInv() {
   return 'MAJ-' + d.getFullYear() + String(d.getMonth()+1).padStart(2,'0') + String(d.getDate()).padStart(2,'0') + '-' + String(Math.floor(Math.random()*1000)).padStart(3,'0');
 }
 
-/* ── SOUMISSION DU FORMULAIRE : ENVOI UNIQUE VERS FORMSPREE SANS DOUBLONS ── */
-document.getElementById('updateForm').addEventListener('submit', async function(e) {
-  e.preventDefault();
-  var rubs = document.querySelectorAll('input[name="rubriques[]"]:checked');
-  var urg = document.querySelector('input[name="urgence"]:checked');
-  var msg = document.getElementById('form-message');
-
-  if (!renouveauActif && !rubs.length) {
-    msg.textContent = 'Veuillez sélectionner au moins une rubrique à mettre à jour, ou activer le renouveau de modèle.';
-    msg.className = 'error'; return;
-  }
-  if (!urg) {
-    msg.textContent = 'Veuillez choisir un délai de livraison.';
-    msg.className = 'error'; return;
-  }
-
-  calcPrice();
-  var btn = document.getElementById('submitBtn');
-  btn.disabled = true;
-
-  var nom = (document.getElementById('f_nom_prenom').value || '').trim();
-  var tel = (document.getElementById('f_telephone').value || '').trim();
-  var email = (document.getElementById('f_email').value || '').trim();
-
-  latestInv = genInv();
-  document.getElementById('invHidden').value = latestInv;
-
-  // 1. Si un document est joint, on le téléverse sur le stockage Tally pour obtenir son lien sécurisé
-  if (attachedFile) {
-    msg.textContent = 'Téléversement sécurisé du document joint…';
-    msg.className = 'sending';
-    try {
-      var assetData = await uploadFileToTally(attachedFile);
-      attachedFileUrl = (assetData && assetData.url) ? assetData.url : '';
-    } catch(errTally) {
-      console.warn('Téléversement fichier Tally:', errTally);
-    }
-  }
-
-  // 2. Envoi unique à Formspree contenant le message complet et structuré SANS doublons
-  msg.textContent = 'Envoi de votre demande en cours…';
-  msg.className = 'sending';
-
-  var structuredMsg = structureMessage();
-
-  var cleanFd = new FormData();
-  cleanFd.append('_subject', 'DEMANDE DE MISE À JOUR CV — ' + (nom || 'Client') + ' (' + latestInv + ')');
-  if (email) {
-    cleanFd.append('_replyto', email);
-  }
-  cleanFd.append('Demande', structuredMsg);
-
-  try {
-    var r = await fetch(document.getElementById('updateForm').action, {
-      method: 'POST',
-      body: cleanFd,
-      headers: { Accept: 'application/json' }
-    });
-    if (r.ok) {
-      msg.textContent = 'Demande envoyée avec succès.';
-      msg.className = 'success';
-      setTimeout(function() { showModal(); }, 600);
-    } else {
-      throw new Error();
-    }
-  } catch(err) {
-    msg.textContent = 'Échec de l\'envoi. Vérifiez votre connexion et réessayez.';
-    msg.className = 'error';
-  } finally {
-    btn.disabled = false;
-  }
-});
+function showToast(text) {
+  var t = document.getElementById('toast');
+  if (!t) return;
+  t.innerHTML = text;
+  t.classList.add('show');
+  setTimeout(function() { t.classList.remove('show'); }, 6000);
+}
 
 /* ── MODALE FACTURE ET PAIEMENT ── */
 function showModal() {
@@ -1541,45 +1862,52 @@ function showModal() {
   var base = window._currentBase || 2000;
   var suppl = window._currentSuppl || 0;
   var palier = window._currentPalier || 'Mise à jour CV';
-  var nom = document.getElementById('f_nom_prenom').value || '-';
-  var tel = document.getElementById('f_telephone').value || '-';
-  var email = document.getElementById('f_email').value || '';
+  var nom = (document.getElementById('f_nom_prenom') || {}).value || '-';
+  var tel = (document.getElementById('f_telephone') || {}).value || '-';
+  var email = (document.getElementById('f_email') || {}).value || '';
 
-  document.getElementById('m_name').textContent = nom;
-  document.getElementById('m_contact').textContent = tel + (email ? ' · ' + email : '');
-  document.getElementById('m_inv').textContent = 'Facture N° ' + (latestInv || genInv());
+  var mName = document.getElementById('m_name');
+  if (mName) mName.textContent = nom;
+  var mContact = document.getElementById('m_contact');
+  if (mContact) mContact.textContent = tel + (email ? ' · ' + email : '');
+  var mInv = document.getElementById('m_inv');
+  if (mInv) mInv.textContent = 'Facture N° ' + (latestInv || genInv());
 
   var detailEl = document.getElementById('m_detail_lines');
-  detailEl.innerHTML = '';
-  function mline(label, val, isTotal) {
-    var div = document.createElement('div');
-    div.className = 'modal-line';
-    if (isTotal) div.style.cssText = 'font-weight:700;font-size:0.92rem;border-top:1px solid var(--border);padding-top:8px;margin-top:2px;';
-    div.innerHTML = '<span>' + label + '</span><span' + (isTotal ? ' style="color:var(--orange)"' : '') + '>' + fmtFCFA(val) + '</span>';
-    detailEl.appendChild(div);
+  if (detailEl) {
+    detailEl.innerHTML = '';
+    function mline(label, val, isTotal) {
+      var div = document.createElement('div');
+      div.className = 'modal-line';
+      if (isTotal) div.style.cssText = 'font-weight:700;font-size:0.92rem;border-top:1px solid var(--border);padding-top:8px;margin-top:2px;';
+      div.innerHTML = '<span>' + label + '</span><span' + (isTotal ? ' style="color:var(--orange)"' : '') + '>' + fmtFCFA(val) + '</span>';
+      detailEl.appendChild(div);
+    }
+    mline(palier, base);
+    if (isPrem && suppl > 0) mline('Supplément urgence (×1,5)', suppl);
+    mline('Total à payer', total, true);
   }
-  mline(palier, base);
-  if (isPrem && suppl > 0) mline('Supplément urgence (×1,5)', suppl);
-  mline('Total à payer', total, true);
 
-  document.getElementById('payModal').classList.add('show');
+  var payModal = document.getElementById('payModal');
+  if (payModal) payModal.classList.add('show');
   document.body.style.overflow = 'hidden';
 }
 
 function closeModal() {
-  document.getElementById('payModal').classList.remove('show');
+  var payModal = document.getElementById('payModal');
+  if (payModal) payModal.classList.remove('show');
   document.body.style.overflow = '';
 }
 
 function downloadPDF() {
   try {
-    if (typeof window.jspdf === 'undefined') { alert('Bibliothèque PDF non chargée.'); return; }
+    if (typeof window.jspdf === 'undefined') { alert('Bibliothèque PDF non disponible.'); return; }
     var jsPDF = window.jspdf.jsPDF;
     var doc = new jsPDF();
     var pw = doc.internal.pageSize.width, m = 20, y = 30;
-    var cn = document.getElementById('m_name').textContent || 'N/A';
-    var cc = document.getElementById('m_contact').textContent || 'N/A';
-    var inv = document.getElementById('m_inv').textContent || 'N/A';
+    var cn = (document.getElementById('m_name') || {}).textContent || 'N/A';
+    var cc = (document.getElementById('m_contact') || {}).textContent || 'N/A';
+    var inv = (document.getElementById('m_inv') || {}).textContent || 'N/A';
     var isPrem = window._currentIsPrem || false;
     var total = window._currentTotal || (isPrem ? 3000 : 2000);
     var base = window._currentBase || 2000;
@@ -1624,63 +1952,61 @@ function downloadPDF() {
     var fn = cn.replace(/[^a-zA-Z0-9\-_]/g,'_').slice(0,40);
     doc.save('Facture_MAJ_CV_' + fn + '_' + new Date().toISOString().slice(0,10) + '.pdf');
 
-    var t = document.getElementById('toast');
-    t.innerHTML = 'Facture téléchargée. Envoyez-la par WhatsApp au <strong>+241 65 37 08 82</strong> pour confirmer.';
-    t.classList.add('show');
-    setTimeout(function() { t.classList.remove('show'); }, 7000);
+    showToast('Facture téléchargée. Envoyez-la par WhatsApp au <strong>+241 65 37 08 82</strong> pour confirmer.');
   } catch(err) { console.error(err); alert('Erreur lors de la génération du PDF.'); }
 }
 
-/* ── SCANNER ── */
-function openScanner()  { document.getElementById('scannerOverlay').classList.add('show'); document.body.style.overflow = 'hidden'; }
-function closeScanner() { document.getElementById('scannerOverlay').classList.remove('show'); document.body.style.overflow = ''; }
+/* ── SCANNER ASSISTANT IA ── */
+function openScanner()  { var s = document.getElementById('scannerOverlay'); if (s) s.classList.add('show'); document.body.style.overflow = 'hidden'; }
+function closeScanner() { var s = document.getElementById('scannerOverlay'); if (s) s.classList.remove('show'); document.body.style.overflow = ''; }
 
 var GROQ_MODEL     = 'qwen/qwen3.6-27b';
 var GROQ_PROXY_URL = '/.netlify/functions/groq-proxy';
 var selectedFile = null, extractedData = null;
 
-document.addEventListener('DOMContentLoaded', function() {
-  var dz = document.getElementById('dropZone');
-  var fi = document.getElementById('fileInputScanner');
-  if (fi) {
-    fi.addEventListener('change', function() { if (fi.files.length) handleFile(fi.files[0]); });
-  }
-  if (dz) {
-    dz.addEventListener('dragover', function(e) { e.preventDefault(); dz.classList.add('dragover'); });
-    dz.addEventListener('dragleave', function() { dz.classList.remove('dragover'); });
-    dz.addEventListener('drop', function(e) { e.preventDefault(); dz.classList.remove('dragover'); if (e.dataTransfer.files.length) handleFile(e.dataTransfer.files[0]); });
-  }
-});
-
 function handleFile(file) {
   if (file.size > 10*1024*1024) { scErr('Fichier trop volumineux (max 10 Mo).'); return; }
   if (!file.name.match(/\.(pdf|jpg|jpeg|png)$/i)) { scErr('Format non supporté. Utilisez PDF, JPG ou PNG.'); return; }
   selectedFile = file;
-  document.getElementById('fpName').textContent = file.name;
-  document.getElementById('fpSize').textContent = fmtB(file.size);
-  document.getElementById('filePreview').classList.add('show');
-  document.getElementById('scanInstructBox').style.display = 'block';
-  document.getElementById('btnAnalyze').classList.add('show');
-  document.getElementById('scError').classList.remove('show');
-  document.getElementById('scResults').classList.remove('show');
-  document.getElementById('apBox').classList.remove('show');
+  var fpName = document.getElementById('fpName');
+  if (fpName) { fpName.textContent = file.name; fpName.setAttribute('title', file.name); }
+  var fpSize = document.getElementById('fpSize');
+  if (fpSize) fpSize.textContent = fmtB(file.size);
+  var fp = document.getElementById('filePreview');
+  if (fp) fp.classList.add('show');
+  var sib = document.getElementById('scanInstructBox');
+  if (sib) sib.style.display = 'block';
+  var ba = document.getElementById('btnAnalyze');
+  if (ba) ba.classList.add('show');
+  var sce = document.getElementById('scError');
+  if (sce) sce.classList.remove('show');
+  var scr = document.getElementById('scResults');
+  if (scr) scr.classList.remove('show');
+  var ap = document.getElementById('apBox');
+  if (ap) ap.classList.remove('show');
 }
+
 function removeFile() {
   selectedFile = null;
-  document.getElementById('filePreview').classList.remove('show');
-  document.getElementById('btnAnalyze').classList.remove('show');
-  document.getElementById('scanInstructBox').style.display = 'none';
-  document.getElementById('fileInputScanner').value = '';
+  var fp = document.getElementById('filePreview'); if (fp) fp.classList.remove('show');
+  var ba = document.getElementById('btnAnalyze'); if (ba) ba.classList.remove('show');
+  var sib = document.getElementById('scanInstructBox'); if (sib) sib.style.display = 'none';
+  var fi = document.getElementById('fileInputScanner'); if (fi) fi.value = '';
 }
-function fmtB(b) { if (b<1024) return b+' o'; if (b<1048576) return (b/1024).toFixed(1)+' Ko'; return (b/1048576).toFixed(1)+' Mo'; }
-function scErr(msg) { var e = document.getElementById('scError'); e.textContent = msg; e.classList.add('show'); }
+
+function fmtB(b) { if (b<1024) return b+'\u00a0o'; if (b<1048576) return (b/1024).toFixed(1)+'\u00a0Ko'; return (b/1048576).toFixed(1)+'\u00a0Mo'; }
+function scErr(msg) { var e = document.getElementById('scError'); if (e) { e.textContent = msg; e.classList.add('show'); } }
+
 function setStep(n) {
-  document.getElementById('apBar').style.width = [0,25,50,75,95][n] + '%';
+  var b = document.getElementById('apBar');
+  if (b) b.style.width = [0,25,50,75,95][n] + '%';
   for (var i=1;i<=4;i++) {
     var ic=document.getElementById('ai'+i), lb=document.getElementById('al'+i);
-    ic.classList.remove('active','done'); lb.classList.remove('active','done');
-    if (i<n) { ic.classList.add('done'); ic.textContent='✓'; lb.classList.add('done'); }
-    else if (i===n) { ic.classList.add('active'); lb.classList.add('active'); }
+    if (ic && lb) {
+      ic.classList.remove('active','done'); lb.classList.remove('active','done');
+      if (i<n) { ic.classList.add('done'); ic.textContent='✓'; lb.classList.add('done'); }
+      else if (i===n) { ic.classList.add('active'); lb.classList.add('active'); }
+    }
   }
 }
 function setLbl(n,t) { var e=document.getElementById('al'+n); if(e) e.textContent=t; }
@@ -1690,21 +2016,23 @@ function loadScript(src) { return new Promise(function(res,rej){ if(document.que
 
 async function extractPDF(b64) {
   try {
-    if (typeof pdfjsLib==='undefined') { await loadScript('https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js'); window.pdfjsLib.GlobalWorkerOptions.workerSrc='https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js'; }
+    if (typeof window.pdfjsLib==='undefined') { await loadScript('https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js'); window.pdfjsLib.GlobalWorkerOptions.workerSrc='https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js'; }
     var bin=atob(b64), arr=new Uint8Array(bin.length);
     for(var i=0;i<bin.length;i++) arr[i]=bin.charCodeAt(i);
-    var pdf=await pdfjsLib.getDocument({data:arr}).promise, txt='';
+    var pdf=await window.pdfjsLib.getDocument({data:arr}).promise, txt='';
     for(var p=1;p<=Math.min(pdf.numPages,8);p++){ var page=await pdf.getPage(p); var c=await page.getTextContent(); var ly=null; c.items.forEach(function(it){ if(ly!==null&&Math.abs(it.transform[5]-ly)>5) txt+='\n'; txt+=it.str+' '; ly=it.transform[5]; }); txt+='\n'; }
     return txt.trim();
   } catch(e){ console.warn(e); return ''; }
 }
+
 async function runOCR(file) {
   try {
-    if(typeof Tesseract==='undefined') await loadScript('https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js');
-    var r=await Tesseract.recognize(file,'fra+eng',{logger:function(m){if(m.status==='recognizing text') setLbl(2,'OCR : '+Math.round((m.progress||0)*100)+'%…');}});
+    if(typeof window.Tesseract==='undefined') await loadScript('https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js');
+    var r=await window.Tesseract.recognize(file,'fra+eng',{logger:function(m){if(m.status==='recognizing text') setLbl(2,'OCR : '+Math.round((m.progress||0)*100)+'%…');}});
     return r.data.text||'';
   } catch(e){ console.warn(e); return ''; }
 }
+
 async function callGroq(text) {
   var instrEl  = document.querySelector('input[name="sc_instruct"]:checked');
   var instruct = instrEl ? instrEl.value : 'auto';
@@ -1735,13 +2063,15 @@ async function callGroq(text) {
   if (!Array.isArray(p.formations))  p.formations  = p.formations  ? [p.formations]  : [];
   return p;
 }
+
 async function analyzeDoc() {
   if(!selectedFile){ scErr('Veuillez sélectionner un fichier.'); return; }
-  document.getElementById('scError').classList.remove('show');
-  document.getElementById('scResults').classList.remove('show');
+  var se = document.getElementById('scError'); if (se) se.classList.remove('show');
+  var sr = document.getElementById('scResults'); if (sr) sr.classList.remove('show');
   var btn=document.getElementById('btnAnalyze');
   btn.disabled=true; btn.textContent='Analyse en cours…';
-  document.getElementById('apBox').classList.add('show'); setStep(1);
+  var ap = document.getElementById('apBox'); if (ap) ap.classList.add('show');
+  setStep(1);
   try {
     var isImg=selectedFile.name.match(/\.(jpg|jpeg|png)$/i), isPDF=selectedFile.name.match(/\.pdf$/i), txt='';
     var b64=await toB64(selectedFile); await delay(300); setStep(2);
@@ -1751,16 +2081,18 @@ async function analyzeDoc() {
     await delay(200); setStep(3);
     var ai=await callGroq(txt); await delay(300); setStep(4);
     extractedData=ai; await delay(400);
-    document.getElementById('apBar').style.width='100%';
-    for(var i=1;i<=4;i++){ var ic=document.getElementById('ai'+i); ic.classList.remove('active'); ic.classList.add('done'); ic.textContent='✓'; document.getElementById('al'+i).classList.remove('active'); document.getElementById('al'+i).classList.add('done'); }
+    var b = document.getElementById('apBar'); if (b) b.style.width='100%';
+    for(var i=1;i<=4;i++){ var ic=document.getElementById('ai'+i); if (ic) { ic.classList.remove('active'); ic.classList.add('done'); ic.textContent='✓'; } var al=document.getElementById('al'+i); if (al) { al.classList.remove('active'); al.classList.add('done'); } }
     showSR(ai);
-  } catch(err){ console.error(err); document.getElementById('apBox').classList.remove('show'); scErr(err.message||'Une erreur est survenue. Réessayez.'); }
+  } catch(err){ console.error(err); var ap2=document.getElementById('apBox'); if(ap2) ap2.classList.remove('show'); scErr(err.message||'Une erreur est survenue. Réessayez.'); }
   finally { btn.disabled=false; btn.textContent='Analyser le document'; }
 }
+
 function showSR(d) {
-  document.getElementById('apBox').classList.remove('show');
-  document.getElementById('scResults').classList.add('show');
-  var g = document.getElementById('srGrid'); g.innerHTML = '';
+  var ap = document.getElementById('apBox'); if (ap) ap.classList.remove('show');
+  var sr = document.getElementById('scResults'); if (sr) sr.classList.add('show');
+  var g = document.getElementById('srGrid'); if (!g) return;
+  g.innerHTML = '';
   function card(lbl, val, full) {
     var empty = !val || (typeof val === 'string' && !val.trim());
     var dsp = empty ? 'Non détecté' : val;
@@ -1791,6 +2123,9 @@ function showSR(d) {
   }
   if (d.infos_comp) card('Infos complémentaires', d.infos_comp, true);
 }
+
+function esc(s){ return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+
 function applyResults() {
   if (!extractedData) return;
   var d = extractedData;
@@ -1799,75 +2134,82 @@ function applyResults() {
   if (d.experiences && d.experiences.length) {
     var hasExp = d.experiences.some(function(e){ return e.poste || e.entreprise || e.dates; });
     if (hasExp) {
-      document.getElementById('rub_exp').checked = true; toggleSec('sec_exp', true);
-      var ef = document.getElementById('expContainer'); ef.innerHTML = ''; expCount = 0;
-      d.experiences.forEach(function(exp) {
-        if (!exp.poste && !exp.entreprise && !exp.dates) return;
-        expCount++;
-        var div = document.createElement('div'); div.className = 'exp-block'; div.id = 'exp_' + expCount;
-        div.innerHTML = (expCount > 1 ? '<button class="remove-btn" type="button" onclick="this.parentNode.remove()">Supprimer</button>' : '') +
-          '<div class="block-title">Expérience ' + expCount + '</div>' +
-          '<div class="row2"><div class="field"><label>Période</label><input type="text" name="exp_' + expCount + '_dates" value="' + esc(exp.dates || '') + '" style="border-color:#094102"></div>' +
-          '<div class="field"><label>Poste occupé</label><input type="text" name="exp_' + expCount + '_poste" value="' + esc(exp.poste || '') + '" style="border-color:#094102"></div></div>' +
-          '<div class="field"><label>Entreprise et lieu</label><input type="text" name="exp_' + expCount + '_entreprise" value="' + esc(exp.entreprise || '') + '" style="border-color:#094102"></div>' +
-          '<div class="field"><label>Tâches principales</label><textarea name="exp_' + expCount + '_taches" rows="3" style="border-color:#094102">' + esc(exp.taches || '') + '</textarea></div>';
-        ef.appendChild(div);
-      });
-      if (expCount === 0) { expCount = 1; ef.innerHTML = '<div class="exp-block" id="exp_1"><div class="block-title">Expérience 1</div><div class="row2"><div class="field"><label>Période</label><input type="text" name="exp_1_dates"></div><div class="field"><label>Poste</label><input type="text" name="exp_1_poste"></div></div><div class="field"><label>Entreprise</label><input type="text" name="exp_1_entreprise"></div><div class="field"><label>Tâches</label><textarea name="exp_1_taches" rows="3"></textarea></div></div>'; }
+      var rExp = document.getElementById('rub_exp'); if (rExp) rExp.checked = true;
+      toggleSec('sec_exp', true);
+      var ef = document.getElementById('expContainer'); if (ef) {
+        ef.innerHTML = ''; expCount = 0;
+        d.experiences.forEach(function(exp) {
+          if (!exp.poste && !exp.entreprise && !exp.dates) return;
+          expCount++;
+          var div = document.createElement('div'); div.className = 'exp-block'; div.id = 'exp_' + expCount;
+          div.innerHTML = (expCount > 1 ? '<button class="remove-btn" type="button" onclick="this.parentNode.remove()">Supprimer</button>' : '') +
+            '<div class="block-title">Expérience ' + expCount + '</div>' +
+            '<div class="row2"><div class="field"><label>Période</label><input type="text" name="exp_' + expCount + '_dates" value="' + esc(exp.dates || '') + '" style="border-color:#094102"></div>' +
+            '<div class="field"><label>Poste occupé</label><input type="text" name="exp_' + expCount + '_poste" value="' + esc(exp.poste || '') + '" style="border-color:#094102"></div></div>' +
+            '<div class="field"><label>Entreprise et lieu</label><input type="text" name="exp_' + expCount + '_entreprise" value="' + esc(exp.entreprise || '') + '" style="border-color:#094102"></div>' +
+            '<div class="field"><label>Tâches principales</label><textarea name="exp_' + expCount + '_taches" rows="3" style="border-color:#094102">' + esc(exp.taches || '') + '</textarea></div>';
+          ef.appendChild(div);
+        });
+        if (expCount === 0) { expCount = 1; ef.innerHTML = '<div class="exp-block" id="exp_1"><div class="block-title">Expérience 1</div><div class="row2"><div class="field"><label>Période</label><input type="text" name="exp_1_dates"></div><div class="field"><label>Poste</label><input type="text" name="exp_1_poste"></div></div><div class="field"><label>Entreprise</label><input type="text" name="exp_1_entreprise"></div><div class="field"><label>Tâches</label><textarea name="exp_1_taches" rows="3"></textarea></div></div>'; }
+      }
     }
   }
   if (d.formations && d.formations.length) {
     var hasFm = d.formations.some(function(f){ return f.diplome || f.etablissement; });
     if (hasFm) {
-      document.getElementById('rub_form').checked = true; toggleSec('sec_form', true);
-      var ff = document.getElementById('fmContainer'); ff.innerHTML = ''; fmCount = 0;
-      d.formations.forEach(function(fm) {
-        if (!fm.diplome && !fm.etablissement) return;
-        fmCount++;
-        var div = document.createElement('div'); div.className = 'fm-block'; div.id = 'fm_' + fmCount;
-        div.innerHTML = (fmCount > 1 ? '<button class="remove-btn" type="button" onclick="this.parentNode.remove()">Supprimer</button>' : '') +
-          '<div class="block-title">Formation ' + fmCount + '</div>' +
-          '<div class="row2"><div class="field"><label>Diplôme / Formation</label><input type="text" name="fm_' + fmCount + '_diplome" value="' + esc(fm.diplome || '') + '" style="border-color:#094102"></div>' +
-          '<div class="field"><label>Filière / Série</label><input type="text" name="fm_' + fmCount + '_serie" value="' + esc(fm.serie || '') + '" style="border-color:#094102"></div></div>' +
-          '<div class="row2"><div class="field"><label>Année et lieu</label><input type="text" name="fm_' + fmCount + '_date" value="' + esc(fm.date || '') + '" style="border-color:#094102"></div>' +
-          '<div class="field"><label>Établissement</label><input type="text" name="fm_' + fmCount + '_etab" value="' + esc(fm.etablissement || '') + '" style="border-color:#094102"></div></div>';
-        ff.appendChild(div);
-      });
-      if (fmCount === 0) { fmCount = 1; ff.innerHTML = '<div class="fm-block" id="fm_1"><div class="block-title">Formation 1</div><div class="row2"><div class="field"><label>Diplôme</label><input type="text" name="fm_1_diplome"></div><div class="field"><label>Filière</label><input type="text" name="fm_1_serie"></div></div><div class="row2"><div class="field"><label>Date</label><input type="text" name="fm_1_date"></div><div class="field"><label>Établissement</label><input type="text" name="fm_1_etab"></div></div></div>'; }
+      var rForm = document.getElementById('rub_form'); if (rForm) rForm.checked = true;
+      toggleSec('sec_form', true);
+      var ff = document.getElementById('fmContainer'); if (ff) {
+        ff.innerHTML = ''; fmCount = 0;
+        d.formations.forEach(function(fm) {
+          if (!fm.diplome && !fm.etablissement) return;
+          fmCount++;
+          var div = document.createElement('div'); div.className = 'fm-block'; div.id = 'fm_' + fmCount;
+          div.innerHTML = (fmCount > 1 ? '<button class="remove-btn" type="button" onclick="this.parentNode.remove()">Supprimer</button>' : '') +
+            '<div class="block-title">Formation ' + fmCount + '</div>' +
+            '<div class="row2"><div class="field"><label>Diplôme / Formation</label><input type="text" name="fm_' + fmCount + '_diplome" value="' + esc(fm.diplome || '') + '" style="border-color:#094102"></div>' +
+            '<div class="field"><label>Filière / Série</label><input type="text" name="fm_' + fmCount + '_serie" value="' + esc(fm.serie || '') + '" style="border-color:#094102"></div></div>' +
+            '<div class="row2"><div class="field"><label>Année et lieu</label><input type="text" name="fm_' + fmCount + '_date" value="' + esc(fm.date || '') + '" style="border-color:#094102"></div>' +
+            '<div class="field"><label>Établissement</label><input type="text" name="fm_' + fmCount + '_etab" value="' + esc(fm.etablissement || '') + '" style="border-color:#094102"></div></div>';
+          ff.appendChild(div);
+        });
+        if (fmCount === 0) { fmCount = 1; ff.innerHTML = '<div class="fm-block" id="fm_1"><div class="block-title">Formation 1</div><div class="row2"><div class="field"><label>Diplôme</label><input type="text" name="fm_1_diplome"></div><div class="field"><label>Filière</label><input type="text" name="fm_1_serie"></div></div><div class="row2"><div class="field"><label>Date</label><input type="text" name="fm_1_date"></div><div class="field"><label>Établissement</label><input type="text" name="fm_1_etab"></div></div></div>'; }
+      }
     }
   }
-  if (d.langues || d.logiciels || d.domaines) { document.getElementById('rub_comp').checked = true; toggleSec('sec_comp', true); sfId('f_langues', d.langues); sfId('f_logiciels', d.logiciels); sfId('f_domaines', d.domaines); }
+  if (d.langues || d.logiciels || d.domaines) { var rc = document.getElementById('rub_comp'); if (rc) rc.checked = true; toggleSec('sec_comp', true); sfId('f_maj_langues', d.langues); sfId('f_maj_logiciels', d.logiciels); sfId('f_maj_domaines', d.domaines); }
   if (d.nom_prenom || d.telephone || d.email || d.adresse) {
-    document.getElementById('rub_infos').checked = true; toggleSec('sec_infos', true);
+    var ri = document.getElementById('rub_infos'); if (ri) ri.checked = true; toggleSec('sec_infos', true);
     sfIfEmpty('f_nom_prenom', d.nom_prenom);
     sfIfEmpty('f_telephone', d.telephone);
     sfIfEmpty('f_email', d.email);
     sfIfEmpty('f_maj_telephone', d.telephone);
     sfIfEmpty('f_maj_email', d.email);
-    sfId('f_adresse', d.adresse);
+    sfId('f_maj_adresse', d.adresse);
   }
-  if (d.infos_comp && d.infos_comp.trim()) { document.getElementById('rub_autres').checked = true; toggleSec('sec_autres', true); sfId('f_infos_comp', d.infos_comp); }
+  if (d.infos_comp && d.infos_comp.trim()) { var ra = document.getElementById('rub_autres'); if (ra) ra.checked = true; toggleSec('sec_autres', true); sfId('f_maj_infos_comp', d.infos_comp); }
   
-  if (selectedFile && typeof handleNativeDocSelect === 'function') {
+  if (selectedFile) {
     handleNativeDocSelect([selectedFile]);
   }
 
-  document.getElementById('prefillBanner').classList.add('show');
+  var pb = document.getElementById('prefillBanner');
+  if (pb) pb.classList.add('show');
   closeScanner();
   window.scrollTo({ top: 0, behavior: 'smooth' });
   calcPrice();
 }
+
 function resetScanner() {
   selectedFile = null; extractedData = null;
   ['filePreview','btnAnalyze','scResults','apBox','scError'].forEach(function(id){ var el=document.getElementById(id); if(el) el.classList.remove('show'); });
-  document.getElementById('fileInputScanner').value = '';
-  document.getElementById('scanInstructBox').style.display = 'none';
-  document.getElementById('apBar').style.width = '0%';
+  var fi = document.getElementById('fileInputScanner'); if (fi) fi.value = '';
+  var sib = document.getElementById('scanInstructBox'); if (sib) sib.style.display = 'none';
+  var apBar = document.getElementById('apBar'); if (apBar) apBar.style.width = '0%';
   var defRadio = document.querySelector('input[name="sc_instruct"][value="auto"]');
   if (defRadio) defRadio.checked = true;
-  for (var i=1;i<=4;i++) { var ic=document.getElementById('ai'+i); ic.classList.remove('active','done'); ic.textContent=i; document.getElementById('al'+i).classList.remove('active','done'); }
+  for (var i=1;i<=4;i++) { var ic=document.getElementById('ai'+i); if (ic) { ic.classList.remove('active','done'); ic.textContent=i; } var al=document.getElementById('al'+i); if (al) { al.classList.remove('active','done'); } }
 }
-function esc(s){ return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
 
 /* ── GESTION DU RETOUR DEPUIS LE CATALOGUE DE CV ── */
 function saveFormDraft() {
@@ -1917,7 +2259,6 @@ function initCatalogueReturn() {
   var foundModel = null;
   var hasRenouveauIntent = false;
 
-  // 1. Détection via les paramètres de l'URL
   try {
     var sp = new URLSearchParams(window.location.search);
     var candidateKeys = ['modele', 'nouveau_modele', 'model', 'ref', 'cv', 'choix', 'nouveau', 'formule', 'code', 'id', 'selected'];
@@ -1935,7 +2276,6 @@ function initCatalogueReturn() {
     }
   } catch(e) {}
 
-  // 2. Détection via le stockage temporaire (sessionStorage / localStorage)
   if (!foundModel) {
     try {
       var stKeys = ['selectedModel', 'nouveau_modele', 'modele_cv', 'modele', 'cv_modele', 'selected_cv'];
@@ -1952,7 +2292,6 @@ function initCatalogueReturn() {
     } catch(e) {}
   }
 
-  // 3. Activation automatique du renouveau et injection du modèle choisi
   if (hasRenouveauIntent || foundModel !== null) {
     var toggle = document.getElementById('toggleRenouveau');
     if (toggle) {
@@ -1969,7 +2308,6 @@ function initCatalogueReturn() {
 
     calcPrice();
 
-    // Défilement fluide vers la carte de renouveau pour rassurer le client
     setTimeout(function() {
       var card = document.getElementById('renouveauCard');
       if (card) {
@@ -1979,20 +2317,117 @@ function initCatalogueReturn() {
   }
 }
 
-// Enregistrement des données avant départ vers le catalogue
-var catBtn = document.getElementById('catBtnRenouveau');
-if (catBtn) {
-  catBtn.addEventListener('click', function() {
-    saveFormDraft();
-  });
-}
-
-// Exécution automatique à l'ouverture de la page
-if (document.readyState === 'loading') {
-  document.addEventListener('DOMContentLoaded', initCatalogueReturn);
-} else {
+// Initialisations événementielles globales
+document.addEventListener('DOMContentLoaded', function() {
+  initDropzone();
   initCatalogueReturn();
-}
+
+  var catBtn = document.getElementById('catBtnRenouveau');
+  if (catBtn) {
+    catBtn.addEventListener('click', function() {
+      saveFormDraft();
+    });
+  }
+
+  var dz = document.getElementById('dropZone');
+  var fi = document.getElementById('fileInputScanner');
+  if (fi) {
+    fi.addEventListener('change', function() { if (fi.files.length) handleFile(fi.files[0]); });
+  }
+  if (dz) {
+    dz.addEventListener('dragover', function(e) { e.preventDefault(); dz.classList.add('dragover'); });
+    dz.addEventListener('dragleave', function() { dz.classList.remove('dragover'); });
+    dz.addEventListener('drop', function(e) { e.preventDefault(); dz.classList.remove('dragover'); if (e.dataTransfer.files.length) handleFile(e.dataTransfer.files[0]); });
+  }
+
+  var updateForm = document.getElementById('updateForm');
+  if (updateForm) {
+    updateForm.addEventListener('submit', async function(e) {
+      e.preventDefault();
+      var rubs = document.querySelectorAll('input[name="rubriques[]"]:checked');
+      var urg = document.querySelector('input[name="urgence"]:checked');
+      var msg = document.getElementById('form-message');
+
+      if (!renouveauActif && !rubs.length) {
+        if (msg) {
+          msg.textContent = 'Veuillez sélectionner au moins une rubrique à mettre à jour, ou activer le renouveau de modèle.';
+          msg.className = 'error';
+        }
+        return;
+      }
+      if (!urg) {
+        if (msg) {
+          msg.textContent = 'Veuillez choisir un délai de livraison.';
+          msg.className = 'error';
+        }
+        return;
+      }
+
+      calcPrice();
+      var btn = document.getElementById('submitBtn');
+      if (btn) btn.disabled = true;
+
+      var nom = ((document.getElementById('f_nom_prenom') || {}).value || '').trim();
+      var tel = ((document.getElementById('f_telephone') || {}).value || '').trim();
+      var email = ((document.getElementById('f_email') || {}).value || '').trim();
+
+      latestInv = genInv();
+      var invH = document.getElementById('invHidden');
+      if (invH) invH.value = latestInv;
+
+      if (attachedFile) {
+        if (msg) {
+          msg.textContent = 'Téléversement sécurisé du document joint…';
+          msg.className = 'sending';
+        }
+        try {
+          var assetData = await uploadFileToTally(attachedFile);
+          attachedFileUrl = (assetData && assetData.url) ? assetData.url : '';
+        } catch(errTally) {
+          console.warn('Téléversement fichier Tally:', errTally);
+        }
+      }
+
+      if (msg) {
+        msg.textContent = 'Envoi de votre demande en cours…';
+        msg.className = 'sending';
+      }
+
+      var structuredMsg = structureMessage();
+
+      var cleanFd = new FormData();
+      cleanFd.append('_subject', 'DEMANDE DE MISE À JOUR CV — ' + (nom || 'Client') + ' (' + latestInv + ')');
+      if (email) {
+        cleanFd.append('_replyto', email);
+      }
+      cleanFd.append('Demande', structuredMsg);
+
+      try {
+        var r = await fetch(updateForm.action, {
+          method: 'POST',
+          body: cleanFd,
+          headers: { Accept: 'application/json' }
+        });
+        if (r.ok) {
+          if (msg) {
+            msg.textContent = 'Demande envoyée avec succès.';
+            msg.className = 'success';
+          }
+          setTimeout(function() { showModal(); }, 600);
+        } else {
+          throw new Error();
+        }
+      } catch(err) {
+        if (msg) {
+          msg.textContent = 'Échec de l\'envoi. Vérifiez votre connexion et réessayez.';
+          msg.className = 'error';
+        }
+      } finally {
+        if (btn) btn.disabled = false;
+      }
+    });
+  }
+});
 </script>
 </body>
 </html>
