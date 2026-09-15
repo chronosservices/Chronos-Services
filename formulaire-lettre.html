@@ -4,7 +4,11 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Demande de Lettre de Motivation</title>
+    <meta name="description" content="Formulaire de demande de lettre de motivation avec import de CV sécurisé et personnalisé transmis via Tally." />
+    <meta property="og:title" content="Demande de Lettre de Motivation" />
+    <meta property="og:description" content="Formulaire de demande de lettre de motivation avec import de CV sécurisé et personnalisé transmis via Tally." />
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://tally.so/widgets/embed.js" async></script>
     <style>
         * { box-sizing: border-box; margin: 0; padding: 0; }
 
@@ -57,17 +61,49 @@
         /* Steps Nav */
         .steps-nav { background: #f8f9fa; padding: 20px 40px; border-bottom: 1px solid #e9ecef; }
         .steps-container { display: flex; justify-content: space-between; align-items: center; position: relative; max-width: 800px; margin: 0 auto; }
-        .step-line { position: absolute; top: 20px; left: 0; right: 0; height: 2px; background: #e9ecef; z-index: 1; }
-        .step-line-progress { position: absolute; top: 20px; left: 0; height: 2px; background: linear-gradient(90deg, #094102, #FF5700); z-index: 2; transition: width 0.5s cubic-bezier(0.4, 0, 0.2, 1); }
+        .step-line { position: absolute; top: 20px; left: 20px; right: 20px; height: 3px; background: #e2e8f0; z-index: 1; border-radius: 2px; }
+        .step-line-progress { position: absolute; top: 0; left: 0; height: 100%; width: 0%; background: linear-gradient(90deg, #094102, #FF5700); z-index: 2; transition: width 0.45s cubic-bezier(0.4, 0, 0.2, 1); border-radius: 2px; }
 
-        .step-nav { display: flex; flex-direction: column; align-items: center; text-align: center; position: relative; z-index: 3; cursor: pointer; transition: all 0.3s ease; }
-        .step-number { width: 40px; height: 40px; border-radius: 50%; background: #e9ecef; color: #6c757d; display: flex; align-items: center; justify-content: center; font-weight: 600; font-size: 0.9rem; margin-bottom: 8px; transition: all 0.3s ease; position: relative; }
-        .step-nav.active .step-number { background: #FF5700; color: white; transform: scale(1.1); box-shadow: 0 4px 12px rgba(255,87,0,0.3); }
-        .step-nav.completed .step-number { background: #094102; color: white; }
-        .step-nav.completed .step-number::after { content: '✓'; position: absolute; font-size: 14px; }
-        .step-label { font-size: 0.85rem; font-weight: 600; color: #6c757d; margin-bottom: 2px; transition: color 0.3s ease; }
-        .step-nav.active .step-label, .step-nav.completed .step-label { color: #2f3640; }
-        .step-desc { font-size: 0.75rem; color: #adb5bd; max-width: 80px; line-height: 1.2; }
+        .step-nav { display: flex; flex-direction: column; align-items: center; text-align: center; position: relative; z-index: 3; cursor: pointer; transition: all 0.25s ease; user-select: none; padding: 4px; }
+        .step-number { width: 40px; height: 40px; border-radius: 50%; background: #ffffff; border: 2px solid #cbd5e1; color: #64748b; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 0.9rem; margin-bottom: 8px; transition: all 0.25s ease; position: relative; }
+        .step-nav.active .step-number { background: #FF5700; border-color: #FF5700; color: #ffffff; transform: scale(1.1); box-shadow: 0 4px 12px rgba(255,87,0,0.3); }
+        .step-nav.completed .step-number { background: #094102; border-color: #094102; color: transparent; }
+        .step-nav.completed .step-number::after { content: '✓'; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); font-size: 15px; color: #ffffff; font-weight: 700; line-height: 1; }
+        .step-label { font-size: 0.85rem; font-weight: 600; color: #64748b; margin-bottom: 2px; transition: color 0.3s ease; white-space: nowrap; }
+        .step-nav.active .step-label, .step-nav.completed .step-label { color: #1e293b; font-weight: 700; }
+        .step-desc { font-size: 0.74rem; color: #94a3b8; max-width: 90px; line-height: 1.25; }
+
+        /* Indicateur d'étape dédié mobile */
+        .mobile-step-summary {
+            display: none;
+            margin-top: 10px;
+            padding-top: 8px;
+            border-top: 1px dashed #e2e8f0;
+            text-align: center;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+        .mobile-step-badge {
+            background: #FF5700;
+            color: #ffffff;
+            font-size: 0.72rem;
+            font-weight: 700;
+            padding: 3px 9px;
+            border-radius: 12px;
+            letter-spacing: 0.03em;
+            white-space: nowrap;
+            box-shadow: 0 1px 3px rgba(255, 87, 0, 0.2);
+            flex-shrink: 0;
+        }
+        .mobile-step-name {
+            font-size: 0.86rem;
+            font-weight: 700;
+            color: #1e293b;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
 
         /* Form content */
         .form-content { padding: 40px; min-height: 500px; }
@@ -136,7 +172,7 @@
             white-space: nowrap; background: white; padding: 0 4px;
         }
 
-        /* OFFER SCANNER TRIGGER — optional shortcut inside the block */
+        /* OFFER SCANNER TRIGGER */
         .offer-scanner-trigger {
             margin-top: 18px;
             background: #f8f9fa;
@@ -155,127 +191,213 @@
             font-family: inherit; white-space: nowrap; transition: all 0.2s; flex-shrink: 0;
         }
         .offer-scan-btn:hover { background: #e64a00; transform: translateY(-1px); }
-        .offer-scan-btn svg { width: 15px; height: 15px; fill: white; }
 
-        /* ═══════════════════════════════
-           COMPÉTENCES — DUAL COLUMN C+D
-        ═══════════════════════════════ */
-        .skills-dual-grid {
+        /* ════════════════════════════════════════════════════
+           ÉTAPE 4 — COMPÉTENCES & QUALITÉS (DESIGN RESPONSIVE & ÉLÉGANT)
+        ════════════════════════════════════════════════════ */
+        .skills-compact-grid {
             display: grid;
             grid-template-columns: 1fr 1fr;
-            gap: 16px;
-            margin-bottom: 20px;
+            gap: 14px;
+            margin-bottom: 18px;
         }
-        .skills-col {
-            background: #f8f9fa;
-            border: 1.5px solid #e9ecef;
+
+        .skills-compact-box {
+            background: #ffffff;
+            border: 1.5px solid #e2e8f0;
             border-radius: 12px;
-            padding: 16px;
+            padding: 12px 14px;
             display: flex;
             flex-direction: column;
-            gap: 12px;
-            transition: border-color 0.2s;
+            gap: 9px;
+            transition: border-color 0.2s, box-shadow 0.2s;
         }
-        .skills-col:focus-within { border-color: #FF5700; }
-
-        .skills-col-header {
-            display: flex; align-items: center; gap: 10px;
+        .skills-compact-box:focus-within {
+            border-color: #094102;
+            box-shadow: 0 2px 8px rgba(9, 65, 2, 0.05);
         }
-        .skills-col-icon { font-size: 1.3rem; flex-shrink: 0; }
-        .skills-col-title {
-            font-size: 0.88rem; font-weight: 700; color: #2f3640; margin-bottom: 2px;
-        }
-        .skills-col-count {
-            font-size: 0.72rem; color: #868e96; margin-bottom: 8px;
-        }
-        /* Examples hint row — non-interactive, just guidance */
-        .skills-examples-hint {
-            display: flex; flex-wrap: wrap; align-items: center; gap: 5px;
-            margin-top: 6px;
-        }
-        .sk-example-label {
-            font-size: 0.7rem; color: #adb5bd; font-style: italic;
-        }
-        .sk-example {
-            font-size: 0.72rem; color: #adb5bd;
-            background: #f1f3f5; border: 1px solid #e9ecef;
-            padding: 2px 8px; border-radius: 10px;
-            pointer-events: none; user-select: none;
+        .skills-compact-box.box-tech:focus-within {
+            border-color: #FF5700;
+            box-shadow: 0 2px 8px rgba(255, 87, 0, 0.05);
         }
 
-        /* Selected tags zone inside column */
-        .skills-selected-zone {
-            min-height: 38px;
-            display: flex; flex-wrap: wrap; gap: 6px; align-items: center;
-            padding: 8px 10px;
-            background: white;
-            border: 1px dashed #dee2e6;
+        .skills-compact-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 8px;
+        }
+        .skills-compact-title {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            min-width: 0;
+        }
+        .skills-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            display: inline-block;
+            flex-shrink: 0;
+        }
+        .skills-dot.green { background: #094102; }
+        .skills-dot.orange { background: #FF5700; }
+
+        .skills-title-main {
+            font-size: 0.88rem;
+            font-weight: 700;
+            color: #1e293b;
+            line-height: 1.25;
+            white-space: nowrap;
+        }
+        .skills-title-sub {
+            font-size: 0.72rem;
+            font-weight: 500;
+            color: #64748b;
+            line-height: 1.2;
+            white-space: nowrap;
+        }
+
+        .skills-compact-count {
+            font-size: 0.72rem;
+            font-weight: 600;
+            color: #094102;
+            background: #ecfdf5;
+            border: 1px solid #bbf7d0;
+            padding: 2px 8px;
+            border-radius: 12px;
+            white-space: nowrap;
+            flex-shrink: 0;
+        }
+        .skills-compact-box.box-tech .skills-compact-count {
+            color: #c2410c;
+            background: #fff7ed;
+            border-color: #fed7aa;
+        }
+
+        /* Barre de saisie intégrée et fusionnée */
+        .skills-input-group {
+            display: flex;
+            align-items: stretch;
+            border: 1.5px solid #cbd5e1;
             border-radius: 8px;
-            transition: border-color 0.2s;
+            background: #ffffff;
+            overflow: hidden;
+            transition: border-color 0.2s, box-shadow 0.2s;
         }
-        .skills-selected-zone:not(:has(.sk-selected-tag)) { border-style: dashed; }
-        .skills-empty-hint {
-            font-size: 0.72rem; color: #adb5bd; font-style: italic;
+        .skills-input-group:focus-within {
+            border-color: #094102;
+            box-shadow: 0 0 0 2px rgba(9, 65, 2, 0.08);
         }
-        .sk-selected-tag {
-            background: #094102; color: white;
-            padding: 4px 10px; border-radius: 14px;
-            font-size: 0.75rem; font-weight: 500;
-            display: flex; align-items: center; gap: 5px;
-            animation: tagPop 0.2s ease;
+        .skills-compact-box.box-tech .skills-input-group:focus-within {
+            border-color: #FF5700;
+            box-shadow: 0 0 0 2px rgba(255, 87, 0, 0.08);
         }
-        @keyframes tagPop {
-            from { opacity:0; transform: scale(0.8); }
-            to   { opacity:1; transform: scale(1); }
+
+        .skills-input-field {
+            flex: 1;
+            min-width: 0;
+            padding: 8px 10px;
+            border: none;
+            background: transparent;
+            font-size: 0.83rem;
+            font-family: inherit;
+            color: #1e293b;
+            outline: none;
         }
-        .sk-selected-tag.from-offer {
-            background: linear-gradient(90deg, #094102, #FF5700);
+        .skills-input-field::placeholder {
+            color: #94a3b8;
+            font-size: 0.8rem;
         }
-        .sk-tag-remove {
-            cursor: pointer; opacity: 0.65; font-size: 0.8rem; line-height: 1;
+
+        .skills-btn-add {
+            background: #094102;
+            color: #ffffff;
+            border: none;
+            padding: 0 13px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            cursor: pointer;
+            white-space: nowrap;
+            flex-shrink: 0;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 4px;
+            transition: background 0.15s, opacity 0.15s;
+        }
+        .skills-btn-add:hover {
+            background: #062e01;
+        }
+        .skills-btn-add:active {
+            opacity: 0.85;
+        }
+        .skills-btn-add.btn-orange {
+            background: #FF5700;
+        }
+        .skills-btn-add.btn-orange:hover {
+            background: #e04d00;
+        }
+
+        /* Liste des puces ajoutées */
+        .skills-tags-wrap {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+            margin-top: 2px;
+        }
+        .skills-tags-wrap:empty {
+            display: none;
+            margin-top: 0;
+        }
+
+        .skill-tag-pill {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            padding: 3px 9px;
+            background: #094102;
+            color: #ffffff;
+            border-radius: 12px;
+            font-size: 0.77rem;
+            font-weight: 500;
+            line-height: 1.3;
+            animation: tagPopIn 0.18s cubic-bezier(0.16, 1, 0.3, 1);
+            box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+            max-width: 100%;
+            word-break: break-word;
+        }
+        .skill-tag-pill.tag-orange {
+            background: #FF5700;
+        }
+        @keyframes tagPopIn {
+            from { opacity: 0; transform: scale(0.85); }
+            to { opacity: 1; transform: scale(1); }
+        }
+        .skill-tag-remove {
+            cursor: pointer;
+            opacity: 0.75;
+            font-size: 0.95rem;
+            line-height: 1;
+            padding: 0 1px;
             transition: opacity 0.15s;
         }
-        .sk-tag-remove:hover { opacity: 1; }
+        .skill-tag-remove:hover {
+            opacity: 1;
+        }
 
-        /* sk-tag kept minimal — only used for scanner-injected hidden pills */
-        .sk-tag { display: none; }
-        .sk-tag.active { display: none; }
-
-        /* Custom input row */
-        .skills-custom-row {
-            display: flex; gap: 6px; margin-top: 2px;
-        }
-        .skills-custom-input {
-            flex: 1; padding: 8px 10px;
-            border: 1.5px solid #dee2e6; border-radius: 6px;
-            font-size: 0.82rem; font-family: inherit;
-            background: white; transition: border-color 0.2s;
-        }
-        .skills-custom-input:focus {
-            outline: none; border-color: #FF5700;
-            box-shadow: 0 0 0 2px rgba(255,87,0,0.08);
-        }
-        .skills-custom-btn {
-            background: #FF5700; color: white; border: none;
-            border-radius: 6px; padding: 8px 12px;
-            font-size: 1rem; font-weight: 700; cursor: pointer;
-            transition: background 0.2s; flex-shrink: 0;
-        }
-        .skills-custom-btn:hover { background: #e64a00; }
-
-        /* Context block — Option D */
+        /* Context block */
         .skills-context-block {
             background: #fffbf5;
             border: 1.5px solid #ffe5cc;
             border-radius: 12px;
             padding: 18px 20px;
-            margin-bottom: 4px;
+            margin-bottom: 24px;
         }
         .skills-context-header {
             display: flex; gap: 12px; align-items: flex-start;
             margin-bottom: 12px;
         }
-        .skills-context-icon { font-size: 1.25rem; flex-shrink: 0; margin-top: 1px; }
         .skills-context-title {
             font-size: 0.88rem; font-weight: 700; color: #2f3640;
             display: flex; align-items: center; gap: 8px; flex-wrap: wrap;
@@ -298,11 +420,344 @@
             box-shadow: 0 0 0 3px rgba(255,87,0,0.08) !important;
         }
 
-        @media (max-width: 600px) {
-            .skills-dual-grid { grid-template-columns: 1fr; }
+        /* ═══════════════════════════════
+           ÉTAPE 4 — IMPORT DU CV SÉCURISÉ TALLY
+        ═══════════════════════════════ */
+        .cv-upload-card {
+            background: #fbfcfd;
+            border: 1.5px solid #e2e8f0;
+            border-radius: 14px;
+            padding: 22px;
+            margin-top: 20px;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+        .cv-upload-card:hover {
+            border-color: #cbd5e1;
+            box-shadow: 0 4px 16px rgba(0,0,0,0.03);
+        }
+        .cv-card-header {
+            display: flex;
+            align-items: flex-start;
+            gap: 14px;
+            margin-bottom: 16px;
+        }
+        .cv-card-icon {
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(135deg, #eef7ee, #e1f0e2);
+            border: 1px solid #c2e2c4;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            color: #094102;
+            flex-shrink: 0;
+        }
+        .cv-card-header-text { flex: 1; min-width: 0; }
+        .cv-card-title {
+            font-size: 0.95rem;
+            font-weight: 700;
+            color: #1e293b;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+        .cv-card-subtitle {
+            font-size: 0.8rem;
+            color: #64748b;
+            margin-top: 2px;
+            line-height: 1.4;
         }
 
-        /* Urgence */
+        .cv-interaction-zone {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        /* Dropzone épurée */
+        .cv-dropzone {
+            border: 1.5px dashed #cbd5e1;
+            background: #fafbfc;
+            border-radius: 10px;
+            padding: 20px 16px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            position: relative;
+        }
+        .cv-dropzone:hover, .cv-dropzone.dragover {
+            border-color: #094102;
+            background: #f0fdf4;
+            transform: translateY(-1px);
+        }
+        .cv-drop-icon {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 6px;
+            color: #64748b;
+        }
+        .cv-drop-main-text {
+            font-size: 0.88rem;
+            font-weight: 600;
+            color: #1e293b;
+            margin-bottom: 3px;
+        }
+        .cv-drop-main-text span {
+            color: #094102;
+            text-decoration: underline;
+        }
+        .cv-drop-formats {
+            font-size: 0.74rem;
+            color: #94a3b8;
+        }
+
+        #cvFileInput { display: none; }
+
+        /* Progress bar */
+        .cv-upload-progress {
+            display: none;
+            background: white;
+            border: 1.5px solid #e2e8f0;
+            border-radius: 12px;
+            padding: 20px;
+            flex-direction: column;
+            gap: 10px;
+            animation: fadeInSlide 0.3s ease;
+        }
+        .cv-upload-progress.show { display: flex; }
+        .cv-prog-bar-wrap {
+            background: #f1f5f9;
+            height: 6px;
+            border-radius: 3px;
+            overflow: hidden;
+        }
+        .cv-prog-bar {
+            height: 100%;
+            background: linear-gradient(90deg, #094102, #FF5700);
+            width: 0%;
+            transition: width 0.3s ease;
+        }
+        .cv-prog-text {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.8rem;
+            color: #64748b;
+        }
+
+        /* Attached CV Card */
+        .cv-attached-card {
+            display: none;
+            background: #ffffff;
+            border: 1px solid #e2e8f0;
+            border-radius: 10px;
+            padding: 14px 16px;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+            animation: tagPop 0.25s ease;
+            box-sizing: border-box;
+            width: 100%;
+        }
+        .cv-attached-card.show { display: flex; }
+        .cv-att-left {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            min-width: 0;
+            flex: 1;
+        }
+        .cv-att-icon {
+            width: 38px;
+            height: 38px;
+            background: #f0fdf4;
+            color: #15803d;
+            border: 1px solid #bbf7d0;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            font-weight: 700;
+            font-size: 0.72rem;
+        }
+        .cv-att-details {
+            min-width: 0;
+            flex: 1;
+        }
+        .cv-att-filename {
+            font-size: 0.88rem;
+            font-weight: 600;
+            color: #0f172a;
+            word-break: break-word;
+            overflow-wrap: anywhere;
+            line-height: 1.35;
+            display: block;
+            margin-bottom: 2px;
+        }
+        .cv-att-meta {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 0.75rem;
+            color: #64748b;
+            flex-wrap: wrap;
+        }
+        .cv-att-dot {
+            color: #cbd5e1;
+        }
+        .cv-att-status {
+            color: #15803d;
+            font-weight: 500;
+            display: inline-flex;
+            align-items: center;
+            gap: 3px;
+        }
+        .cv-att-actions {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex-shrink: 0;
+        }
+        .cv-btn-change {
+            background: #ffffff;
+            border: 1px solid #e2e8f0;
+            color: #475569;
+            font-size: 0.78rem;
+            font-weight: 500;
+            padding: 6px 12px;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.15s ease;
+            white-space: nowrap;
+            font-family: inherit;
+        }
+        .cv-btn-change:hover {
+            border-color: #cbd5e1;
+            background: #f8fafc;
+            color: #0f172a;
+        }
+        .cv-btn-remove {
+            background: transparent;
+            border: 1px solid transparent;
+            color: #94a3b8;
+            width: 30px;
+            height: 30px;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.15s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0;
+        }
+        .cv-btn-remove:hover {
+            background: #fef2f2;
+            color: #dc2626;
+            border-color: #fee2e2;
+        }
+
+        .cv-security-note {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 0.74rem;
+            color: #64748b;
+            margin-top: 10px;
+            line-height: 1.35;
+        }
+        .cv-security-note svg {
+            width: 13px;
+            height: 13px;
+            fill: #094102;
+            flex-shrink: 0;
+        }
+
+        @media (max-width: 600px) {
+            .skills-compact-grid { grid-template-columns: 1fr; gap: 10px; margin-bottom: 14px; }
+            .skills-compact-box { padding: 10px 12px; border-radius: 10px; gap: 7px; }
+            .skills-title-main { font-size: 0.84rem; }
+            .skills-title-sub { font-size: 0.7rem; }
+            .skills-compact-count { font-size: 0.68rem; padding: 2px 7px; }
+            .skills-input-field { padding: 7px 8px; font-size: 0.8rem; }
+            .skills-input-field::placeholder { font-size: 0.77rem; }
+            .skills-btn-add { padding: 0 10px; font-size: 0.76rem; }
+            .cv-upload-card { padding: 14px 12px; margin-top: 16px; border-radius: 12px; }
+            .cv-card-header { gap: 10px; margin-bottom: 12px; }
+            .cv-card-icon { width: 34px; height: 34px; font-size: 1.05rem; border-radius: 8px; }
+            .cv-card-title { font-size: 0.88rem; }
+            .cv-card-subtitle { font-size: 0.75rem; }
+            .cv-dropzone { padding: 16px 10px; }
+            .cv-drop-icon { font-size: 1.5rem; margin-bottom: 4px; }
+            .cv-drop-main-text { font-size: 0.82rem; }
+            .cv-drop-formats { font-size: 0.7rem; }
+            .cv-attached-card {
+                flex-direction: column;
+                align-items: stretch;
+                padding: 12px;
+                gap: 10px;
+                width: 100%;
+                max-width: 100%;
+            }
+            .cv-att-left {
+                width: 100%;
+                max-width: 100%;
+                min-width: 0;
+                display: flex;
+                align-items: center;
+                gap: 10px;
+            }
+            .cv-att-icon { width: 36px; height: 36px; font-size: 0.65rem; }
+            .cv-att-details { min-width: 0; max-width: calc(100% - 46px); flex: 1; }
+            .cv-att-filename {
+                font-size: 0.86rem;
+                font-weight: 600;
+                color: #0f172a;
+                white-space: normal;
+                word-break: break-word;
+                overflow-wrap: anywhere;
+                line-height: 1.35;
+                display: block;
+                margin-bottom: 2px;
+            }
+            .cv-att-meta { font-size: 0.72rem; gap: 6px; }
+            .cv-att-actions {
+                width: 100%;
+                display: flex;
+                align-items: center;
+                gap: 8px;
+                padding-top: 8px;
+                border-top: 1px solid #f1f5f9;
+            }
+            .cv-btn-change {
+                flex: 1;
+                text-align: center;
+                padding: 7px 10px;
+                font-size: 0.78rem;
+                min-height: 34px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+            }
+            .cv-btn-remove {
+                min-width: 34px;
+                min-height: 34px;
+                background: #f8fafc;
+                border: 1px solid #e2e8f0;
+                border-radius: 6px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+            }
+            .cv-security-note { font-size: 0.7rem; }
+        }
+
+        /* Urgence & Prix */
         .urgence-info { background: #fff3cd; border: 1px solid #ffeaa7; border-radius: 6px; padding: 12px; margin-top: 8px; font-size: 0.85rem; color: #856404; display: none; }
         .price-display { background: linear-gradient(135deg, #094102, #FF5700); color: white; padding: 20px; border-radius: 12px; margin: 20px 0; text-align: center; display: none; }
         .price-display.show { display: block; }
@@ -310,9 +765,7 @@
         .price-amount { font-size: 2rem; font-weight: 700; margin-bottom: 5px; }
         .price-details { font-size: 0.9rem; opacity: 0.9; }
 
-        /* ═══════════════════════════════
-           ÉTAPE 5 — TIMELINE (Option B)
-        ═══════════════════════════════ */
+        /* Timeline Étape 5 */
         .timeline-card {
             background: white;
             border: 1.5px solid #e9ecef;
@@ -321,7 +774,6 @@
             margin-bottom: 20px;
         }
 
-        /* One section = one timeline row */
         .tl-section {
             display: flex;
             gap: 16px;
@@ -329,7 +781,6 @@
         }
         .tl-section--last { padding-bottom: 8px; }
 
-        /* Left column: dot + vertical line */
         .tl-aside {
             display: flex;
             flex-direction: column;
@@ -355,7 +806,6 @@
             margin-top: 6px;
         }
 
-        /* Right column: content */
         .tl-body { flex: 1; padding-top: 5px; min-width: 0; }
 
         .tl-title {
@@ -387,7 +837,6 @@
             line-height: 1.4;
         }
 
-        /* Skill tags inside timeline */
         .tl-tags {
             display: flex; flex-wrap: wrap; gap: 4px; margin-top: 3px;
         }
@@ -397,14 +846,12 @@
         }
         .tl-tag--tech { background: #EAF3DE; border-color: #c3e6cb; color: #3B6D11; }
 
-        /* Context quote */
         .tl-ctx {
             font-size: 0.82rem; color: #57606f; font-style: italic;
             line-height: 1.55; border-left: 2px solid #e9ecef;
             padding-left: 8px; margin-top: 2px;
         }
 
-        /* Price pill */
         .tl-price-pill {
             display: inline-block;
             margin-top: 10px;
@@ -414,20 +861,19 @@
             letter-spacing: 0.02em;
         }
 
-        /* ── Responsive ── */
         @media (max-width: 520px) {
-            .timeline-card { padding: 16px 14px 6px; }
-            .tl-section { gap: 12px; }
+            .form-content { padding: 16px 12px; }
+            .timeline-card { padding: 16px 12px 6px; }
+            .tl-section { gap: 10px; }
             .tl-dot { width: 28px; height: 28px; font-size: 0.7rem; }
             .tl-aside { width: 28px; }
             .tl-rows { grid-template-columns: 1fr; }
             .tl-row--full { grid-column: 1; }
             .tl-title { font-size: 0.85rem; }
             .tl-val { font-size: 0.82rem; }
+            .cv-upload-card { padding: 12px 10px; }
+            .cv-attached-card { padding: 10px; }
         }
-
-        .important-notice { background: linear-gradient(135deg, #fff3cd, #ffeaa7); border: 1px solid #ffeaa7; border-radius: 8px; padding: 16px; margin: 20px 0; color: #856404; }
-        .important-notice h4 { margin-bottom: 8px; display: flex; align-items: center; gap: 6px; }
 
         /* Navigation */
         .form-navigation { display: flex; justify-content: space-between; align-items: center; margin-top: 40px; padding: 20px 0; border-top: 1px solid #e9ecef; }
@@ -493,182 +939,62 @@
         .payment-beneficiary strong { color: #2f3640; }
         .recipient-info { text-align: center; padding: 8px 12px; background: #f0fff0; border-radius: 6px; margin-bottom: 14px; color: #094102; font-size: 0.8rem; border: 1px solid #c3e6cb; }
         .confirmation-section { text-align: center; }
-        .confirmation-btn { background: #094102; color: white; padding: 12px 30px; border: none; border-radius: 8px; font-size: 1rem; font-weight: 600; cursor: pointer; transition: all 0.3s; }
-        .confirmation-btn:hover { background: #0a4f02; transform: translateY(-1px); }
         .pdf-btn { background: linear-gradient(90deg, #094102, #ff5700); color: white; padding: 12px 30px; border: none; border-radius: 8px; font-size: 1rem; font-weight: 600; cursor: pointer; transition: all 0.3s; margin-bottom: 10px; display: block; width: 100%; }
-
-        /* ═══════════════════════════════════
-           OFFER SCANNER OVERLAY
-           ═══════════════════════════════════ */
-        #offerScannerOverlay {
-            display: none; position: fixed; inset: 0; z-index: 3000;
-            background: rgba(5, 22, 4, 0.96);
-            align-items: center; justify-content: center; padding: 20px;
-        }
-        #offerScannerOverlay.show { display: flex; }
-
-        .offer-scanner-panel {
-            width: 100%; max-width: 580px; background: #0f1f0e;
-            border: 1px solid rgba(255,255,255,0.08); border-radius: 12px;
-            padding: 28px; display: flex; flex-direction: column; gap: 20px;
-            max-height: calc(100vh - 40px); overflow-y: auto;
-        }
-
-        .offer-scanner-header {
-            display: flex; align-items: flex-start; justify-content: space-between; gap: 12px;
-            padding-bottom: 16px; border-bottom: 1px solid rgba(255,255,255,0.07);
-        }
-        .offer-scanner-title { font-size: 1.05rem; font-weight: 600; color: #fff; letter-spacing: 0.01em; }
-        .offer-scanner-sub { font-size: 0.76rem; color: rgba(255,255,255,0.4); margin-top: 3px; }
-        .offer-scanner-badge {
-            display: inline-flex; align-items: center; gap: 5px; margin-top: 6px;
-            background: rgba(255,87,0,0.15); border: 1px solid rgba(255,87,0,0.3);
-            color: #FF5700; font-size: 0.68rem; font-weight: 600; padding: 2px 8px; border-radius: 4px;
-            text-transform: uppercase; letter-spacing: 0.06em;
-        }
-        .offer-scanner-close {
-            background: none; border: 1px solid rgba(255,255,255,0.15); border-radius: 6px;
-            width: 32px; height: 32px; cursor: pointer; color: rgba(255,255,255,0.6);
-            font-size: 1rem; display: flex; align-items: center; justify-content: center;
-            flex-shrink: 0; transition: all 0.2s;
-        }
-        .offer-scanner-close:hover { background: rgba(255,255,255,0.08); color: #fff; }
-
-        .offer-drop-zone {
-            border: 1.5px dashed rgba(255,255,255,0.2); border-radius: 8px; padding: 28px 20px;
-            display: flex; flex-direction: column; align-items: center; gap: 10px;
-            background: rgba(255,255,255,0.02); cursor: pointer; transition: all 0.2s; text-align: center;
-        }
-        .offer-drop-zone:hover, .offer-drop-zone.dragover { border-color: rgba(255,87,0,0.6); background: rgba(255,87,0,0.04); }
-        .offer-drop-icon { font-size: 2rem; opacity: 0.6; }
-        .offer-drop-text { color: rgba(255,255,255,0.75); font-size: 0.88rem; font-weight: 500; }
-        .offer-drop-sub { color: rgba(255,255,255,0.35); font-size: 0.73rem; }
-        .offer-type-badges { display: flex; gap: 6px; flex-wrap: wrap; justify-content: center; }
-        .offer-type-badge { background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.12); border-radius: 4px; padding: 2px 10px; font-size: 0.68rem; color: rgba(255,255,255,0.5); font-weight: 500; }
-
-        #offerFileInput { display: none; }
-
-        .offer-file-preview {
-            background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.08);
-            border-radius: 8px; padding: 12px 14px; align-items: center; gap: 12px; display: none;
-        }
-        .offer-file-preview.show { display: flex; }
-        .offer-file-icon { width: 36px; height: 36px; background: rgba(255,87,0,0.2); border: 1px solid rgba(255,87,0,0.4); border-radius: 6px; display: flex; align-items: center; justify-content: center; font-size: 0.75rem; font-weight: 700; color: #FF5700; flex-shrink: 0; }
-        .offer-file-info { flex: 1; min-width: 0; }
-        .offer-file-name { color: #fff; font-weight: 500; font-size: 0.85rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-        .offer-file-size { color: rgba(255,255,255,0.35); font-size: 0.72rem; margin-top: 2px; }
-        .offer-file-remove { background: none; border: none; color: rgba(255,255,255,0.3); font-size: 1rem; cursor: pointer; padding: 4px; flex-shrink: 0; transition: color 0.2s; }
-        .offer-file-remove:hover { color: rgba(255,87,0,0.8); }
-
-        #btnOfferAnalyze {
-            background: #FF5700; color: #fff; border: none; border-radius: 6px;
-            padding: 12px 20px; font-size: 0.9rem; font-weight: 600; cursor: pointer;
-            width: 100%; transition: background 0.2s; display: none; font-family: inherit;
-        }
-        #btnOfferAnalyze.show { display: block; }
-        #btnOfferAnalyze:hover:not(:disabled) { background: #e64a00; }
-        #btnOfferAnalyze:disabled { opacity: 0.5; cursor: not-allowed; }
-
-        /* Analysis progress */
-        .offer-analysis-progress { display: none; flex-direction: column; gap: 10px; }
-        .offer-analysis-progress.show { display: flex; }
-        .offer-analysis-bar-wrap { background: rgba(255,255,255,0.08); border-radius: 2px; height: 3px; overflow: hidden; }
-        .offer-analysis-bar { height: 100%; border-radius: 2px; background: linear-gradient(90deg, #094102, #FF5700); transition: width 0.5s ease; width: 0%; }
-        .offer-analysis-step { display: flex; align-items: center; gap: 10px; }
-        .offer-step-icon { width: 22px; height: 22px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 0.65rem; font-weight: 700; flex-shrink: 0; background: rgba(255,255,255,0.08); color: rgba(255,255,255,0.3); transition: all 0.3s; }
-        .offer-step-icon.active { background: #FF5700; color: #fff; }
-        .offer-step-icon.done { background: #094102; color: #fff; }
-        .offer-step-label { color: rgba(255,255,255,0.4); font-size: 0.79rem; transition: color 0.3s; }
-        .offer-step-label.active { color: rgba(255,255,255,0.9); font-weight: 500; }
-        .offer-step-label.done { color: rgba(255,255,255,0.25); }
-
-        .offer-scan-error { border-left: 3px solid #ff5700; background: rgba(255,87,0,0.06); border-radius: 0 6px 6px 0; padding: 10px 12px; color: rgba(255,200,180,0.9); font-size: 0.8rem; display: none; line-height: 1.5; }
-        .offer-scan-error.show { display: block; }
-
-        /* Results */
-        .offer-scan-results { display: none; flex-direction: column; gap: 16px; }
-        .offer-scan-results.show { display: flex; }
-        .offer-results-title { color: rgba(255,255,255,0.5); font-size: 0.68rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.1em; }
-
-        .offer-results-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
-        .offer-result-card { background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.07); border-radius: 6px; padding: 10px 12px; }
-        .offer-result-card.full { grid-column: 1 / -1; }
-        .offer-result-card-label { font-size: 0.62rem; text-transform: uppercase; letter-spacing: 0.08em; color: rgba(255,255,255,0.35); font-weight: 600; margin-bottom: 3px; }
-        .offer-result-card-check { color: #4caf50; font-size: 0.7rem; margin-left: 4px; }
-        .offer-result-card-value { font-size: 0.8rem; color: rgba(255,255,255,0.8); font-weight: 400; line-height: 1.4; }
-        .offer-result-card-value.empty { color: rgba(255,255,255,0.2); font-style: italic; }
-
-        /* Editable fields in results */
-        .offer-editable-section {
-            background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08);
-            border-radius: 8px; padding: 16px;
-        }
-        .offer-editable-title { color: rgba(255,255,255,0.6); font-size: 0.72rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 12px; display: flex; align-items: center; gap: 6px; }
-        .offer-editable-title::before { content: '✏️'; }
-        .offer-edit-row { display: flex; flex-direction: column; gap: 4px; margin-bottom: 12px; }
-        .offer-edit-row:last-child { margin-bottom: 0; }
-        .offer-edit-label { font-size: 0.72rem; color: rgba(255,255,255,0.4); font-weight: 500; }
-        .offer-edit-input {
-            background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.12);
-            border-radius: 5px; padding: 8px 10px; font-size: 0.82rem; color: #fff;
-            font-family: inherit; width: 100%; transition: border-color 0.2s;
-        }
-        .offer-edit-input:focus { outline: none; border-color: rgba(255,87,0,0.5); background: rgba(255,255,255,0.08); }
-        .offer-edit-textarea { resize: vertical; min-height: 70px; }
-
-        .offer-skills-preview { display: flex; flex-wrap: wrap; gap: 5px; margin-top: 8px; }
-        .offer-skill-chip {
-            background: rgba(255,87,0,0.15); border: 1px solid rgba(255,87,0,0.3);
-            color: rgba(255,255,255,0.8); font-size: 0.72rem; padding: 3px 10px; border-radius: 12px;
-            cursor: pointer; transition: all 0.2s; display: flex; align-items: center; gap: 4px;
-        }
-        .offer-skill-chip:hover { background: rgba(255,87,0,0.3); }
-        .offer-skill-chip.selected { background: rgba(9,65,2,0.4); border-color: rgba(9,65,2,0.6); }
-        .offer-skill-chip.selected::before { content: '✓ '; font-size: 0.65rem; color: #4caf50; }
-
-        .offer-apply-btn {
-            background: #094102; color: #fff; border: none; border-radius: 6px;
-            padding: 13px 20px; font-size: 0.9rem; font-weight: 600; cursor: pointer;
-            width: 100%; transition: background 0.2s; font-family: inherit;
-        }
-        .offer-apply-btn:hover { background: #0a5c03; }
-        .offer-retry-btn {
-            background: none; color: rgba(255,255,255,0.45); border: 1px solid rgba(255,255,255,0.12);
-            border-radius: 6px; padding: 10px 20px; font-size: 0.82rem; font-weight: 500;
-            cursor: pointer; width: 100%; transition: all 0.2s; font-family: inherit;
-        }
-        .offer-retry-btn:hover { color: rgba(255,255,255,0.75); border-color: rgba(255,255,255,0.25); }
-
-        .offer-scan-tip { border-top: 1px solid rgba(255,255,255,0.06); padding-top: 14px; }
-        .offer-scan-tip-text { color: rgba(255,255,255,0.3); font-size: 0.73rem; line-height: 1.6; }
 
         /* Responsive */
         @media (max-width: 768px) {
             .container { padding: 10px; }
-            .header { padding: 30px 20px 15px; }
-            .header h1 { font-size: 1.6rem; }
-            .steps-nav { padding: 15px 20px; }
-            .step-line, .step-line-progress { display: none; }
+            .header { padding: 25px 18px 15px; }
+            .header h1 { font-size: 1.5rem; }
+            .steps-nav { padding: 16px 20px 14px; }
+            .step-desc { display: none !important; }
             .form-content { padding: 20px; }
             .form-row { grid-template-columns: 1fr; gap: 15px; }
-            .info-grid { grid-template-columns: 1fr; }
             .form-navigation { flex-direction: column; gap: 15px; }
             .navigation-left, .navigation-right { width: 100%; justify-content: center; }
             .navigation-right { order: -1; }
             .btn { flex: 1; max-width: 200px; }
-            .offer-results-grid { grid-template-columns: 1fr; }
-            .offer-scanner-panel { padding: 20px 16px; border-radius: 10px; }
-            #offerScannerOverlay { padding: 12px; }
+        }
+
+        @media (max-width: 600px) {
+            .steps-nav {
+                padding: 12px 14px 10px;
+                background: #f8fafc;
+            }
+            .step-line {
+                top: 15px;
+                left: 15px;
+                right: 15px;
+                height: 3px;
+                background: #e2e8f0;
+            }
+            .step-nav {
+                flex: 0 0 auto;
+                padding: 2px;
+            }
+            .step-number {
+                width: 30px;
+                height: 30px;
+                font-size: 0.8rem;
+                margin-bottom: 0;
+            }
+            .step-nav.active .step-number {
+                transform: scale(1.15);
+            }
+            .step-nav.completed .step-number::after {
+                font-size: 13px;
+            }
+            .step-label {
+                display: none !important;
+            }
+            .step-desc {
+                display: none !important;
+            }
+            .mobile-step-summary {
+                display: flex;
+            }
         }
     </style>
-  <link rel="manifest" href="/manifest.json">
-  <meta name="theme-color" content="#FF5700">
-  <meta name="apple-mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-  <link rel="apple-touch-icon" href="/Logo/apple-touch-icon.png">
-  <script src="/js/pwa-register.js" defer></script>
-  <script src="/js/pwa-install-banner.js" defer></script>
-  <script src="/js/pwa-update-banner.js" defer></script>
 </head>
 <body>
 <div class="container">
@@ -686,17 +1012,22 @@
         <!-- Steps nav -->
         <div class="steps-nav">
             <div class="steps-container">
-                <div class="step-line"></div>
-                <div class="step-line-progress" id="stepLineProgress"></div>
-                <div class="step-nav active" data-step="1"><div class="step-number">1</div><div class="step-label">Vos infos</div><div class="step-desc">Informations personnelles</div></div>
-                <div class="step-nav" data-step="2"><div class="step-number">2</div><div class="step-label">Entreprise</div><div class="step-desc">Informations sur l'entreprise</div></div>
-                <div class="step-nav" data-step="3"><div class="step-number">3</div><div class="step-label">Détails</div><div class="step-desc">Informations complémentaires</div></div>
-                <div class="step-nav" data-step="4"><div class="step-number">4</div><div class="step-label">Compétences</div><div class="step-desc">Vos qualités et compétences</div></div>
-                <div class="step-nav" data-step="5"><div class="step-number">5</div><div class="step-label">Vérification</div><div class="step-desc">Aperçu de votre demande</div></div>
+                <div class="step-line">
+                    <div class="step-line-progress" id="stepLineProgress"></div>
+                </div>
+                <div class="step-nav active" data-step="1" title="Étape 1 : Vos infos"><div class="step-number">1</div><div class="step-label">Vos infos</div><div class="step-desc">Informations personnelles</div></div>
+                <div class="step-nav" data-step="2" title="Étape 2 : Entreprise"><div class="step-number">2</div><div class="step-label">Entreprise</div><div class="step-desc">Informations sur l'entreprise</div></div>
+                <div class="step-nav" data-step="3" title="Étape 3 : Détails"><div class="step-number">3</div><div class="step-label">Détails</div><div class="step-desc">Informations complémentaires</div></div>
+                <div class="step-nav" data-step="4" title="Étape 4 : Compétences"><div class="step-number">4</div><div class="step-label">Compétences</div><div class="step-desc">Vos qualités et compétences</div></div>
+                <div class="step-nav" data-step="5" title="Étape 5 : Vérification"><div class="step-number">5</div><div class="step-label">Vérification</div><div class="step-desc">Aperçu de votre demande</div></div>
+            </div>
+            <div class="mobile-step-summary" id="mobileStepSummary" aria-live="polite">
+                <span class="mobile-step-badge" id="mobileStepBadge">Étape 1 / 5</span>
+                <span class="mobile-step-name" id="mobileStepName">Vos informations personnelles</span>
             </div>
         </div>
 
-        <form id="motivationForm" action="https://formcarry.com/s/_DyNAYw7D4E" method="POST">
+        <form id="motivationForm" action="https://formcarry.com/s/_DyNAYw7D4E" method="POST" enctype="multipart/form-data">
             <div class="form-content">
 
                 <!-- ── ÉTAPE 1 : Infos personnelles ── -->
@@ -764,7 +1095,7 @@
                     <div class="step-header">
                         <div><div class="step-title">Informations complémentaires</div><div class="step-subtitle">Détails de votre demande</div></div>
                     </div>
-                    <!-- Prefill banner — appears after scanner applies results -->
+                    <!-- Prefill banner -->
                     <div class="prefill-banner" id="prefillBanner">
                         <div class="prefill-banner-title">✦ Pré-remplissage automatique effectué</div>
                         <div class="prefill-banner-sub">Les champs ci-dessous ont été remplis à partir de l'offre scannée. Vérifiez et corrigez si nécessaire.</div>
@@ -791,15 +1122,11 @@
                         </div>
                     </div>
 
-                    <!-- ── BLOC OFFRE : champs manuels + scanner optionnel ── -->
+                    <!-- ── BLOC OFFRE : champs manuels ── -->
                     <div class="offer-extra-block" id="offerExtraBlock">
-
-                        <!-- Divider -->
                         <div class="offer-block-divider">
                             <span>Informations sur l'offre</span>
                         </div>
-
-                        <!-- Champs manuels — toujours visibles dès que "Réponse à une offre" est sélectionné -->
                         <div class="form-row">
                             <div class="form-group">
                                 <label class="form-label">Référence / titre de l'offre</label>
@@ -822,7 +1149,7 @@
                         <div class="form-row">
                             <div class="form-group">
                                 <label class="form-label">Compétences mentionnées dans l'offre</label>
-                                <textarea name="competences_offre" id="f_competences_offre" class="form-textarea" style="min-height:80px" placeholder="Ex: Maîtrise d'Excel, gestion d'équipe, rigueur...&#10;Copiez-collez directement depuis le message WhatsApp ou l'annonce."></textarea>
+                                <textarea name="competences_offre" id="f_competences_offre" class="form-textarea" style="min-height:80px" placeholder="Ex: Maîtrise d'Excel, gestion d'équipe, rigueur..."></textarea>
                             </div>
                             <div class="form-group">
                                 <label class="form-label">Date limite de candidature</label>
@@ -839,23 +1166,7 @@
                                 </select>
                             </div>
                         </div>
-
-                        <!-- Scanner optionnel — raccourci IA -->
-                        <div class="offer-scanner-trigger" id="offerScannerTrigger">
-                            <div class="offer-scanner-inner">
-                                <div class="offer-scanner-text">
-                                    <strong>
-                                        <svg viewBox="0 0 24 24" style="width:14px;height:14px;fill:#FF5700;vertical-align:middle;margin-right:4px"><path d="M4 6h16v2H4zm0 10h16v2H4zm-2-5h2v2H2zm20 0h2v2h-2zm-4-5h2v8h-2zm-12 0h2v8H6z"/></svg>
-                                        Vous avez un PDF ou une photo de l'offre ?
-                                    </strong>
-                                    <span>Le scanner IA peut pré-remplir les champs ci-dessus automatiquement. Optionnel — vous pouvez aussi tout saisir manuellement.</span>
-                                </div>
-                                <button type="button" class="offer-scan-btn" onclick="openOfferScanner()">
-                                    Scanner l'offre
-                                </button>
-                            </div>
-                        </div>
-                    </div><!-- /offer-extra-block -->
+                    </div>
 
                     <div class="form-row single" style="margin-top:20px;">
                         <div class="form-group">
@@ -879,55 +1190,60 @@
                     </div>
                 </div>
 
-                <!-- ── ÉTAPE 4 : Compétences ── -->
+                <!-- ── ÉTAPE 4 : Compétences & Import du CV ── -->
                 <div class="step-content" data-step="4">
                     <div class="step-header">
-                        <div><div class="step-title">Vos compétences</div><div class="step-subtitle">Décrivez vos atouts pour ce poste</div></div>
+                        <div><div class="step-title">Vos compétences & atouts</div><div class="step-subtitle">Sélectionnez vos qualités et compétences clés pour valoriser votre profil</div></div>
                     </div>
 
-                    <div class="skills-dual-grid">
-
-                        <!-- COL 1 : Qualités personnelles -->
-                        <div class="skills-col">
-                            <div class="skills-col-title">Qualités personnelles</div>
-                            <div class="skills-col-count"><span id="softCount">0</span> saisie(s)</div>
-                            <div class="skills-selected-zone" id="softSelected">
-                                <span class="skills-empty-hint">Vos qualités apparaîtront ici</span>
+                    <!-- Compétences & Qualités (Design compact & sans allongement) -->
+                    <div class="skills-compact-grid">
+                        <!-- COL 1 : Qualités humaines (Savoir-être) -->
+                        <div class="skills-compact-box">
+                            <div class="skills-compact-header">
+                                <div class="skills-compact-title">
+                                    <span class="skills-dot green"></span>
+                                    <div>
+                                        <div class="skills-title-main">Qualités humaines</div>
+                                        <div class="skills-title-sub">Savoir-être & comportement</div>
+                                    </div>
+                                </div>
+                                <span class="skills-compact-count" id="softCountBadge">0 saisie</span>
                             </div>
-                            <div class="skills-custom-row">
-                                <input type="text" class="skills-custom-input" id="softCustomInput"
-                                    placeholder="Ex : Rigueur, Autonomie...">
-                                <button type="button" class="skills-custom-btn" onclick="addCustomSkillCol('soft')">+</button>
+                            <div class="skills-input-group">
+                                <input type="text" id="softCustomInput" class="skills-input-field"
+                                    placeholder="Ex : Rigueur, autonomie..." maxlength="50">
+                                <button type="button" class="skills-btn-add" onclick="addCustomSkillCol('soft')">
+                                    <span>+ Ajouter</span>
+                                </button>
                             </div>
-                            <div class="skills-examples-hint" id="softSuggestions">
-                                <span class="sk-example-label">Exemples :</span>
-                                <span class="sk-example">Rigueur</span>
-                                <span class="sk-example">Sens de l'initiative</span>
-                            </div>
+                            <div class="skills-tags-wrap" id="softTagsWrap"></div>
                         </div>
 
-                        <!-- COL 2 : Compétences techniques -->
-                        <div class="skills-col">
-                            <div class="skills-col-title">Compétences techniques</div>
-                            <div class="skills-col-count"><span id="techCount">0</span> saisie(s)</div>
-                            <div class="skills-selected-zone" id="techSelected">
-                                <span class="skills-empty-hint">Vos compétences apparaîtront ici</span>
+                        <!-- COL 2 : Compétences techniques (Savoir-faire) -->
+                        <div class="skills-compact-box box-tech">
+                            <div class="skills-compact-header">
+                                <div class="skills-compact-title">
+                                    <span class="skills-dot orange"></span>
+                                    <div>
+                                        <div class="skills-title-main">Compétences techniques</div>
+                                        <div class="skills-title-sub">Savoir-faire & métier</div>
+                                    </div>
+                                </div>
+                                <span class="skills-compact-count" id="techCountBadge">0 saisie</span>
                             </div>
-                            <div class="skills-custom-row">
-                                <input type="text" class="skills-custom-input" id="techCustomInput"
-                                    placeholder="Ex : Excel, Gestion de projet...">
-                                <button type="button" class="skills-custom-btn" onclick="addCustomSkillCol('tech')">+</button>
+                            <div class="skills-input-group">
+                                <input type="text" id="techCustomInput" class="skills-input-field"
+                                    placeholder="Ex : Excel, gestion projet..." maxlength="50">
+                                <button type="button" class="skills-btn-add btn-orange" onclick="addCustomSkillCol('tech')">
+                                    <span>+ Ajouter</span>
+                                </button>
                             </div>
-                            <div class="skills-examples-hint" id="techSuggestions">
-                                <span class="sk-example-label">Exemples :</span>
-                                <span class="sk-example">Maîtrise d'Excel</span>
-                                <span class="sk-example">Gestion de projet</span>
-                            </div>
+                            <div class="skills-tags-wrap" id="techTagsWrap"></div>
                         </div>
+                    </div>
 
-                    </div><!-- /skills-dual-grid -->
-
-                    <!-- Champ contexte D -->
+                    <!-- Champ contexte -->
                     <div class="skills-context-block">
                         <div class="skills-context-header">
                             <div>
@@ -941,24 +1257,92 @@
 
                     <input type="hidden" name="competences" id="competencesHidden">
 
-                    <div class="important-notice" style="margin-top:20px;">
-                        <h4>ℹ️ Informations importantes</h4>
-                        <p>N'oubliez pas de nous faire parvenir votre CV actuel (par email ou autre moyen) afin que nous puissions compléter les informations nécessaires à la rédaction de votre lettre de motivation.</p>
+                    <!-- ════════════════════════════════════════════════════
+                         IMPORT DU CV (Téléversement sécurisé Tally)
+                    ════════════════════════════════════════════════════ -->
+                    <div class="cv-upload-card" id="cvUploadCard">
+                        <div class="cv-card-header">
+                            <div class="cv-card-icon">📎</div>
+                            <div class="cv-card-header-text">
+                                <div class="cv-card-title">Importer votre CV</div>
+                                <div class="cv-card-subtitle">Format PDF, DOC ou DOCX (max 10 Mo)</div>
+                            </div>
+                        </div>
+
+                        <div class="cv-interaction-zone">
+                            <!-- 1. Dropzone épurée -->
+                            <div class="cv-dropzone" id="cvDropzone" onclick="triggerCvUploadChoice()">
+                                <div class="cv-drop-icon">
+                                    <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+                                </div>
+                                <div class="cv-drop-main-text">
+                                    Glissez votre CV ici ou <span>cliquez pour choisir</span>
+                                </div>
+                                <div class="cv-drop-formats">Formats acceptés : PDF, DOC, DOCX (max 10 Mo)</div>
+                            </div>
+                            <input type="file" id="cvFileInput" name="cv_fichier" accept=".pdf,.doc,.docx" style="display:none;">
+
+                            <!-- 2. Barre de progression en temps réel -->
+                            <div class="cv-upload-progress" id="cvUploadProgress">
+                                <div class="cv-prog-text">
+                                    <span id="cvProgStatus">Sécurisation et téléversement du document...</span>
+                                    <span id="cvProgPercent">0%</span>
+                                </div>
+                                <div class="cv-prog-bar-wrap">
+                                    <div class="cv-prog-bar" id="cvProgBar"></div>
+                                </div>
+                            </div>
+
+                            <!-- 3. Fiche fichier joint (Design Pro) -->
+                            <div class="cv-attached-card" id="cvAttachedCard">
+                                <div class="cv-att-left">
+                                    <div class="cv-att-icon" id="cvAttIcon">PDF</div>
+                                    <div class="cv-att-details">
+                                        <div class="cv-att-filename" id="cvAttachedName">document.pdf</div>
+                                        <div class="cv-att-meta">
+                                            <span id="cvAttachedSize">0 Ko</span>
+                                            <span class="cv-att-dot">•</span>
+                                            <span class="cv-att-status">
+                                                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                                                Prêt pour l'envoi
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="cv-att-actions">
+                                    <button type="button" class="cv-btn-change" onclick="triggerCvUploadChoice()">Remplacer</button>
+                                    <button type="button" class="cv-btn-remove" onclick="removeAttachedCV()" title="Supprimer ce document">
+                                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="cv-security-note">
+                            <svg viewBox="0 0 24 24"><path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4zm-2 16l-4-4 1.41-1.41L10 14.17l6.59-6.59L18 9l-8 8z"/></svg>
+                            Transmission sécurisée et confidentielle.
+                        </div>
                     </div>
+
+                    <!-- Hidden fields to transmit CV metadata with formcarry -->
+                    <input type="hidden" name="cv_statut" id="f_cv_statut" value="Aucun document joint">
+                    <input type="hidden" name="cv_nom_fichier" id="f_cv_nom_fichier" value="">
+                    <input type="hidden" name="cv_taille" id="f_cv_taille" value="">
+                    <input type="hidden" name="cv_lien_telechargement" id="f_cv_lien_telechargement" value="">
+
                     <div class="form-navigation">
                         <div class="navigation-left"><button type="button" class="btn btn-secondary" id="prevBtn4">← Précédent</button></div>
                         <div class="navigation-right"><button type="button" class="btn btn-primary" id="nextBtn4">Suivant →</button></div>
                     </div>
                 </div>
 
-                <!-- ── ÉTAPE 5 : Vérification — Option B Timeline ── -->
+                <!-- ── ÉTAPE 5 : Vérification — Timeline ── -->
                 <div class="step-content" data-step="5">
                     <div class="step-header">
                         <div><div class="step-title">Vérification de votre demande</div><div class="step-subtitle">Relisez avant d'envoyer</div></div>
                     </div>
 
                     <div class="timeline-card">
-
                         <!-- Étape 1 : Vous -->
                         <div class="tl-section">
                             <div class="tl-aside">
@@ -1009,14 +1393,14 @@
                             </div>
                         </div>
 
-                        <!-- Étape 4 : Compétences -->
+                        <!-- Étape 4 : Compétences & CV -->
                         <div class="tl-section">
                             <div class="tl-aside">
                                 <div class="tl-dot tl-dot--purple">4</div>
                                 <div class="tl-line"></div>
                             </div>
                             <div class="tl-body">
-                                <div class="tl-title">Compétences</div>
+                                <div class="tl-title">Compétences & Document</div>
                                 <div class="tl-rows">
                                     <div class="tl-row tl-row--full"><span class="tl-key">Qualités</span><span class="tl-val tl-tags" id="verify-soft">—</span></div>
                                     <div class="tl-row tl-row--full"><span class="tl-key">Techniques</span><span class="tl-val tl-tags" id="verify-tech">—</span></div>
@@ -1024,11 +1408,16 @@
                                         <span class="tl-key">Exemple</span>
                                         <span class="tl-val tl-ctx" id="verify-ctx">—</span>
                                     </div>
+                                    <!-- CV ligne de vérification avec lien direct -->
+                                    <div class="tl-row tl-row--full" style="margin-top:6px; border-top:1px dashed #e2e8f0; padding-top:8px;">
+                                        <span class="tl-key">Pièce jointe / CV</span>
+                                        <span class="tl-val" id="verify-cv">Non joint</span>
+                                    </div>
                                 </div>
                             </div>
                         </div>
 
-                        <!-- Étape 5 : Commande — pas de ligne sous le dernier -->
+                        <!-- Étape 5 : Commande -->
                         <div class="tl-section tl-section--last">
                             <div class="tl-aside">
                                 <div class="tl-dot tl-dot--price">5</div>
@@ -1041,13 +1430,8 @@
                                 <div class="tl-price-pill" id="verify-price">— FCFA</div>
                             </div>
                         </div>
-
-                    </div><!-- /timeline-card -->
-
-                    <div class="important-notice" style="margin-top:20px;">
-                        <h4>ℹ️ Informations importantes</h4>
-                        <p>N'oubliez pas de nous faire parvenir votre CV actuel (par email ou autre moyen) afin que nous puissions compléter les informations nécessaires à la rédaction de votre lettre de motivation.</p>
                     </div>
+
                     <input type="hidden" name="profil" value="Demande de lettre de motivation">
                     <div class="form-navigation">
                         <div class="navigation-left"><button type="button" class="btn btn-secondary" id="prevBtn5">← Précédent</button></div>
@@ -1061,104 +1445,6 @@
                 </div>
             </div>
         </form>
-    </div>
-</div>
-
-<!-- ═══════════════════════════════════════════
-     OFFER SCANNER OVERLAY
-═══════════════════════════════════════════ -->
-<div id="offerScannerOverlay">
-    <div class="offer-scanner-panel">
-
-        <div class="offer-scanner-header">
-            <div>
-                <div class="offer-scanner-title">Scanner une offre d'emploi</div>
-                <div class="offer-scanner-sub">L'IA extrait et pré-remplit automatiquement le formulaire</div>
-                <div class="offer-scanner-badge">✦ Propulsé par l'IA</div>
-            </div>
-            <button class="offer-scanner-close" type="button" onclick="closeOfferScanner()">✕</button>
-        </div>
-
-        <!-- Drop zone -->
-        <div class="offer-drop-zone" id="offerDropZone" onclick="document.getElementById('offerFileInput').click()">
-            <div class="offer-drop-icon">📄</div>
-            <div class="offer-drop-text">Glissez votre offre ici ou cliquez pour parcourir</div>
-            <div class="offer-type-badges">
-                <span class="offer-type-badge">PDF</span>
-                <span class="offer-type-badge">PDF scanné</span>
-                <span class="offer-type-badge">JPG / PNG</span>
-            </div>
-            <div class="offer-drop-sub">Taille maximale : 10 Mo</div>
-        </div>
-        <input type="file" id="offerFileInput" accept=".pdf,.jpg,.jpeg,.png">
-
-        <!-- File preview -->
-        <div class="offer-file-preview" id="offerFilePreview">
-            <div class="offer-file-icon" id="offerFileIconLabel">PDF</div>
-            <div class="offer-file-info">
-                <div class="offer-file-name" id="offerFileName">offre.pdf</div>
-                <div class="offer-file-size" id="offerFileSize">—</div>
-            </div>
-            <button class="offer-file-remove" type="button" onclick="removeOfferFile()">✕</button>
-        </div>
-
-        <!-- Analyze button -->
-        <button id="btnOfferAnalyze" type="button" onclick="analyzeOfferDocument()">🔍 Analyser l'offre avec l'IA</button>
-
-        <!-- Progress -->
-        <div class="offer-analysis-progress" id="offerAnalysisProgress">
-            <div class="offer-analysis-bar-wrap"><div class="offer-analysis-bar" id="offerAnalysisBar"></div></div>
-            <div class="offer-analysis-step"><div class="offer-step-icon" id="oStep1">1</div><div class="offer-step-label" id="oStepLabel1">Lecture du document</div></div>
-            <div class="offer-analysis-step"><div class="offer-step-icon" id="oStep2">2</div><div class="offer-step-label" id="oStepLabel2">Extraction du texte</div></div>
-            <div class="offer-analysis-step"><div class="offer-step-icon" id="oStep3">3</div><div class="offer-step-label" id="oStepLabel3">Analyse IA de l'offre</div></div>
-            <div class="offer-analysis-step"><div class="offer-step-icon" id="oStep4">4</div><div class="offer-step-label" id="oStepLabel4">Préparation du formulaire</div></div>
-        </div>
-
-        <!-- Error -->
-        <div class="offer-scan-error" id="offerScanError"></div>
-
-        <!-- Results -->
-        <div class="offer-scan-results" id="offerScanResults">
-            <div class="offer-results-title">Informations détectées dans l'offre</div>
-            <div class="offer-results-grid" id="offerResultsGrid"></div>
-
-            <!-- Editable verification section -->
-            <div class="offer-editable-section" id="offerEditableSection">
-                <div class="offer-editable-title">Vérifiez et corrigez avant d'appliquer</div>
-
-                <div class="offer-edit-row">
-                    <div class="offer-edit-label">Entreprise</div>
-                    <input type="text" class="offer-edit-input" id="oe_entreprise" placeholder="Nom de l'entreprise">
-                </div>
-                <div class="offer-edit-row">
-                    <div class="offer-edit-label">Destinataire / Service RH</div>
-                    <input type="text" class="offer-edit-input" id="oe_destinataire" placeholder="Ex: M. Dupont / Service RH">
-                </div>
-                <div class="offer-edit-row">
-                    <div class="offer-edit-label">Adresse de l'entreprise</div>
-                    <input type="text" class="offer-edit-input" id="oe_adresse" placeholder="Adresse complète">
-                </div>
-                <div class="offer-edit-row">
-                    <div class="offer-edit-label">Titre du poste / Objet de la lettre</div>
-                    <input type="text" class="offer-edit-input" id="oe_poste" placeholder="Ex: Responsable Commercial">
-                </div>
-                <div class="offer-edit-row">
-                    <div class="offer-edit-label">Référence de l'offre</div>
-                    <input type="text" class="offer-edit-input" id="oe_reference" placeholder="Ex: REF-2025-001">
-                </div>
-                <div class="offer-edit-row">
-                    <div class="offer-edit-label">Compétences requises dans l'offre — cliquez pour sélectionner celles à mettre en avant dans votre lettre</div>
-                    <div class="offer-skills-preview" id="offerSkillsPreview"></div>
-                </div>
-            </div>
-
-            <button class="offer-apply-btn" type="button" onclick="applyOfferResults()">✓ Appliquer dans le formulaire</button>
-            <button class="offer-retry-btn" type="button" onclick="resetOfferScanner()">Importer un autre document</button>
-        </div>
-
-        <div class="offer-scan-tip">
-            <div class="offer-scan-tip-text">Pour de meilleurs résultats, utilisez un PDF numérique. Les photos et scans doivent être nets. Vous pourrez modifier tous les champs après import.</div>
-        </div>
     </div>
 </div>
 
@@ -1182,7 +1468,6 @@
             <div class="service-item" id="premiumCharge" style="display:none"><span>Supplément Premium (+50%)</span><span id="premiumAmount">1050 FCFA</span></div>
             <div class="service-item"><span>Total à payer</span><span id="totalAmount">2050 FCFA</span></div>
         </div>
-        <!-- Payment methods — compact inline layout -->
         <div class="payment-methods-compact">
             <div class="payment-methods-label">Procédez au paiement</div>
             <div class="payment-methods-row">
@@ -1205,13 +1490,7 @@
 </div>
 
 <script>
-/* ════════════════════════════════════════════════════
-   CONFIGURATION
-════════════════════════════════════════════════════ */
-var GROQ_PROXY_URL = '/.netlify/functions/groq-proxy';
-var GROQ_MODEL = 'llama-3.3-70b-versatile';
-
-/* ─── MOTEUR DE SONS UI (synthétisés, sans fichier audio) ─── */
+/* ─── MOTEUR DE SONS UI (synthétisés) ─── */
 const SoundFX = (function () {
   let ctx = null;
   function getCtx() {
@@ -1242,67 +1521,158 @@ const SoundFX = (function () {
       osc.stop(t0 + duration + 0.02);
     } catch (e) {}
   }
-  /* "Whoosh" : bruit filtré dont la fréquence balaie de fromFreq à toFreq —
-     donne un vrai mouvement dynamique à l'apparition/disparition d'une fenêtre */
-  function whoosh(fromFreq, toFreq, duration, peakGain, delay) {
-    const c = getCtx();
-    if (!c) return;
-    try {
-      const t0 = c.currentTime + (delay || 0);
-      const size = Math.max(1, Math.floor(c.sampleRate * duration));
-      const buffer = c.createBuffer(1, size, c.sampleRate);
-      const data = buffer.getChannelData(0);
-      for (let i = 0; i < size; i++) data[i] = Math.random() * 2 - 1;
-      const noise = c.createBufferSource();
-      noise.buffer = buffer;
-      const filter = c.createBiquadFilter();
-      filter.type = 'bandpass';
-      filter.Q.value = 0.9;
-      filter.frequency.setValueAtTime(fromFreq, t0);
-      filter.frequency.exponentialRampToValueAtTime(toFreq, t0 + duration);
-      const gain = c.createGain();
-      gain.gain.setValueAtTime(0.0001, t0);
-      gain.gain.exponentialRampToValueAtTime(peakGain, t0 + duration * 0.35);
-      gain.gain.exponentialRampToValueAtTime(0.0001, t0 + duration);
-      noise.connect(filter);
-      filter.connect(gain);
-      gain.connect(c.destination);
-      noise.start(t0);
-      noise.stop(t0 + duration + 0.02);
-    } catch (e) {}
-  }
   return {
     click()  { tone(680, 0.05, 'sine', 0.07); },
     toggle() { tone(560, 0.045, 'sine', 0.06); },
-    open()   { whoosh(260, 2600, 0.17, 0.06); tone(760, 0.11, 'sine', 0.08, 0.1, 1140); },
-    close()  { whoosh(1900, 240, 0.14, 0.05); tone(400, 0.08, 'sine', 0.05, 0, 220); },
     notify() { tone(880, 0.09, 'sine', 0.08); tone(1320, 0.13, 'sine', 0.065, 0.08); },
+    success() { tone(523.25, 0.08, 'sine', 0.07); tone(659.25, 0.08, 'sine', 0.07, 0.08); tone(783.99, 0.14, 'sine', 0.08, 0.16); }
   };
 })();
 
-/* Feedback sonore générique au clic (boutons, liens, cartes, chips…),
-   en évitant les doublons avec les sons dédiés open/close */
 document.addEventListener('click', function (e) {
-  const t = e.target.closest('button, a, [onclick], .sk-example, .offer-skill-chip, .step-nav');
+  const t = e.target.closest('button, a, [onclick], .step-nav');
   if (!t) return;
-  const oc = t.getAttribute('onclick') || '';
-  if (/openOfferScanner/.test(oc)) {
-    SoundFX.open();
-  } else if (/closeOfferScanner|closePaymentModal/.test(oc)) {
-    SoundFX.close();
-  } else {
-    SoundFX.click();
-  }
+  SoundFX.click();
 }, true);
 
-/* Feedback sonore pour les <select> (Type de lettre, Urgence, etc.) —
-   un <select> ne déclenche pas de "click" exploitable (le menu déroulant
-   natif intercepte l'interaction), on écoute donc "change" à la place */
 document.addEventListener('change', function (e) {
   if (e.target.matches('select, .form-select')) {
     SoundFX.toggle();
   }
 }, true);
+
+/* ════════════════════════════════════════════════════
+   TÉLÉVERSEMENT VIA SERVICE SÉCURISÉ TALLY
+   https://tally.so/r/LZeyKG
+   Génère un lien de téléchargement direct et unique
+   propre au fichier sélectionné (storage.tally.so)
+════════════════════════════════════════════════════ */
+async function uploadDocumentToTally(file, onProgress) {
+    const FORM_ID = 'LZeyKG';
+    const BLOCK_GROUP_UUID = 'afd52517-3269-479e-bc94-a2bd5e6a9099';
+
+    const respondentUuid = (typeof crypto !== 'undefined' && crypto.randomUUID)
+        ? crypto.randomUUID()
+        : 'resp_' + Math.random().toString(36).substring(2) + Date.now();
+    const submissionUuid = (typeof crypto !== 'undefined' && crypto.randomUUID)
+        ? crypto.randomUUID()
+        : 'sub_' + Math.random().toString(36).substring(2) + Date.now();
+
+    const formData = new FormData();
+    formData.append('blockGroupUuid', BLOCK_GROUP_UUID);
+    formData.append('respondentUuid', respondentUuid);
+    formData.append('submissionUuid', submissionUuid);
+    formData.append('asset', file);
+
+    return new Promise((resolve, reject) => {
+        const xhr = new XMLHttpRequest();
+        xhr.open('POST', `https://api.tally.so/upload/${FORM_ID}/response-asset`);
+        xhr.setRequestHeader('tally-version', '2025-01-15');
+
+        if (xhr.upload && typeof onProgress === 'function') {
+            xhr.upload.addEventListener('progress', (e) => {
+                if (e.lengthComputable) {
+                    const percent = Math.round((e.loaded / e.total) * 100);
+                    onProgress(percent);
+                }
+            });
+        }
+
+        xhr.onload = () => {
+            if (xhr.status >= 200 && xhr.status < 300) {
+                try {
+                    const result = JSON.parse(xhr.responseText);
+                    if (result && result.url) {
+                        resolve(result);
+                    } else {
+                        reject(new Error('Format de réponse Tally inattendu'));
+                    }
+                } catch (e) {
+                    reject(new Error('Erreur de lecture de la réponse Tally'));
+                }
+            } else {
+                reject(new Error(`Erreur Tally HTTP ${xhr.status}`));
+            }
+        };
+
+        xhr.onerror = () => {
+            reject(new Error('Erreur de communication avec le service Tally'));
+        };
+
+        xhr.send(formData);
+    });
+}
+
+/* Traitement direct d'un fichier glissé ou sélectionné */
+async function handleDirectCvFile(file) {
+    if (!file) return;
+    if (file.size > 10 * 1024 * 1024) {
+        alert('Le fichier est trop volumineux. Taille maximale autorisée : 10 Mo.');
+        return;
+    }
+
+    if (window.motivationWizard) {
+        window.motivationWizard.attachedCVFile = file;
+    }
+
+    const fileInput = document.getElementById('cvFileInput');
+    if (fileInput && (!fileInput.files || fileInput.files[0] !== file)) {
+        try {
+            const dt = new DataTransfer();
+            dt.items.add(file);
+            fileInput.files = dt.files;
+        } catch(err) {}
+    }
+
+    const dropzone = document.getElementById('cvDropzone');
+    const progress = document.getElementById('cvUploadProgress');
+    const progBar = document.getElementById('cvProgBar');
+    const progPercent = document.getElementById('cvProgPercent');
+    const progStatus = document.getElementById('cvProgStatus');
+
+    dropzone.style.display = 'none';
+    progress.classList.add('show');
+    progStatus.textContent = 'Sécurisation et téléversement du document...';
+
+    progBar.style.width = '15%';
+    progPercent.textContent = '15%';
+
+    let tallyResult = null;
+    try {
+        tallyResult = await uploadDocumentToTally(file, (pct) => {
+            const displayPct = Math.max(15, Math.min(95, pct));
+            progBar.style.width = displayPct + '%';
+            progPercent.textContent = displayPct + '%';
+        });
+    } catch (err) {
+        console.warn('Téléversement Tally en arrière-plan:', err);
+    }
+
+    progBar.style.width = '100%';
+    progPercent.textContent = '100%';
+    progStatus.textContent = 'Document prêt !';
+
+    let formattedSize = '';
+    if (file.size < 1024 * 1024) {
+        formattedSize = (file.size / 1024).toFixed(1) + ' Ko';
+    } else {
+        formattedSize = (file.size / (1024 * 1024)).toFixed(2) + ' Mo';
+    }
+
+    // Le lien de téléchargement direct et unique généré par Tally
+    const downloadUrl = (tallyResult && tallyResult.url)
+        ? tallyResult.url
+        : `Fichier joint directement au formulaire (${file.name})`;
+
+    setTimeout(() => {
+        window.motivationWizard.setAttachedCV({
+            name: (tallyResult && tallyResult.name) ? tallyResult.name : file.name,
+            size: formattedSize,
+            url: downloadUrl,
+            status: 'Document joint et transmis avec succès via Tally'
+        });
+    }, 200);
+}
 
 /* ════════════════════════════════════════════════════
    FORM WIZARD
@@ -1311,8 +1681,10 @@ class MotivationFormWizard {
     constructor() {
         this.currentStep = 1;
         this.totalSteps = 5;
-        this.softSkills = [];   // qualités personnelles
-        this.techSkills = [];   // compétences techniques
+        this.softSkills = [];
+        this.techSkills = [];
+        this.attachedCV = null;
+        this.attachedCVFile = null;
         this.init();
     }
 
@@ -1323,7 +1695,9 @@ class MotivationFormWizard {
         this.setupCompetences();
         this.setupUrgence();
         this.setupTypeLettre();
+        this.setupCvUpload();
         this.autoFillDate();
+        this.updateStepDisplay();
         this.updateProgress();
     }
 
@@ -1390,74 +1764,85 @@ class MotivationFormWizard {
     }
 
     setupCompetences() {
-        // Remove clicks on selected zones
-        ['softSelected','techSelected'].forEach(zoneId => {
-            document.getElementById(zoneId).addEventListener('click', e => {
-                if (e.target.classList.contains('sk-tag-remove')) {
-                    this.removeSkillFromCol(e.target.dataset.skill, e.target.dataset.col);
-                }
-            });
+        ['softCustomInput', 'techCustomInput'].forEach(id => {
+            const input = document.getElementById(id);
+            if (input) {
+                input.addEventListener('keypress', e => {
+                    if (e.key === 'Enter') {
+                        e.preventDefault();
+                        addCustomSkillCol(id.startsWith('soft') ? 'soft' : 'tech');
+                    }
+                });
+            }
         });
-        // Enter key on custom inputs
-        ['softCustomInput','techCustomInput'].forEach(id => {
-            document.getElementById(id).addEventListener('keypress', e => {
-                if (e.key === 'Enter') { e.preventDefault(); addCustomSkillCol(id.startsWith('soft') ? 'soft' : 'tech'); }
-            });
-        });
+        this.renderCol('soft');
+        this.renderCol('tech');
+        this.syncHidden();
     }
 
-    addSkillToCol(skill, col) {
+    addSkillToCol(skillName, col) {
+        const skill = (skillName || '').trim();
+        if (!skill) return;
         const arr = col === 'soft' ? this.softSkills : this.techSkills;
-        if (arr.includes(skill)) return;
+        if (arr.some(s => s.toLowerCase() === skill.toLowerCase())) {
+            return;
+        }
         arr.push(skill);
+        SoundFX.success();
         this.renderCol(col);
         this.syncHidden();
+        this.updateProgress();
     }
 
     removeSkillFromCol(skill, col) {
-        if (col === 'soft') this.softSkills = this.softSkills.filter(s => s !== skill);
-        else this.techSkills = this.techSkills.filter(s => s !== skill);
-        // Re-enable suggestion pill
-        const gridId = col === 'soft' ? 'softSuggestions' : 'techSuggestions';
-        const pill = Array.from(document.querySelectorAll(`#${gridId} .sk-tag`)).find(t => t.textContent.trim() === skill);
-        if (pill) pill.classList.remove('active');
+        if (col === 'soft') {
+            this.softSkills = this.softSkills.filter(s => s !== skill);
+        } else {
+            this.techSkills = this.techSkills.filter(s => s !== skill);
+        }
+        SoundFX.click();
         this.renderCol(col);
         this.syncHidden();
+        this.updateProgress();
     }
 
     renderCol(col) {
-        const arr  = col === 'soft' ? this.softSkills : this.techSkills;
-        const zone = document.getElementById(col === 'soft' ? 'softSelected' : 'techSelected');
-        const cnt  = document.getElementById(col === 'soft' ? 'softCount'    : 'techCount');
-        cnt.textContent = arr.length;
-        zone.innerHTML = arr.length === 0
-            ? '<span class="skills-empty-hint">Cliquez ci-dessous pour ajouter</span>'
-            : arr.map(s => `<span class="sk-selected-tag">${s}<span class="sk-tag-remove" data-skill="${s}" data-col="${col}">×</span></span>`).join('');
+        const isSoft = col === 'soft';
+        const arr = isSoft ? this.softSkills : this.techSkills;
+        const wrap = document.getElementById(isSoft ? 'softTagsWrap' : 'techTagsWrap');
+        const badge = document.getElementById(isSoft ? 'softCountBadge' : 'techCountBadge');
+
+        if (badge) {
+            const count = arr.length;
+            badge.textContent = `${count} saisie${count > 1 ? 's' : ''}`;
+        }
+
+        if (!wrap) return;
+
+        if (arr.length === 0) {
+            wrap.innerHTML = '';
+            wrap.style.display = 'none';
+        } else {
+            wrap.style.display = 'flex';
+            wrap.innerHTML = arr.map(s => {
+                const escaped = s.replace(/'/g, "\\'");
+                const tagClass = isSoft ? 'skill-tag-pill' : 'skill-tag-pill tag-orange';
+                return `<span class="${tagClass}">
+                    <span>${s}</span>
+                    <span class="skill-tag-remove" onclick="window.motivationWizard.removeSkillFromCol('${escaped}', '${col}')" title="Supprimer">×</span>
+                </span>`;
+            }).join('');
+        }
     }
 
     syncHidden() {
-        document.getElementById('competencesHidden').value = [...this.softSkills, ...this.techSkills].join(', ');
+        const el = document.getElementById('competencesHidden');
+        if (el) el.value = [...this.softSkills, ...this.techSkills].join(', ');
     }
 
-    // Called by offer scanner — skills from offer go to tech column
     addCustomSkill(skill, fromOffer = false) {
         const col = fromOffer ? 'tech' : 'soft';
-        if (this.softSkills.includes(skill) || this.techSkills.includes(skill)) return;
-        const gridId = col === 'tech' ? 'techSuggestions' : 'softSuggestions';
-        const grid = document.getElementById(gridId);
-        let pill = Array.from(grid.querySelectorAll('.sk-tag')).find(t => t.textContent.trim() === skill);
-        if (!pill) {
-            pill = document.createElement('span');
-            pill.className = 'sk-tag';
-            pill.dataset.col = col;
-            pill.textContent = skill;
-            grid.appendChild(pill);
-        }
-        pill.classList.add('active');
-        if (col === 'tech') this.techSkills.push(skill);
-        else this.softSkills.push(skill);
-        this.renderCol(col);
-        this.syncHidden();
+        this.addSkillToCol(skill, col);
     }
 
     autoFillDate() {
@@ -1509,6 +1894,19 @@ class MotivationFormWizard {
             if (n === this.currentStep) nav.classList.add('active');
             else if (n < this.currentStep) nav.classList.add('completed');
         });
+
+        // Mise à jour de l'indicateur lisible sur petit écran
+        const stepTitles = [
+            'Vos informations personnelles',
+            'Entreprise & destinataire',
+            'Détails & objet de la lettre',
+            'Compétences & qualités',
+            'Vérification de votre demande'
+        ];
+        const badgeEl = document.getElementById('mobileStepBadge');
+        const nameEl = document.getElementById('mobileStepName');
+        if (badgeEl) badgeEl.textContent = `Étape ${this.currentStep} / ${this.totalSteps}`;
+        if (nameEl) nameEl.textContent = stepTitles[this.currentStep - 1] || '';
     }
 
     updateProgress() {
@@ -1526,25 +1924,21 @@ class MotivationFormWizard {
             if (el) el.textContent = (val && val.trim()) ? val.trim() : '—';
         };
 
-        // Étape 1 — Vous
         set('verify-nom-prenom', fd.get('nom_prenom'));
         set('verify-contact',    fd.get('contact'));
         set('verify-email',      fd.get('email'));
         set('verify-adresse',    fd.get('adresse'));
 
-        // Étape 2 — Entreprise
         set('verify-entreprise',         fd.get('entreprise'));
         set('verify-destinataire',        fd.get('destinataire') || 'Non spécifié');
         set('verify-adresse-entreprise',  fd.get('adresse_entreprise'));
 
-        // Étape 3 — Lettre
         set('verify-objet',   fd.get('objet'));
         set('verify-type',    fd.get('type_lettre'));
         set('verify-offre',   fd.get('offre') || 'Non spécifié');
         set('verify-date',    fd.get('lieu_date'));
         set('verify-urgence', fd.get('urgence'));
 
-        // Étape 4 — Compétences : afficher en tags colorés
         const renderTags = (id, arr, cssClass) => {
             const el = document.getElementById(id);
             if (!el) return;
@@ -1559,7 +1953,6 @@ class MotivationFormWizard {
         renderTags('verify-soft', this.softSkills, '');
         renderTags('verify-tech', this.techSkills, 'tl-tag--tech');
 
-        // Contexte optionnel
         const ctx = (fd.get('contexte_competences') || '').trim();
         const ctxRow = document.getElementById('verify-ctx-row');
         const ctxEl  = document.getElementById('verify-ctx');
@@ -1570,12 +1963,91 @@ class MotivationFormWizard {
             ctxRow.style.display = 'none';
         }
 
-        // Étape 5 — Prix
+        // Section CV dans la timeline
+        const cvEl = document.getElementById('verify-cv');
+        if (this.attachedCV) {
+            let cvHtml = `<span style="color:#094102; font-weight:600; word-break:break-word;">✓ ${this.attachedCV.name} (${this.attachedCV.size})</span><br><span style="font-size:0.75rem; color:#64748b;">${this.attachedCV.status || 'Document joint et transmis avec succès'}</span>`;
+            if (this.attachedCV.url && this.attachedCV.url.startsWith('http')) {
+                cvHtml += `<br><a href="${this.attachedCV.url}" target="_blank" rel="noopener noreferrer" style="font-size:0.75rem; color:#094102; text-decoration:underline; font-weight:600;">↗ Ouvrir / Vérifier le fichier téléchargé</a>`;
+            }
+            cvEl.innerHTML = cvHtml;
+        } else {
+            cvEl.textContent = 'Aucun CV joint (transmission ultérieure)';
+        }
+
         const urg = fd.get('urgence') || '';
         const priceEl = document.getElementById('verify-price');
         if (priceEl) {
             priceEl.textContent = urg.includes('Premium') ? '3 100 FCFA' : urg.includes('Normal') ? '2 050 FCFA' : '— FCFA';
         }
+    }
+
+    setupCvUpload() {
+        const dropzone = document.getElementById('cvDropzone');
+        const fileInput = document.getElementById('cvFileInput');
+
+        if (!dropzone || !fileInput) return;
+
+        fileInput.addEventListener('change', () => {
+            if (fileInput.files.length > 0) {
+                handleDirectCvFile(fileInput.files[0]);
+            }
+        });
+
+        dropzone.addEventListener('dragover', e => {
+            e.preventDefault();
+            dropzone.classList.add('dragover');
+        });
+
+        dropzone.addEventListener('dragleave', () => {
+            dropzone.classList.remove('dragover');
+        });
+
+        dropzone.addEventListener('drop', e => {
+            e.preventDefault();
+            dropzone.classList.remove('dragover');
+            if (e.dataTransfer.files && e.dataTransfer.files.length > 0) {
+                try {
+                    fileInput.files = e.dataTransfer.files;
+                } catch(err) {}
+                handleDirectCvFile(e.dataTransfer.files[0]);
+            }
+        });
+    }
+
+    setAttachedCV(cvData) {
+        this.attachedCV = cvData;
+        document.getElementById('f_cv_statut').value = cvData.status || 'Document joint et transmis avec succès sur votre boîte e-mail';
+        document.getElementById('f_cv_nom_fichier').value = cvData.name || '';
+        document.getElementById('f_cv_taille').value = cvData.size || '';
+        document.getElementById('f_cv_lien_telechargement').value = cvData.url || '';
+
+        document.getElementById('cvDropzone').style.display = 'none';
+        document.getElementById('cvUploadProgress').classList.remove('show');
+
+        const card = document.getElementById('cvAttachedCard');
+        document.getElementById('cvAttachedName').textContent = cvData.name;
+        document.getElementById('cvAttachedSize').textContent = cvData.size;
+
+        const isDoc = (cvData.name || '').toLowerCase().match(/\.docx?$/);
+        const iconEl = document.getElementById('cvAttIcon');
+        if (iconEl) iconEl.textContent = isDoc ? 'DOC' : 'PDF';
+
+        card.classList.add('show');
+        SoundFX.success();
+    }
+
+    clearAttachedCV() {
+        this.attachedCV = null;
+        this.attachedCVFile = null;
+        document.getElementById('f_cv_statut').value = 'Aucun document joint';
+        document.getElementById('f_cv_nom_fichier').value = '';
+        document.getElementById('f_cv_taille').value = '';
+        document.getElementById('f_cv_lien_telechargement').value = '';
+        document.getElementById('cvFileInput').value = '';
+
+        document.getElementById('cvAttachedCard').classList.remove('show');
+        document.getElementById('cvDropzone').style.display = 'block';
     }
 
     async handleSubmit(e) {
@@ -1585,17 +2057,24 @@ class MotivationFormWizard {
         const load = document.getElementById('loading');
         btn.disabled = true; txt.style.opacity = '0'; load.style.display = 'block';
 
-        // Build structured message before sending
         const fd = new FormData(e.target);
+        if (this.attachedCVFile && (!fd.get('cv_fichier') || !fd.get('cv_fichier').name)) {
+            fd.set('cv_fichier', this.attachedCVFile);
+        }
         this.buildStructuredMessage(fd, e.target);
 
+        const finalFd = new FormData(e.target);
+        if (this.attachedCVFile && (!finalFd.get('cv_fichier') || !finalFd.get('cv_fichier').name)) {
+            finalFd.set('cv_fichier', this.attachedCVFile);
+        }
+
         try {
-            const r = await fetch(e.target.action, { method: 'POST', body: new FormData(e.target), headers: { Accept: 'application/json' } });
+            const r = await fetch(e.target.action, { method: 'POST', body: finalFd, headers: { Accept: 'application/json' } });
             if (r.ok) {
                 SoundFX.notify();
                 txt.textContent = 'Demande envoyée !'; txt.style.opacity = '1'; load.style.display = 'none';
                 btn.style.background = '#28a745';
-                setTimeout(() => { this.showPaymentModal(fd); setTimeout(() => { btn.disabled = false; txt.textContent = 'Envoyer ma demande'; btn.style.background = ''; }, 2000); }, 1000);
+                setTimeout(() => { this.showPaymentModal(finalFd); setTimeout(() => { btn.disabled = false; txt.textContent = 'Envoyer ma demande'; btn.style.background = ''; }, 2000); }, 1000);
             } else throw new Error();
         } catch {
             txt.textContent = 'Erreur'; txt.style.opacity = '1'; load.style.display = 'none'; btn.style.background = '#dc3545';
@@ -1646,6 +2125,18 @@ class MotivationFormWizard {
         const ctx = (fd.get('contexte_competences') || '').trim();
         if (ctx) msg += `\nContexte / exemple concret :\n${ctx}\n`;
 
+        /* ── SECTION PIÈCE JOINTE / DOCUMENT (transmis via Tally) ── */
+        msg += `\n[ PIÈCE JOINTE / DOCUMENT ]\n`;
+        if (this.attachedCV) {
+            msg += `Statut : ${this.attachedCV.status || 'Document joint et transmis avec succès sur votre boîte e-mail'}\n`;
+            msg += `Nom du fichier : ${this.attachedCV.name} (${this.attachedCV.size})\n`;
+            msg += `Lien de téléchargement sécurisé : ${this.attachedCV.url}\n`;
+        } else {
+            msg += `Statut : Aucun document joint (le candidat transmettra son CV ultérieurement)\n`;
+            msg += `Nom du fichier : Aucun\n`;
+            msg += `Lien de téléchargement sécurisé : Non applicable\n`;
+        }
+
         msg += sep('💰 COMMANDE');
         msg += line('Niveau d\'urgence', fd.get('urgence'));
         const urg = fd.get('urgence') || '';
@@ -1653,7 +2144,6 @@ class MotivationFormWizard {
 
         msg += '\n' + '═'.repeat(44) + '\n';
 
-        // Inject into hidden field (add it if not present)
         let hidden = form.querySelector('input[name="message_structure"]');
         if (!hidden) {
             hidden = document.createElement('input');
@@ -1663,9 +2153,11 @@ class MotivationFormWizard {
         }
         hidden.value = msg;
 
-        // Also set profil for formcarry subject line clarity
         let profilField = form.querySelector('input[name="profil"]');
-        if (profilField) profilField.value = `LM — ${fd.get('nom_prenom') || 'Client'} → ${fd.get('entreprise') || '?'} (${(fd.get('urgence') || '').includes('Premium') ? '⚡ PREMIUM' : 'Normal'})`;
+        if (profilField) {
+            const cvTag = this.attachedCV ? '📎 CV JOINT' : 'Sans CV';
+            profilField.value = `LM — ${fd.get('nom_prenom') || 'Client'} → ${fd.get('entreprise') || '?'} [${cvTag}] (${(fd.get('urgence') || '').includes('Premium') ? '⚡ PREMIUM' : 'Normal'})`;
+        }
     }
 
     showPaymentModal(fd) {
@@ -1684,439 +2176,30 @@ class MotivationFormWizard {
     }
 }
 
-/* ════════════════════════════════════════════════════
-   GLOBAL HELPERS — COMPETENCES
-════════════════════════════════════════════════════ */
 function addCustomSkillCol(col) {
     const inputId = col === 'soft' ? 'softCustomInput' : 'techCustomInput';
     const input = document.getElementById(inputId);
+    if (!input) return;
     const val = (input.value || '').trim();
     if (!val) return;
-    window.motivationWizard.addCustomSkill(val, col === 'tech');
+    if (window.motivationWizard) {
+        window.motivationWizard.addSkillToCol(val, col);
+    }
     input.value = '';
     input.focus();
 }
-var offerSelectedFile = null;
-var offerExtractedData = null;
 
-function openOfferScanner() {
-    document.getElementById('offerScannerOverlay').classList.add('show');
-    document.body.style.overflow = 'hidden';
-}
-
-function closeOfferScanner() {
-    document.getElementById('offerScannerOverlay').classList.remove('show');
-    document.body.style.overflow = 'auto';
-}
-
-function initOfferScanner() {
-    const dz = document.getElementById('offerDropZone');
-    const fi = document.getElementById('offerFileInput');
-    fi.addEventListener('change', () => { if (fi.files.length > 0) handleOfferFileSelected(fi.files[0]); });
-    dz.addEventListener('dragover', e => { e.preventDefault(); dz.classList.add('dragover'); });
-    dz.addEventListener('dragleave', () => dz.classList.remove('dragover'));
-    dz.addEventListener('drop', e => {
-        e.preventDefault(); dz.classList.remove('dragover');
-        if (e.dataTransfer.files.length > 0) handleOfferFileSelected(e.dataTransfer.files[0]);
-    });
-    document.addEventListener('click', e => {
-        if (e.target === document.getElementById('offerScannerOverlay')) closeOfferScanner();
-    });
-}
-
-function handleOfferFileSelected(file) {
-    if (file.size > 10 * 1024 * 1024) { showOfferScanError('Le fichier est trop volumineux (max 10 Mo).'); return; }
-    if (!file.name.match(/\.(pdf|jpg|jpeg|png)$/i)) { showOfferScanError('Type non supporté. Utilisez PDF, JPG ou PNG.'); return; }
-    offerSelectedFile = file;
-    const ext = file.name.split('.').pop().toUpperCase();
-    document.getElementById('offerFileIconLabel').textContent = ext === 'PDF' ? 'PDF' : 'IMG';
-    document.getElementById('offerFileName').textContent = file.name;
-    document.getElementById('offerFileSize').textContent = formatOfferBytes(file.size);
-    document.getElementById('offerFilePreview').classList.add('show');
-    document.getElementById('btnOfferAnalyze').classList.add('show');
-    document.getElementById('offerScanError').classList.remove('show');
-    document.getElementById('offerScanResults').classList.remove('show');
-    document.getElementById('offerAnalysisProgress').classList.remove('show');
-}
-
-function removeOfferFile() {
-    offerSelectedFile = null;
-    document.getElementById('offerFilePreview').classList.remove('show');
-    document.getElementById('btnOfferAnalyze').classList.remove('show');
-    document.getElementById('offerFileInput').value = '';
-    document.getElementById('offerScanError').classList.remove('show');
-    document.getElementById('offerScanResults').classList.remove('show');
-    document.getElementById('offerAnalysisProgress').classList.remove('show');
-}
-
-function formatOfferBytes(b) {
-    if (b < 1024) return b + ' o';
-    if (b < 1048576) return (b/1024).toFixed(1) + ' Ko';
-    return (b/1048576).toFixed(1) + ' Mo';
-}
-
-function showOfferScanError(msg) {
-    const el = document.getElementById('offerScanError');
-    el.textContent = '⚠️ ' + msg; el.classList.add('show');
-}
-
-function setOfferStep(num) {
-    const pcts = [0, 25, 50, 75, 95];
-    document.getElementById('offerAnalysisBar').style.width = pcts[num] + '%';
-    for (let i = 1; i <= 4; i++) {
-        const icon = document.getElementById('oStep' + i);
-        const label = document.getElementById('oStepLabel' + i);
-        icon.classList.remove('active', 'done'); label.classList.remove('active', 'done');
-        if (i < num) { icon.classList.add('done'); icon.textContent = '✓'; label.classList.add('done'); }
-        else if (i === num) { icon.classList.add('active'); label.classList.add('active'); }
+function triggerCvUploadChoice() {
+    const fileInput = document.getElementById('cvFileInput');
+    if (fileInput) {
+        fileInput.click();
     }
 }
 
-function updateOfferStepLabel(num, text) {
-    const el = document.getElementById('oStepLabel' + num);
-    if (el) el.textContent = text;
+function removeAttachedCV() {
+    window.motivationWizard.clearAttachedCV();
 }
 
-function delay(ms) { return new Promise(r => setTimeout(r, ms)); }
-
-function fileToBase64(file) {
-    return new Promise((resolve, reject) => {
-        const reader = new FileReader();
-        reader.onload = e => resolve(e.target.result.split(',')[1]);
-        reader.onerror = reject;
-        reader.readAsDataURL(file);
-    });
-}
-
-async function extractTextFromPDF(base64) {
-    try {
-        if (typeof pdfjsLib === 'undefined') {
-            await loadScript('https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js');
-            window.pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
-        }
-        const binary = atob(base64);
-        const arr = new Uint8Array(binary.length);
-        for (let i = 0; i < binary.length; i++) arr[i] = binary.charCodeAt(i);
-        const pdfDoc = await pdfjsLib.getDocument({ data: arr }).promise;
-        let text = '';
-        for (let p = 1; p <= Math.min(pdfDoc.numPages, 8); p++) {
-            const page = await pdfDoc.getPage(p);
-            const content = await page.getTextContent();
-            let lastY = null;
-            content.items.forEach(item => {
-                if (lastY !== null && Math.abs(item.transform[5] - lastY) > 5) text += '\n';
-                text += item.str + ' '; lastY = item.transform[5];
-            });
-            text += '\n';
-        }
-        return text.trim();
-    } catch (e) { console.warn('PDF.js failed:', e); return ''; }
-}
-
-async function runOCR(file, updateLabel) {
-    try {
-        if (typeof Tesseract === 'undefined') await loadScript('https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js');
-        if (updateLabel) updateLabel('🔍 OCR en cours…');
-        const result = await Tesseract.recognize(file, 'fra+eng', {
-            logger: m => {
-                if (m.status === 'recognizing text' && updateLabel) {
-                    updateLabel('🔍 OCR : ' + Math.round((m.progress || 0) * 100) + '%…');
-                }
-            }
-        });
-        return result.data.text || '';
-    } catch (e) { console.warn('Tesseract failed:', e); return ''; }
-}
-
-function loadScript(src) {
-    return new Promise((resolve, reject) => {
-        if (document.querySelector(`script[src="${src}"]`)) { resolve(); return; }
-        const s = document.createElement('script');
-        s.src = src; s.onload = resolve; s.onerror = reject;
-        document.head.appendChild(s);
-    });
-}
-
-async function callGroqForOffer(textContent) {
-    const systemPrompt = `Tu es un expert en analyse d'offres d'emploi francophones (notamment africaines / gabonaises).
-Analyse le texte fourni et extrais les informations clés de l'offre d'emploi.
-Réponds UNIQUEMENT en JSON valide, sans texte avant/après, sans balises markdown.
-
-Structure JSON exacte :
-{
-  "entreprise": "",
-  "adresse_entreprise": "",
-  "destinataire": "",
-  "poste": "",
-  "reference_offre": "",
-  "type_contrat": "",
-  "date_limite": "",
-  "competences_requises": [],
-  "qualifications_requises": [],
-  "description_poste": ""
-}
-
-Règles :
-- competences_requises : liste de compétences techniques et soft skills demandées dans l'offre (max 12 éléments, phrases courtes)
-- qualifications_requises : diplômes, expériences exigées
-- destinataire : si mentionné (DRH, M. X, Service RH...) sinon laisser vide
-- Si une info est absente, laisser la valeur vide ("" ou [])
-- Ne jamais inventer d'informations absentes du texte`;
-
-    const userMessage = `Voici le texte extrait de l'offre d'emploi :\n\n${textContent.slice(0, 8000)}\n\nExtrais toutes les informations de cette offre.`;
-
-    const payload = {
-        model: GROQ_MODEL,
-        messages: [
-            { role: 'system', content: systemPrompt },
-            { role: 'user', content: userMessage }
-        ],
-        temperature: 0.1,
-        max_tokens: 1500,
-        response_format: { type: 'json_object' }
-    };
-
-    const response = await fetch(GROQ_PROXY_URL, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(payload)
-    });
-
-    if (!response.ok) {
-        const errData = await response.json().catch(() => ({}));
-        let msg = 'Erreur lors de l\'analyse IA';
-        if (errData.error) {
-            if (errData.error.code === 'rate_limit_exceeded') msg = 'Limite API atteinte, réessayez dans quelques secondes.';
-            else msg = errData.error.message || msg;
-        }
-        throw new Error(msg);
-    }
-
-    const data = await response.json();
-    let raw = data.choices?.[0]?.message?.content || '';
-    raw = raw.replace(/```json|```/g, '').trim();
-    const parsed = JSON.parse(raw);
-    if (!Array.isArray(parsed.competences_requises)) parsed.competences_requises = [];
-    if (!Array.isArray(parsed.qualifications_requises)) parsed.qualifications_requises = [];
-    return parsed;
-}
-
-async function analyzeOfferDocument() {
-    if (!offerSelectedFile) { showOfferScanError('Veuillez sélectionner un fichier.'); return; }
-    document.getElementById('offerScanError').classList.remove('show');
-    document.getElementById('offerScanResults').classList.remove('show');
-    const btn = document.getElementById('btnOfferAnalyze');
-    btn.disabled = true; btn.textContent = '⏳ Analyse en cours…';
-    document.getElementById('offerAnalysisProgress').classList.add('show');
-    setOfferStep(1);
-
-    try {
-        const isImage = offerSelectedFile.name.match(/\.(jpg|jpeg|png)$/i);
-        const isPDF = offerSelectedFile.name.match(/\.pdf$/i);
-        let textContent = '';
-        const base64 = await fileToBase64(offerSelectedFile);
-        await delay(300);
-        setOfferStep(2);
-
-        if (isPDF) {
-            updateOfferStepLabel(2, '📄 Extraction PDF…');
-            textContent = await extractTextFromPDF(base64);
-        }
-        if (isImage || (isPDF && textContent.trim().length < 50)) {
-            textContent = await runOCR(offerSelectedFile, t => updateOfferStepLabel(2, t));
-        }
-        if (!textContent || textContent.trim().length < 20) {
-            throw new Error('Impossible d\'extraire du texte. Essayez un PDF numérique ou une image plus nette.');
-        }
-
-        await delay(200);
-        setOfferStep(3);
-        updateOfferStepLabel(3, '🤖 Analyse de l\'offre par l\'IA…');
-        const result = await callGroqForOffer(textContent);
-        await delay(300);
-        setOfferStep(4);
-        offerExtractedData = result;
-        await delay(400);
-
-        document.getElementById('offerAnalysisBar').style.width = '100%';
-        for (let i = 1; i <= 4; i++) {
-            const ic = document.getElementById('oStep' + i);
-            ic.classList.remove('active'); ic.classList.add('done'); ic.textContent = '✓';
-            document.getElementById('oStepLabel' + i).classList.remove('active'); document.getElementById('oStepLabel' + i).classList.add('done');
-        }
-
-        showOfferResults(result);
-    } catch (err) {
-        console.error(err);
-        document.getElementById('offerAnalysisProgress').classList.remove('show');
-        showOfferScanError('Erreur : ' + (err.message || 'Réessayez.'));
-    } finally {
-        btn.disabled = false;
-        btn.textContent = '🔍 Analyser l\'offre avec l\'IA';
-        updateOfferStepLabel(2, 'Extraction du texte');
-        updateOfferStepLabel(3, 'Analyse IA de l\'offre');
-    }
-}
-
-function showOfferResults(data) {
-    SoundFX.notify();
-    document.getElementById('offerAnalysisProgress').classList.remove('show');
-    document.getElementById('offerScanResults').classList.add('show');
-
-    // Summary cards
-    const grid = document.getElementById('offerResultsGrid');
-    grid.innerHTML = '';
-    function card(label, val, full) {
-        const isEmpty = !val || (Array.isArray(val) && val.length === 0) || (typeof val === 'string' && !val.trim());
-        const disp = isEmpty ? 'Non détecté' : (Array.isArray(val) ? val.join(', ') : val);
-        const d = document.createElement('div');
-        d.className = 'offer-result-card' + (full ? ' full' : '');
-        d.innerHTML = `<div class="offer-result-card-label">${label}${!isEmpty ? '<span class="offer-result-card-check">✓</span>' : ''}</div><div class="offer-result-card-value${isEmpty ? ' empty' : ''}">${disp}</div>`;
-        grid.appendChild(d);
-    }
-    card('Entreprise', data.entreprise);
-    card('Poste', data.poste);
-    card('Type contrat', data.type_contrat);
-    card('Date limite', data.date_limite);
-    if (data.qualifications_requises?.length) card('Qualifications exigées', data.qualifications_requises, true);
-    if (data.competences_requises?.length) card('Compétences requises', data.competences_requises.length + ' détectée(s)', false);
-
-    // Pre-fill editable fields
-    document.getElementById('oe_entreprise').value = data.entreprise || '';
-    document.getElementById('oe_destinataire').value = data.destinataire || '';
-    document.getElementById('oe_adresse').value = data.adresse_entreprise || '';
-    document.getElementById('oe_poste').value = data.poste ? `Candidature au poste de ${data.poste}` : '';
-    document.getElementById('oe_reference').value = data.reference_offre || '';
-
-    // Skills chips
-    const skillsPreview = document.getElementById('offerSkillsPreview');
-    skillsPreview.innerHTML = '';
-    if (data.competences_requises?.length) {
-        data.competences_requises.forEach(skill => {
-            const chip = document.createElement('div');
-            chip.className = 'offer-skill-chip selected';
-            chip.textContent = skill;
-            chip.dataset.skill = skill;
-            chip.addEventListener('click', () => chip.classList.toggle('selected'));
-            skillsPreview.appendChild(chip);
-        });
-    } else {
-        skillsPreview.innerHTML = '<span style="color:rgba(255,255,255,0.25);font-size:0.78rem;font-style:italic">Aucune compétence détectée dans l\'offre</span>';
-    }
-}
-
-function applyOfferResults() {
-    if (!offerExtractedData) return;
-
-    const prefilled = [];
-
-    function setField(id, value) {
-        if (!value || (typeof value === 'string' && !value.trim())) return;
-        const el = document.getElementById(id);
-        if (el) { el.value = value; el.classList.add('field-ok'); prefilled.push(id); }
-    }
-
-    // Read from editable fields (user may have corrected them)
-    const entreprise   = document.getElementById('oe_entreprise').value.trim();
-    const destinataire = document.getElementById('oe_destinataire').value.trim();
-    const adresse      = document.getElementById('oe_adresse').value.trim();
-    const poste        = document.getElementById('oe_poste').value.trim();
-    const reference    = document.getElementById('oe_reference').value.trim();
-
-    // ── Step 2 fields (company) ──
-    setField('f_entreprise', entreprise);
-    setField('f_destinataire', destinataire);
-    setField('f_adresse_entreprise', adresse);
-
-    // ── Step 3 fields (offer details) ──
-    setField('f_objet', poste);
-    setField('f_offre', reference);
-
-    // Type contrat & date limite from raw AI data
-    if (offerExtractedData.type_contrat) {
-        const sel = document.getElementById('f_type_contrat');
-        if (sel) {
-            // Try to match an option
-            const opts = Array.from(sel.options);
-            const match = opts.find(o => o.value.toLowerCase().includes(offerExtractedData.type_contrat.toLowerCase()) || offerExtractedData.type_contrat.toLowerCase().includes(o.value.toLowerCase()));
-            if (match) { sel.value = match.value; prefilled.push('f_type_contrat'); }
-        }
-    }
-    if (offerExtractedData.date_limite) {
-        setField('f_date_limite', offerExtractedData.date_limite);
-    }
-
-    // Competences from offer into the textarea
-    const selectedChips = document.querySelectorAll('.offer-skill-chip.selected');
-    const skillsFromOffer = [];
-    selectedChips.forEach(chip => { if (chip.dataset.skill) skillsFromOffer.push(chip.dataset.skill); });
-    if (skillsFromOffer.length) {
-        const compEl = document.getElementById('f_competences_offre');
-        if (compEl) { compEl.value = skillsFromOffer.join(', '); prefilled.push('f_competences_offre'); }
-        // Also add to the skills selector in step 4
-        let skillsAdded = 0;
-        skillsFromOffer.forEach(skill => {
-            if (!window.motivationWizard.selectedSkills.includes(skill)) {
-                window.motivationWizard.addCustomSkill(skill, true);
-                skillsAdded++;
-            }
-        });
-        if (skillsAdded > 0) prefilled.push('competences_step4');
-    }
-
-    // Mark type lettre + show the offer block
-    const typeSelect = document.getElementById('f_type_lettre');
-    if (typeSelect.value !== 'Réponse à une offre') {
-        typeSelect.value = 'Réponse à une offre';
-        typeSelect.dispatchEvent(new Event('change'));
-    }
-
-    // Build banner tags
-    const labelMap = {
-        'f_entreprise': 'Entreprise',
-        'f_destinataire': 'Destinataire',
-        'f_adresse_entreprise': 'Adresse entreprise',
-        'f_objet': 'Objet de la lettre',
-        'f_offre': 'Référence offre',
-        'f_type_contrat': 'Type de contrat',
-        'f_date_limite': 'Date limite',
-        'f_competences_offre': 'Compétences de l\'offre',
-        'competences_step4': `Compétences ajoutées à l'étape 4`
-    };
-    const tags = prefilled.map(id => labelMap[id] || id);
-
-    // Show prefill banner on current step (3)
-    const banner = document.getElementById('prefillBanner');
-    const tagsContainer = document.getElementById('prefillTagsContainer');
-    tagsContainer.innerHTML = tags.map(t => `<span class="prefill-tag-item">${t}</span>`).join('');
-    banner.classList.add('show');
-    SoundFX.notify();
-
-    closeOfferScanner();
-    // Stay on step 3 — user can review the filled fields directly
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-}
-
-function resetOfferScanner() {
-    offerSelectedFile = null; offerExtractedData = null;
-    document.getElementById('offerFilePreview').classList.remove('show');
-    document.getElementById('btnOfferAnalyze').classList.remove('show');
-    document.getElementById('offerScanResults').classList.remove('show');
-    document.getElementById('offerAnalysisProgress').classList.remove('show');
-    document.getElementById('offerScanError').classList.remove('show');
-    document.getElementById('offerFileInput').value = '';
-    document.getElementById('offerAnalysisBar').style.width = '0%';
-    for (let i = 1; i <= 4; i++) {
-        const ic = document.getElementById('oStep' + i);
-        ic.classList.remove('active', 'done'); ic.textContent = i;
-        const lb = document.getElementById('oStepLabel' + i);
-        lb.classList.remove('active', 'done');
-    }
-}
-
-/* ════════════════════════════════════════════════════
-   PAYMENT & PDF
-════════════════════════════════════════════════════ */
 function closePaymentModal() {
     document.getElementById('paymentModal').classList.remove('show');
     document.body.style.overflow = 'auto';
@@ -2125,19 +2208,15 @@ function closePaymentModal() {
         document.getElementById('prefillBanner').classList.remove('show');
         document.getElementById('offerExtraBlock').classList.remove('show');
         document.getElementById('priceDisplay').classList.remove('show');
-        // Reset skill columns
         const wiz = window.motivationWizard;
         if (wiz) {
             wiz.softSkills = []; wiz.techSkills = [];
             wiz.renderCol('soft'); wiz.renderCol('tech'); wiz.syncHidden();
-            // Re-enable all suggestion pills
-            document.querySelectorAll('.sk-tag').forEach(t => t.classList.remove('active'));
+            wiz.clearAttachedCV();
+            wiz.currentStep = 1;
+            wiz.updateStepDisplay();
+            wiz.updateProgress();
         }
-        window.motivationWizard.selectedSkills = ["Sens de l'initiative"];
-        window.motivationWizard.updateSkillsDisplay();
-        window.motivationWizard.currentStep = 1;
-        window.motivationWizard.updateStepDisplay();
-        window.motivationWizard.updateProgress();
     }, 300);
 }
 
@@ -2147,16 +2226,16 @@ document.addEventListener('click', e => {
 
 function downloadInvoicePDF() {
     try {
-        if (typeof window.jspdf === 'undefined') { alert('Bibliothèque PDF non chargée. Actualisez la page.'); return; }
+        if (typeof window.jspdf === 'undefined') { alert('Bibliothèque PDF non disponible.'); return; }
         const { jsPDF } = window.jspdf;
         const doc = new jsPDF();
         const pw = doc.internal.pageSize.width, ph = doc.internal.pageSize.height, m = 20;
         let y = 30;
-        const cn = document.getElementById('clientName').textContent || 'N/A';
+        const cn = document.getElementById('clientName').textContent || 'Client';
         const cc = document.getElementById('clientContact').textContent || 'N/A';
         const ce = document.getElementById('clientEmail').textContent || 'N/A';
-        const inv = document.getElementById('invoiceNumber').textContent || 'N/A';
-        const tot = document.getElementById('totalAmount').textContent || 'N/A';
+        const inv = document.getElementById('invoiceNumber').textContent || 'Facture N° LM-001';
+        const tot = document.getElementById('totalAmount').textContent || '2050 FCFA';
         const isPrem = document.getElementById('premiumCharge').style.display !== 'none';
         const now = new Date();
         const dateStr = now.toLocaleDateString('fr-FR', { year:'numeric', month:'long', day:'numeric' });
@@ -2201,12 +2280,8 @@ function downloadInvoicePDF() {
     }
 }
 
-/* ════════════════════════════════════════════════════
-   INIT
-════════════════════════════════════════════════════ */
 document.addEventListener('DOMContentLoaded', () => {
     window.motivationWizard = new MotivationFormWizard();
-    initOfferScanner();
 });
 </script>
 </body>
