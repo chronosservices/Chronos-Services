@@ -31,8 +31,9 @@
     .header__slogan{font-size:.62rem;color:rgba(255,255,255,.82);line-height:1.4;margin-top:5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:100%;}
     @keyframes headerWave{0%{transform:rotate(0deg);}10%{transform:rotate(14deg);}20%{transform:rotate(-8deg);}30%{transform:rotate(14deg);}40%{transform:rotate(-4deg);}50%{transform:rotate(10deg);}60%{transform:rotate(0deg);}100%{transform:rotate(0deg);}}
     .header__actions{display:flex;align-items:center;gap:8px;flex-shrink:0;padding-top:2px;}
-    .header__btn{width:42px;height:42px;border-radius:14px;background:rgba(255,255,255,.14);border:1px solid rgba(255,255,255,.22);display:flex;align-items:center;justify-content:center;color:#fff;transition:background .2s;flex-shrink:0;cursor:pointer;text-decoration:none;overflow:visible;}
-    .header__btn:hover{background:rgba(255,255,255,.26);}
+    .header__btn{width:42px;height:42px;border-radius:14px;background:rgba(255,255,255,.14);border:1px solid rgba(255,255,255,.22);display:flex;align-items:center;justify-content:center;color:#fff;transition:all .2s cubic-bezier(.4,0,.2,1);flex-shrink:0;cursor:pointer;text-decoration:none;overflow:visible;position:relative;}
+    .header__btn:hover{background:rgba(255,255,255,.26);transform:scale(1.05);}
+    .header__btn:active{transform:scale(.95);}
     .header__btn svg{overflow:visible;flex-shrink:0;}
     .search-wrap{max-width:480px;margin:16px auto 0;position:relative;z-index:5;}
     .search-input{width:100%;height:46px;border-radius:100px;border:none;background:var(--surface);padding:0 16px 0 46px;font-size:.9rem;font-family:inherit;color:var(--text);outline:none;transition:box-shadow .2s;display:block;box-sizing:border-box;box-shadow:0 10px 26px rgba(9,65,2,.22);}
@@ -47,64 +48,19 @@
     .search-result-item small{color:var(--text-muted);}
     .main{max-width:480px;margin:0 auto;padding:32px var(--col-margin) 0;display:flex;flex-direction:column;gap:24px;}
     .section-title{font-family:'Sora',sans-serif;font-size:1.05rem;font-weight:700;color:var(--green-dark);margin-bottom:16px;}
-    .services-marquee-wrap{margin-left:calc(-1 * var(--col-margin));margin-right:calc(-1 * var(--col-margin));overflow:hidden;width:calc(100% + 2 * var(--col-margin));}
-    .services-marquee-track{display:flex;gap:20px;padding:6px var(--col-margin);animation:marquee-svc 20s linear infinite;width:max-content;}
-    .services-marquee-track:hover{animation-play-state:paused;}
-    @keyframes marquee-svc{from{transform:translateX(0);}to{transform:translateX(-50%);}}
-    .service-chip{display:flex;flex-direction:column;align-items:center;gap:8px;cursor:pointer;flex:0 0 80px;width:80px;text-decoration:none;-webkit-tap-highlight-color:transparent;}
-    .service-chip__icon{width:62px;height:62px;border-radius:50%;background:var(--surface);box-shadow:0 4px 14px rgba(9,65,2,.13);display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden;transition:box-shadow .2s,transform .2s;}
-    .service-chip__icon::before{content:'';position:absolute;inset:0;background:var(--grad);opacity:0;transition:opacity .25s;}
-    .service-chip:hover .service-chip__icon{transform:translateY(-3px);box-shadow:0 8px 20px rgba(9,65,2,.22);}
-    .service-chip:hover .service-chip__icon::before{opacity:1;}
-    .service-chip:hover .service-chip__icon svg{color:white;}
-    .service-chip__icon svg{position:relative;z-index:1;color:var(--green-dark);transition:color .25s;}
-    .service-chip__label{font-size:.67rem;font-weight:600;color:var(--text);text-align:center;line-height:1.25;width:78px;}
     .stats-row{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;}
     .stat-card{background:var(--surface);border-radius:var(--radius-md);padding:16px 12px;text-align:center;box-shadow:0 2px 10px rgba(9,65,2,.07);position:relative;overflow:hidden;}
     .stat-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:var(--grad);}
     .stat-card__value{font-family:'Sora',sans-serif;font-size:1.5rem;font-weight:800;background:var(--grad);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;line-height:1;margin-bottom:4px;}
     .stat-card__label{font-size:.7rem;color:var(--text-muted);font-weight:500;line-height:1.2;}
 
-    .quick-list{display:flex;flex-direction:column;gap:10px;}
-    .quick-item{background:var(--surface);border-radius:var(--radius-md);padding:14px 16px;display:flex;align-items:center;gap:14px;box-shadow:0 2px 8px rgba(9,65,2,.06);transition:transform .2s,box-shadow .2s;cursor:pointer;}
-    .quick-item:hover{transform:translateX(4px);box-shadow:0 4px 16px rgba(9,65,2,.12);}
-    .quick-item__icon{width:44px;height:44px;border-radius:var(--radius-sm);background:linear-gradient(135deg,rgba(9,65,2,.08) 0%,rgba(255,87,0,.08) 100%);display:flex;align-items:center;justify-content:center;flex-shrink:0;color:var(--green-dark);}
-    .quick-item__text{flex:1;min-width:0;}
-    .quick-item__title{font-weight:600;font-size:.9rem;color:var(--text);margin-bottom:2px;}
-    .quick-item__desc{font-size:.78rem;color:var(--text-muted);}
-    .quick-item__arrow{color:var(--text-muted);flex-shrink:0;}
-
-    /* ====================================================
-       TUILES SERVICES — grille bento (nouveau look d'accueil)
-       6 tuiles numérotées + bandeau lettre + bandeau assistance
-       (Affiches, Réseaux sociaux et Rédaction de documents vivent
-        maintenant uniquement dans le menu "+" pour éviter les doublons)
-    ==================================================== */
-    .tile-grid{
-      display:grid;
-      grid-template-columns:1fr 1fr;
-      grid-template-areas:
-        "a b"
-        "a c"
-        "d d"
-        "e e";
-      gap:12px;
-    }
-    .tile{
-      position:relative;border-radius:var(--radius-lg);overflow:hidden;
-      display:flex;flex-direction:column;justify-content:flex-end;
-      padding:18px 18px 16px;min-height:150px;text-decoration:none;
-      -webkit-tap-highlight-color:transparent;color:inherit;
-      transition:transform .18s cubic-bezier(.4,0,.2,1),box-shadow .18s;
-    }
+    /* TUILES SERVICES */
+    .tile-grid{display:grid;grid-template-columns:1fr 1fr;grid-template-areas:"a b" "a c" "d d" "e e";gap:12px;}
+    .tile{position:relative;border-radius:var(--radius-lg);overflow:hidden;display:flex;flex-direction:column;justify-content:flex-end;padding:18px 18px 16px;min-height:150px;text-decoration:none;-webkit-tap-highlight-color:transparent;color:inherit;transition:transform .18s cubic-bezier(.4,0,.2,1),box-shadow .18s;}
     .tile:active{transform:scale(.96);}
     @media(hover:hover){.tile:hover{transform:translateY(-2px);box-shadow:0 10px 26px rgba(9,65,2,.16);}}
 
-    /* ── Animation "regarde-moi / clique-moi" : léger flottement en boucle ── */
-    @keyframes tileFloat{
-      0%,100%{transform:translateY(0) scale(1);}
-      50%{transform:translateY(-6px) scale(1.015);}
-    }
+    @keyframes tileFloat{0%,100%{transform:translateY(0) scale(1);}50%{transform:translateY(-6px) scale(1.015);}}
     .tile{animation:tileFloat 2.8s ease-in-out infinite;}
     .tile--a{animation-delay:0s;}
     .tile--b{animation-delay:.35s;}
@@ -148,11 +104,6 @@
       .tile__desc{font-size:.71rem;}
       .tile--d,.tile--e{padding:14px 16px;}
     }
-    @media(max-width:375px){
-      .tile--a{min-height:250px;}
-      .tile--b{min-height:120px;}
-      .tile__num{font-size:1.7rem;}
-    }
 
     .bottom-nav{position:fixed;left:14px;right:14px;bottom:14px;max-width:452px;margin:0 auto;background:var(--surface);border-radius:100px;padding:8px 6px;z-index:100;box-shadow:0 10px 32px rgba(0,0,0,.16);}
     .bottom-nav__inner{display:grid;grid-template-columns:1fr 1fr auto 1fr 1fr;align-items:center;max-width:452px;margin:0 auto;padding:0 4px;}
@@ -162,21 +113,11 @@
     .bottom-nav__icon-wrap{position:relative;width:36px;height:36px;display:flex;align-items:center;justify-content:center;border-radius:10px;transition:background .2s;}
     .bottom-nav__item.active .bottom-nav__icon-wrap{background:linear-gradient(135deg,rgba(9,65,2,.12) 0%,rgba(255,87,0,.1) 100%);}
     .bottom-nav__label{font-size:.62rem;font-weight:600;text-align:center;line-height:1.1;}
-    .bottom-nav__fab{
-      grid-column:3;justify-self:center;
-      width:54px;height:54px;margin-top:-30px;
-      border-radius:50%;border:none;cursor:pointer;
-      background:linear-gradient(135deg,var(--orange) 0%,var(--orange-light) 100%);
-      color:#fff;display:flex;align-items:center;justify-content:center;
-      box-shadow:0 8px 20px rgba(255,87,0,.45),0 0 0 6px var(--surface);
-      -webkit-tap-highlight-color:transparent;
-      transition:transform .18s;
-    }
+    .bottom-nav__fab{grid-column:3;justify-self:center;width:54px;height:54px;margin-top:-30px;border-radius:50%;border:none;cursor:pointer;background:linear-gradient(135deg,var(--orange) 0%,var(--orange-light) 100%);color:#fff;display:flex;align-items:center;justify-content:center;box-shadow:0 8px 20px rgba(255,87,0,.45),0 0 0 6px var(--surface);-webkit-tap-highlight-color:transparent;transition:transform .18s;}
     .bottom-nav__fab:active{transform:scale(.92);}
     .bottom-nav__fab svg{transition:transform .25s;}
     .bottom-nav__fab.open svg{transform:rotate(45deg);}
 
-    /* ── Menu "+" : bandeau qui remonte du bas ── */
     .menu-backdrop{display:none;position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:250;align-items:flex-end;justify-content:center;}
     .menu-backdrop.open{display:flex;}
     .menu-sheet-wrap{position:relative;width:100%;max-width:480px;margin:0 auto;animation:slideUp .3s ease;}
@@ -192,6 +133,7 @@
     .menu-sheet__social-row{display:flex;gap:12px;}
     .menu-sheet__social-btn{width:44px;height:44px;border-radius:50%;background:rgba(255,255,255,.12);display:flex;align-items:center;justify-content:center;color:#fff;transition:background .2s,transform .2s;flex-shrink:0;}
     .menu-sheet__social-btn:hover{background:rgba(255,255,255,.22);transform:translateY(-2px);}
+
     .modal-backdrop{display:none;position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:200;align-items:flex-end;}
     .modal-backdrop.open{display:flex;}
     .modal-sheet{background:var(--surface);border-radius:var(--radius-xl) var(--radius-xl) 0 0;width:100%;max-width:480px;margin:0 auto;padding:24px 20px;max-height:85vh;overflow-y:auto;animation:slideUp .3s ease;}
@@ -202,7 +144,7 @@
     .contact-row__icon{width:40px;height:40px;border-radius:var(--radius-sm);background:var(--grad);display:flex;align-items:center;justify-content:center;color:white;flex-shrink:0;}
     .contact-row__label{font-size:.78rem;color:var(--text-muted);}
     .contact-row__value{font-weight:600;font-size:.9rem;}
-    .toast{position:fixed;top:80px;right:16px;left:16px;max-width:440px;margin:0 auto;background:var(--green-dark);color:white;padding:14px 18px;border-radius:var(--radius-md);font-size:.88rem;font-weight:500;box-shadow:0 6px 24px rgba(9,65,2,.35);z-index:300;display:flex;align-items:center;gap:10px;animation:slideDown .4s ease,fadeOut .4s ease 4.6s forwards;}
+    .toast{position:fixed;top:80px;right:16px;left:16px;max-width:440px;margin:0 auto;background:var(--green-dark);color:white;padding:14px 18px;border-radius:var(--radius-md);font-size:.88rem;font-weight:500;box-shadow:0 6px 24px rgba(9,65,2,.35);z-index:400;display:flex;align-items:center;gap:10px;animation:slideDown .4s ease,fadeOut .4s ease 4.6s forwards;}
     @keyframes slideDown{from{transform:translateY(-20px);opacity:0;}to{transform:translateY(0);opacity:1;}}
     @keyframes fadeOut{from{opacity:1;}to{opacity:0;pointer-events:none;}}
 
@@ -212,8 +154,6 @@
     .toast--welcome .toast__text strong{font-family:'Sora',sans-serif;font-size:.94rem;font-weight:700;letter-spacing:-.005em;}
     .toast--welcome .toast__text span{font-size:.75rem;font-weight:400;color:rgba(255,255,255,.82);line-height:1.35;}
 
-    /* RESPONSIVE INDEX */
-    /* ── Badge "Clients existants" ── */
     .badge-client {
       display: inline-flex;
       align-items: center;
@@ -229,16 +169,7 @@
       vertical-align: middle;
       line-height: 1.4;
     }
-    /* Légère teinte dorée sur la carte mise à jour */
-    .quick-item--update {
-      border-left: 3px solid #ffb347;
-    }
-    .quick-item__icon--update {
-      background: linear-gradient(135deg, rgba(255,179,71,.15) 0%, rgba(255,87,0,.1) 100%) !important;
-      color: #c26a00 !important;
-    }
 
-    /* ── Modale douce "Êtes-vous client ?" ── */
     #majModal {
       display: none;
       position: fixed;
@@ -278,9 +209,6 @@
       line-height: 1.55;
       margin-bottom: 24px;
     }
-    #majModal .maj-desc strong { color: var(--text); }
-
-    /* --- Cartes de choix illustrées --- */
     #majModal .maj-choices {
       display: flex;
       flex-direction: column;
@@ -305,414 +233,388 @@
       background: linear-gradient(135deg, var(--green-dark) 0%, var(--green-mid) 100%);
       box-shadow: 0 8px 22px rgba(9,65,2,.28);
     }
-    #majModal .maj-choice-card--primary:hover { opacity: .94; }
     #majModal .maj-choice-card--neutral {
       background: var(--surface);
       border: 1.5px solid var(--border);
     }
-    #majModal .maj-choice-card--neutral:hover { border-color: var(--orange-light); }
     #majModal .maj-choice-icon {
       width: 44px; height: 44px;
       border-radius: 50%;
       display: flex; align-items: center; justify-content: center;
       flex-shrink: 0;
     }
-    #majModal .maj-choice-card--primary .maj-choice-icon {
-      background: rgba(255,255,255,.16);
-      color: #fff;
-    }
-    #majModal .maj-choice-card--neutral .maj-choice-icon {
-      background: linear-gradient(135deg, rgba(255,179,71,.22), rgba(255,87,0,.13));
-      color: var(--orange);
-    }
+    #majModal .maj-choice-card--primary .maj-choice-icon { background: rgba(255,255,255,.16); color: #fff; }
+    #majModal .maj-choice-card--neutral .maj-choice-icon { background: linear-gradient(135deg, rgba(255,179,71,.22), rgba(255,87,0,.13)); color: var(--orange); }
     #majModal .maj-choice-text { flex: 1; min-width: 0; }
-    #majModal .maj-choice-title {
-      font-family: 'Sora', sans-serif;
-      font-weight: 700;
-      font-size: .88rem;
-      line-height: 1.3;
-      margin-bottom: 2px;
-    }
+    #majModal .maj-choice-title { font-family: 'Sora', sans-serif; font-weight: 700; font-size: .88rem; line-height: 1.3; margin-bottom: 2px; }
     #majModal .maj-choice-card--primary .maj-choice-title { color: #fff; }
     #majModal .maj-choice-card--neutral .maj-choice-title { color: var(--text); }
-    #majModal .maj-choice-desc {
-      font-size: .74rem;
-      line-height: 1.4;
-    }
+    #majModal .maj-choice-desc { font-size: .74rem; line-height: 1.4; }
     #majModal .maj-choice-card--primary .maj-choice-desc { color: rgba(255,255,255,.78); }
     #majModal .maj-choice-card--neutral .maj-choice-desc { color: var(--text-muted); }
-    #majModal .maj-choice-chevron { flex-shrink: 0; }
-    #majModal .maj-choice-card--primary .maj-choice-chevron { color: rgba(255,255,255,.7); }
-    #majModal .maj-choice-card--neutral .maj-choice-chevron { color: var(--text-muted); }
-
-    #majModal .maj-or-divider {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      margin: 14px 0;
-    }
-    #majModal .maj-or-divider::before,
-    #majModal .maj-or-divider::after {
-      content: '';
-      flex: 1;
-      height: 1px;
-      background: var(--border);
-    }
-    #majModal .maj-or-divider span {
-      font-size: .72rem;
-      font-weight: 600;
-      color: var(--text-muted);
-      text-transform: uppercase;
-      letter-spacing: .04em;
-    }
-
-    #majModal .maj-btn-cancel {
-      text-align: center;
-      font-size: .8rem;
-      color: var(--text-muted);
-      cursor: pointer;
-      padding: 6px;
-      background: none;
-      border: none;
-      width: 100%;
-      font-family: inherit;
-      margin-top: 18px;
-    }
-    #majModal .maj-btn-cancel:hover { color: var(--text); }
-
-    @media(min-width:481px){.header{padding-left:calc((100vw - 480px)/2 + 20px);padding-right:calc((100vw - 480px)/2 + 20px);}.main{max-width:480px;}.bottom-nav{max-width:452px;}.bottom-nav__inner{max-width:452px;}}
-    @media(max-width:768px){:root{--col-margin:16px;--gutter:16px;}.header__title{font-size:1.15rem;}.header__slogan{font-size:.6rem;}.header__btn{width:38px;height:38px;}.search-input{height:42px;font-size:.85rem;}.stats-row{gap:10px;}.stat-card{padding:14px 10px;}.stat-card__value{font-size:1.3rem;}.stat-card__label{font-size:.65rem;}.section-title{font-size:1rem;margin-bottom:14px;}.service-chip{flex:0 0 72px;width:72px;}.service-chip__icon{width:56px;height:56px;}.service-chip__label{font-size:.63rem;width:70px;}.quick-item{padding:12px 14px;gap:12px;}.quick-item__icon{width:40px;height:40px;}.quick-item__title{font-size:.85rem;}.quick-item__desc{font-size:.73rem;}.bottom-nav{padding:6px 0 10px;}.bottom-nav__label{font-size:.6rem;}.bottom-nav__icon-wrap{width:32px;height:32px;}}
-    @media(max-width:480px){:root{--col-margin:14px;--gutter:14px;}body{padding-bottom:96px;}.header{padding:16px var(--col-margin) 16px;border-radius:0 0 22px 22px;}.header__title{font-size:1.1rem;}.header__slogan{font-size:.58rem;margin-top:3px;}.header__btn{width:38px;height:38px;border-radius:12px;}.search-input{height:44px;font-size:.82rem;padding:0 16px 0 42px;}.search-icon{left:14px;width:16px;height:16px;}.search-wrap{margin-top:14px;}.main{padding:30px var(--col-margin) 0;gap:20px;}.stats-row{gap:8px;}.stat-card{padding:12px 8px;border-radius:var(--radius-sm);}.stat-card__value{font-size:1.2rem;}.stat-card__label{font-size:.62rem;}.service-chip{flex:0 0 68px;width:68px;}.service-chip__icon{width:52px;height:52px;}.service-chip__label{font-size:.6rem;width:66px;}.services-marquee-track{gap:16px;}.section-title{font-size:.95rem;margin-bottom:12px;}.quick-item{padding:11px 13px;gap:10px;border-radius:var(--radius-sm);}.quick-item__icon{width:38px;height:38px;border-radius:10px;}.quick-item__title{font-size:.82rem;}.quick-item__desc{font-size:.7rem;}.bottom-nav{left:10px;right:10px;bottom:10px;padding:6px 4px;}.bottom-nav__inner{padding:0 6px;}.bottom-nav__item{gap:3px;}.bottom-nav__label{font-size:.58rem;}.bottom-nav__icon-wrap{width:32px;height:32px;}.bottom-nav__fab{width:50px;height:50px;margin-top:-26px;}.menu-sheet{padding:32px 18px 24px;}.menu-sheet__item{font-size:.88rem;padding:12px 4px;}.modal-sheet{padding:20px 16px;border-radius:var(--radius-lg) var(--radius-lg) 0 0;}.modal-title{font-size:1rem;}}
-    @media(max-width:375px){:root{--col-margin:12px;--gutter:12px;}body{padding-bottom:92px;}.header__title{font-size:1rem;}.header__slogan{font-size:.55rem;}.header__btn{width:34px;height:34px;}.search-input{height:42px;font-size:.8rem;padding:0 14px 0 40px;}.stat-card__value{font-size:1.1rem;}.service-chip{flex:0 0 62px;width:62px;}.service-chip__icon{width:48px;height:48px;}.service-chip__label{font-size:.58rem;width:60px;}.services-marquee-track{gap:14px;}.quick-item__title{font-size:.8rem;}.quick-item__desc{font-size:.68rem;}.bottom-nav{left:8px;right:8px;bottom:8px;}.bottom-nav__label{font-size:.54rem;}.bottom-nav__fab{width:46px;height:46px;margin-top:-24px;}.menu-sheet__icon{width:20px;height:20px;}}
-    @media(max-width:320px){:root{--col-margin:10px;--gutter:10px;}body{padding-bottom:86px;}.header{padding:14px var(--col-margin) 14px;}.header__slogan{font-size:.52rem;}.stats-row{gap:6px;}.stat-card{padding:10px 6px;}.stat-card__value{font-size:1rem;}.service-chip{flex:0 0 58px;width:58px;}.service-chip__icon{width:44px;height:44px;}.service-chip__label{font-size:.55rem;width:56px;}.quick-item{padding:10px;}.quick-item__icon{width:34px;height:34px;}.quick-item__title{font-size:.76rem;}.quick-item__desc{font-size:.64rem;}.bottom-nav{left:6px;right:6px;bottom:6px;padding:5px 3px;}.bottom-nav__inner{padding:0 2px;}.bottom-nav__label{font-size:.5rem;}.bottom-nav__icon-wrap{width:28px;height:28px;}.bottom-nav__fab{width:42px;height:42px;margin-top:-22px;}}
-    @media(max-width:280px){.header__inner{flex-wrap:wrap;gap:6px;}.header__slogan{white-space:normal;}.search-input{font-size:.72rem;}.quick-item__desc{display:none;}.bottom-nav__label{display:none;}.bottom-nav__icon-wrap{width:32px;height:32px;border-radius:50%;}}
+    #majModal .maj-or-divider { display: flex; align-items: center; gap: 12px; margin: 14px 0; }
+    #majModal .maj-or-divider::before, #majModal .maj-or-divider::after { content: ''; flex: 1; height: 1px; background: var(--border); }
+    #majModal .maj-or-divider span { font-size: .72rem; font-weight: 600; color: var(--text-muted); text-transform: uppercase; letter-spacing: .04em; }
+    #majModal .maj-btn-cancel { text-align: center; font-size: .8rem; color: var(--text-muted); cursor: pointer; padding: 6px; background: none; border: none; width: 100%; font-family: inherit; margin-top: 18px; }
 
     /* ====================================================
-       NOUVEL ONBOARDING
+       MODALE DE PARTAGE MODERNE, PRO & COMPLÈTE
     ==================================================== */
-    #csOb {
+    .share-backdrop {
+      display: none;
       position: fixed;
       inset: 0;
-      width: 100vw;
-      height: 100vh; /* repli navigateurs anciens */
-      height: 100svh; /* hauteur mini garantie : évite le bug de recalcul
-                          de la barre d'adresse Android lors du pull-to-refresh
-                          qui poussait les boutons du bas hors écran */
-      max-height: 100svh;
-      z-index: 9999;
-      background: #f5f3ee;
-      font-family: 'DM Sans', sans-serif;
-      display: flex;
-      flex-direction: column;
-      overflow: hidden;
-    }
-    #csOb .ob-topbar {
-      height: 4px;
-      background: linear-gradient(90deg, #094102, #FF5700);
-      flex-shrink: 0;
-    }
-    #csOb .ob-prog-wrap {
-      height: 3px;
-      background: #e8e6e0;
-      flex-shrink: 0;
-      overflow: hidden;
-    }
-    #csOb .ob-prog-fill {
-      height: 100%;
-      background: linear-gradient(90deg, #094102, #FF5700);
-      transition: width .55s cubic-bezier(.4,0,.2,1);
-      width: 0%;
-    }
-    #csOb .ob-slide {
-      position: absolute;
-      left: 0; right: 0; top: 7px; bottom: 0;
-      display: flex;
-      flex-direction: column;
-      opacity: 0;
-      pointer-events: none;
-      transform: translateX(28px);
-      transition: opacity .08s, transform .08s;
-    }
-    #csOb .ob-slide.active {
-      opacity: 1;
-      pointer-events: all;
-      transform: translateX(0);
-    }
-    #csOb .ob-slide.exit {
-      opacity: 0;
-      transform: translateX(-28px);
-    }
-    #csOb .ob-illus {
-      flex: 0 0 50%;
-      min-height: 0;
-      overflow: hidden;
-      position: relative;
-      display: flex;
-      align-items: center;
+      background: rgba(4, 20, 2, 0.65);
+      backdrop-filter: blur(5px);
+      -webkit-backdrop-filter: blur(5px);
+      z-index: 350;
+      align-items: flex-end;
       justify-content: center;
-      background: #f5f3ee;
-      padding: 18px 24px 0;
+      transition: opacity .25s ease;
     }
-    #csOb .ob-illus svg {
-      display: block;
+    .share-backdrop.open { display: flex; }
+    .share-sheet {
+      background: var(--surface);
+      border-radius: 28px 28px 0 0;
       width: 100%;
-      height: 100%;
-      max-width: 300px;
-      max-height: 100%;
-      margin: 0 auto;
+      max-width: 480px;
+      box-sizing: border-box;
+      padding: 16px 20px 28px;
+      max-height: 90vh;
+      overflow-y: auto;
+      overflow-x: hidden;
+      box-shadow: 0 -10px 40px rgba(9, 65, 2, 0.22);
+      animation: slideUp .3s cubic-bezier(.16, 1, .3, 1);
+      position: relative;
     }
-    #csOb .ob-illus::before {
-      content: '';
-      position: absolute;
-      border-radius: 50%;
-      z-index: 0;
-      width: 240px; height: 240px;
-      top: 50%; left: 50%;
-      transform: translate(-50%, -50%);
+    @media (min-width: 481px) {
+      .share-backdrop { align-items: center; padding: 20px; }
+      .share-sheet { border-radius: 26px; box-shadow: 0 20px 50px rgba(0, 0, 0, 0.32); animation: shareModalIn .25s cubic-bezier(.16, 1, .3, 1); }
+      @keyframes shareModalIn { from { opacity: 0; transform: scale(.95) translateY(10px); } to { opacity: 1; transform: scale(1) translateY(0); } }
     }
-    #csOb .s0 .ob-illus::before { background: radial-gradient(circle, rgba(9,65,2,.10) 0%, transparent 70%); }
-    #csOb .s1 .ob-illus::before { background: radial-gradient(circle, rgba(9,65,2,.10) 0%, transparent 70%); }
-    #csOb .s2 .ob-illus::before { background: radial-gradient(circle, rgba(255,87,0,.10) 0%, transparent 70%); }
-    #csOb .s3 .ob-illus::before { background: radial-gradient(circle, rgba(9,65,2,.09) 0%, transparent 70%); }
-    #csOb .s4 .ob-illus::before { background: radial-gradient(circle, rgba(255,87,0,.09) 0%, transparent 70%); }
-    #csOb .s5 .ob-illus::before { background: radial-gradient(circle, rgba(9,65,2,.10) 0%, transparent 70%); }
-    #csOb .s6 .ob-illus::before { background: radial-gradient(circle, rgba(37,211,102,.11) 0%, transparent 70%); }
-    #csOb .ob-bottom {
-      flex: 1;
-      min-height: 0;
-      background: #fff;
-      border-radius: 24px 24px 0 0;
-      padding: 20px 22px 0;
-      display: flex;
-      flex-direction: column;
-      box-shadow: 0 -4px 20px rgba(9,65,2,.07);
+    .share-handle {
+      width: 42px; height: 4px;
+      background: #d1d5db;
+      border-radius: 2px;
+      margin: 0 auto 14px;
     }
-    #csOb .ob-eyebrow {
-      font-size: .6rem;
-      font-weight: 700;
-      letter-spacing: .14em;
-      text-transform: uppercase;
-      color: #FF5700;
-      margin-bottom: 6px;
-    }
-    #csOb .ob-title {
-      font-family: 'Sora', sans-serif;
-      font-size: clamp(.95rem, 3.5vw, 1.18rem);
-      font-weight: 800;
-      color: #094102;
-      line-height: 1.25;
-      margin-bottom: 8px;
-    }
-    #csOb .ob-desc {
-      font-size: clamp(.74rem, 2.5vw, .82rem);
-      color: #6b7280;
-      line-height: 1.6;
-      flex: 1;
-      overflow: hidden;
-      display: -webkit-box;
-      -webkit-box-orient: vertical;
-      -webkit-line-clamp: 3;
-    }
-    #csOb .ob-desc strong { color: #094102; }
-    #csOb .ob-chip {
-      display: inline-flex;
-      align-items: center;
-      gap: 5px;
-      padding: 5px 13px;
-      border-radius: 100px;
-      font-size: .64rem;
-      font-weight: 700;
-      border: 1.5px solid currentColor;
-      width: fit-content;
-      margin-bottom: 6px;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      max-width: 100%;
-    }
-    #csOb .ob-chip.g { color: #094102; }
-    #csOb .ob-chip.o { color: #FF5700; }
-    #csOb .ob-nav {
-      flex-shrink: 0;
+    .share-header {
       display: flex;
       align-items: center;
       justify-content: space-between;
-      padding: 10px 22px calc(10px + env(safe-area-inset-bottom, 0px));
-      background: #fff;
-      border-top: 1px solid #f3f4f6;
+      margin-bottom: 14px;
     }
-    #csOb .ob-dots-row { display: flex; gap: 5px; align-items: center; margin-bottom: 10px; }
-    #csOb .ob-dot {
-      width: 6px; height: 6px;
-      border-radius: 2px;
-      background: #d8ddd4;
-      transition: all .3s cubic-bezier(.23,1,.32,1);
-      cursor: pointer;
-    }
-    #csOb .ob-dot.on  { width: 8px; height: 8px; border-radius: 3px; background: #094102; }
-    #csOb .ob-dot.done { background: #a9d6a0; }
-    #csOb .ob-nav-r { display: flex; align-items: center; gap: 10px; }
-
-    /* --- Bouton "Passer" : pilule outline vert --- */
-    #csOb .ob-skip {
-      height: 40px;
-      padding: 0 20px;
-      border-radius: 100px;
-      background: #fff;
-      border: 1.5px solid #094102;
-      color: #094102;
-      font-family: 'Sora', sans-serif;
-      font-size: .78rem;
-      font-weight: 700;
-      cursor: pointer;
+    .share-header__left {
       display: flex;
       align-items: center;
-      transition: background .2s, transform .15s;
-      white-space: nowrap;
+      gap: 12px;
     }
-    #csOb .ob-skip:hover { background: #f0fdf4; }
-    #csOb .ob-skip:active { transform: scale(.96); }
-
-    /* --- Bouton précédent : pilule outline ronde --- */
-    #csOb .ob-prev {
-      width: 40px; height: 40px;
+    .share-header__icon {
+      width: 42px; height: 42px;
+      border-radius: 14px;
+      background: linear-gradient(135deg, rgba(9,65,2,.12) 0%, rgba(255,87,0,.14) 100%);
+      color: var(--green-dark);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+    .share-header__title {
+      font-family: 'Sora', sans-serif;
+      font-size: 1.08rem;
+      font-weight: 800;
+      color: var(--green-dark);
+      line-height: 1.2;
+    }
+    .share-header__sub {
+      font-size: .74rem;
+      color: var(--text-muted);
+      margin-top: 2px;
+    }
+    .share-header__close {
+      width: 36px; height: 36px;
       border-radius: 50%;
-      border: 1.5px solid #094102;
-      background: #fff;
-      color: #094102;
-      cursor: pointer;
+      background: var(--bg);
+      color: var(--text-muted);
       display: flex;
       align-items: center;
       justify-content: center;
       transition: all .2s;
-      flex-shrink: 0;
+      cursor: pointer;
     }
-    #csOb .ob-prev:hover { background: #f0fdf4; }
-    #csOb .ob-prev:active { transform: scale(.94); }
+    .share-header__close:hover {
+      background: #e8e1d3;
+      color: var(--text);
+    }
 
-    /* --- Bouton "Suivant / Commencer" : pilule pleine + badge double chevron --- */
-    #csOb .ob-next {
-      height: 44px;
-      padding: 0 4px 0 20px;
-      border-radius: 100px;
-      background: #094102;
+    .share-presets-label {
+      font-size: .68rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: .06em;
+      color: var(--text-muted);
+      margin-bottom: 8px;
+      display: block;
+    }
+    .share-presets {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 8px;
+      margin-bottom: 14px;
+      width: 100%;
+      box-sizing: border-box;
+    }
+    .share-preset-chip {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 10px 10px;
+      border-radius: 12px;
+      background: var(--bg);
+      border: 1.5px solid var(--border);
+      color: var(--text);
+      font-size: .76rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all .18s;
+      font-family: inherit;
+      line-height: 1.25;
+      width: 100%;
+      box-sizing: border-box;
+      -webkit-tap-highlight-color: transparent;
+    }
+    .share-preset-chip:hover { border-color: var(--green-dark); background: #eee7da; }
+    .share-preset-chip.active { background: var(--green-dark); color: #fff; border-color: var(--green-dark); box-shadow: 0 4px 12px rgba(9, 65, 2, 0.22); }
+
+    .share-grid-label {
+      font-size: .68rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: .06em;
+      color: var(--text-muted);
+      margin-bottom: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .share-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 12px 8px;
+      margin-bottom: 16px;
+    }
+    .share-item-btn {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 6px;
+      cursor: pointer;
+      text-decoration: none;
+      background: none;
+      border: none;
+      padding: 0;
+      -webkit-tap-highlight-color: transparent;
+      transition: transform .18s;
+    }
+    .share-item-btn:active { transform: scale(.92); }
+    .share-item-btn:hover { transform: translateY(-2px); }
+    .share-item-btn__icon {
+      width: 48px; height: 48px;
+      border-radius: 16px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #fff;
+      box-shadow: 0 4px 12px rgba(0,0,0,.1);
+      transition: box-shadow .2s;
+      position: relative;
+    }
+    .share-item-btn:hover .share-item-btn__icon { box-shadow: 0 6px 16px rgba(0,0,0,.18); }
+    .share-icon--wa  { background: #25D366; }
+    .share-icon--fb  { background: #1877F2; }
+    .share-icon--li  { background: #0A66C2; }
+    .share-icon--x   { background: #111111; }
+    .share-icon--tg  { background: #229ED9; }
+    .share-icon--ms  { background: linear-gradient(135deg, #0084FF 0%, #A033FF 100%); }
+    .share-icon--sms { background: #059669; }
+    .share-icon--mail{ background: #EA4335; }
+    .share-item-btn__label {
+      font-size: .68rem;
+      font-weight: 600;
+      color: var(--text);
+      text-align: center;
+      line-height: 1.15;
+    }
+
+    /* Section Copie & Personnalisation de Domaine Propre */
+    .share-copy-section {
+      width: 100%;
+      box-sizing: border-box;
+      margin-bottom: 12px;
+    }
+    .share-copy-box {
+      background: var(--bg);
+      border: 1.5px solid var(--border);
+      border-radius: var(--radius-md);
+      padding: 5px 6px 5px 12px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 12px;
+      transition: border-color .2s;
+      box-sizing: border-box;
+      width: 100%;
+    }
+    .share-copy-box:focus-within { border-color: var(--green-dark); }
+    .share-copy-input {
+      flex: 1;
+      min-width: 0;
+      border: none;
+      background: none;
+      font-family: inherit;
+      font-size: .8rem;
+      font-weight: 600;
+      color: var(--text);
+      outline: none;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      overflow: hidden;
+    }
+    .share-copy-btn {
+      height: 36px;
+      padding: 0 14px;
+      border-radius: 10px;
+      background: var(--green-dark);
       color: #fff;
       font-family: 'Sora', sans-serif;
-      font-size: .8rem;
+      font-size: .76rem;
       font-weight: 700;
       border: none;
       cursor: pointer;
       display: flex;
       align-items: center;
-      gap: 10px;
-      box-shadow: 0 4px 14px rgba(9,65,2,.28);
-      transition: opacity .2s, transform .15s;
+      gap: 6px;
+      flex-shrink: 0;
+      transition: background .2s, transform .15s;
       white-space: nowrap;
     }
-    #csOb .ob-next:hover { opacity: .9; transform: translateY(-1px); }
-    #csOb .ob-next:active { transform: scale(.97); }
-    #csOb .ob-next.last { background: linear-gradient(120deg, #094102 55%, #FF5700 140%); }
-    #csOb .ob-next__icon {
-      width: 34px; height: 34px;
-      border-radius: 10px;
-      background: rgba(255,255,255,.16);
+    .share-copy-btn:hover { background: var(--green-mid); }
+    .share-copy-btn:active { transform: scale(.96); }
+    .share-copy-btn.copied { background: #15803d; }
+
+    .share-extra-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+      margin-bottom: 10px;
+    }
+    .share-extra-btn {
+      padding: 10px 12px;
+      border-radius: var(--radius-sm);
+      border: 1px solid var(--border);
+      background: #fff;
+      font-family: inherit;
+      font-size: .76rem;
+      font-weight: 600;
+      color: var(--text);
+      cursor: pointer;
       display: flex;
       align-items: center;
       justify-content: center;
-      flex-shrink: 0;
+      gap: 6px;
+      transition: all .2s;
     }
-    #csOb .ob-next__icon svg { display: block; }
+    .share-extra-btn:hover { background: var(--bg); border-color: var(--orange-light); }
+    .share-extra-btn:active { transform: scale(.98); }
+
+    .share-qr-panel {
+      display: none;
+      background: #fff;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      padding: 16px;
+      text-align: center;
+      margin-top: 8px;
+      animation: slideDown .25s ease;
+    }
+    .share-qr-panel.open { display: block; }
+    .share-qr-img {
+      width: 170px; height: 170px;
+      margin: 0 auto 10px;
+      border-radius: 12px;
+      border: 1px solid var(--border);
+      padding: 8px;
+      background: #fff;
+      display: block;
+    }
+    .share-qr-tip { font-size: .72rem; color: var(--text-muted); line-height: 1.4; }
+
+    /* ONBOARDING */
+    #csOb {
+      position: fixed; inset: 0; width: 100vw; height: 100vh; height: 100svh; max-height: 100svh;
+      z-index: 9999; background: #f5f3ee; font-family: 'DM Sans', sans-serif; display: flex; flex-direction: column; overflow: hidden;
+    }
+    #csOb .ob-topbar { height: 4px; background: linear-gradient(90deg, #094102, #FF5700); flex-shrink: 0; }
+    #csOb .ob-prog-wrap { height: 3px; background: #e8e6e0; flex-shrink: 0; overflow: hidden; }
+    #csOb .ob-prog-fill { height: 100%; background: linear-gradient(90deg, #094102, #FF5700); transition: width .55s cubic-bezier(.4,0,.2,1); width: 0%; }
+    #csOb .ob-slide { position: absolute; left: 0; right: 0; top: 7px; bottom: 0; display: flex; flex-direction: column; opacity: 0; pointer-events: none; transform: translateX(28px); transition: opacity .08s, transform .08s; }
+    #csOb .ob-slide.active { opacity: 1; pointer-events: all; transform: translateX(0); }
+    #csOb .ob-slide.exit { opacity: 0; transform: translateX(-28px); }
+    #csOb .ob-illus { flex: 0 0 50%; min-height: 0; overflow: hidden; position: relative; display: flex; align-items: center; justify-content: center; background: #f5f3ee; padding: 18px 24px 0; }
+    #csOb .ob-illus svg { display: block; width: 100%; height: 100%; max-width: 300px; max-height: 100%; margin: 0 auto; }
+    #csOb .ob-bottom { flex: 1; min-height: 0; background: #fff; border-radius: 24px 24px 0 0; padding: 20px 22px 0; display: flex; flex-direction: column; box-shadow: 0 -4px 20px rgba(9,65,2,.07); }
+    #csOb .ob-eyebrow { font-size: .6rem; font-weight: 700; letter-spacing: .14em; text-transform: uppercase; color: #FF5700; margin-bottom: 6px; }
+    #csOb .ob-title { font-family: 'Sora', sans-serif; font-size: clamp(.95rem, 3.5vw, 1.18rem); font-weight: 800; color: #094102; line-height: 1.25; margin-bottom: 8px; }
+    #csOb .ob-desc { font-size: clamp(.74rem, 2.5vw, .82rem); color: #6b7280; line-height: 1.6; flex: 1; overflow: hidden; display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 3; }
+    #csOb .ob-desc strong { color: #094102; }
+    #csOb .ob-chip { display: inline-flex; align-items: center; gap: 5px; padding: 5px 13px; border-radius: 100px; font-size: .64rem; font-weight: 700; border: 1.5px solid currentColor; width: fit-content; margin-bottom: 6px; }
+    #csOb .ob-chip.g { color: #094102; }
+    #csOb .ob-chip.o { color: #FF5700; }
+    #csOb .ob-nav { flex-shrink: 0; display: flex; align-items: center; justify-content: space-between; padding: 10px 22px calc(10px + env(safe-area-inset-bottom, 0px)); background: #fff; border-top: 1px solid #f3f4f6; }
+    #csOb .ob-dots-row { display: flex; gap: 5px; align-items: center; margin-bottom: 10px; }
+    #csOb .ob-dot { width: 6px; height: 6px; border-radius: 2px; background: #d8ddd4; transition: all .3s cubic-bezier(.23,1,.32,1); cursor: pointer; }
+    #csOb .ob-dot.on { width: 8px; height: 8px; border-radius: 3px; background: #094102; }
+    #csOb .ob-dot.done { background: #a9d6a0; }
+    #csOb .ob-nav-r { display: flex; align-items: center; gap: 10px; }
+    #csOb .ob-skip { height: 40px; padding: 0 20px; border-radius: 100px; background: #fff; border: 1.5px solid #094102; color: #094102; font-family: 'Sora', sans-serif; font-size: .78rem; font-weight: 700; cursor: pointer; display: flex; align-items: center; }
+    #csOb .ob-prev { width: 40px; height: 40px; border-radius: 50%; border: 1.5px solid #094102; background: #fff; color: #094102; cursor: pointer; display: flex; align-items: center; justify-content: center; }
+    #csOb .ob-next { height: 44px; padding: 0 4px 0 20px; border-radius: 100px; background: #094102; color: #fff; font-family: 'Sora', sans-serif; font-size: .8rem; font-weight: 700; border: none; cursor: pointer; display: flex; align-items: center; gap: 10px; box-shadow: 0 4px 14px rgba(9,65,2,.28); }
+    #csOb .ob-next.last { background: linear-gradient(120deg, #094102 55%, #FF5700 140%); }
+    #csOb .ob-next__icon { width: 34px; height: 34px; border-radius: 10px; background: rgba(255,255,255,.16); display: flex; align-items: center; justify-content: center; }
     #csOb.ob-closing { animation: obClose .35s ease forwards; }
     @keyframes obClose { from{opacity:1;transform:scale(1);} to{opacity:0;transform:scale(.94);pointer-events:none;} }
 
+    @media(min-width:481px){.header{padding-left:calc((100vw - 480px)/2 + 20px);padding-right:calc((100vw - 480px)/2 + 20px);}.main{max-width:480px;}.bottom-nav{max-width:452px;}.bottom-nav__inner{max-width:452px;}}
     @media(max-width:480px){
-      #csOb .ob-illus { flex: 0 0 46%; padding: 14px 18px 0; }
-      #csOb .ob-illus svg{ max-width: 240px; }
-      #csOb .ob-bottom { padding: 16px 16px 0; }
-      #csOb .ob-nav { padding: 10px 16px calc(10px + env(safe-area-inset-bottom,0px)); }
-    }
-    @media(max-width:375px){
-      #csOb .ob-illus { flex: 0 0 40%; padding: 10px 14px 0; }
-      #csOb .ob-illus svg{ max-width: 200px; }
-      #csOb .ob-title { font-size: .92rem; }
-      #csOb .ob-desc { font-size: .72rem; -webkit-line-clamp: 3; }
-      #csOb .ob-chip { font-size: .6rem; padding: 4px 10px; }
-      #csOb .ob-next { font-size: .72rem; padding: 0 16px; height: 36px; }
-      #csOb .ob-prev { width: 34px; height: 34px; }
-    }
-    @media(max-width:320px){
-      #csOb .ob-illus { flex: 0 0 36%; }
-      #csOb .ob-illus svg{ max-width: 170px; }
-      #csOb .ob-chip { display: none; }
-      #csOb .ob-desc { -webkit-line-clamp: 2; }
-      #csOb .ob-title{ font-size:.86rem; }
-    }
-    @media(min-width:860px){
-      #csOb .ob-slide { flex-direction: row; }
-      #csOb .ob-illus { flex: 0 0 50%; max-height: 100vh; height: calc(100svh - 7px); padding: 0; }
-      #csOb .ob-illus svg{ max-width: 380px; }
-      #csOb .ob-bottom { padding: clamp(28px,4vw,56px) clamp(28px,4vw,52px) 0; justify-content: center; }
-      #csOb .ob-nav { position: fixed; bottom: 0; right: 0; width: 50%; padding: 12px clamp(28px,4vw,52px) 18px; background: #fff; border-top: 1px solid #f3f4f6; }
-      #csOb .ob-desc { -webkit-line-clamp: 5; }
-    }
-    @media(orientation:landscape) and (max-height:500px){
-      #csOb .ob-slide { flex-direction: row; }
-      #csOb .ob-illus { flex: 0 0 40%; max-height: 100vh; height: 100%; padding: 0 10px; }
-      #csOb .ob-illus svg{ max-width: 160px; }
-      #csOb .ob-bottom { padding: 8px 18px 0; }
-      #csOb .ob-desc { -webkit-line-clamp: 2; }
-      #csOb .ob-chip { display: none; }
+      .share-sheet{padding:14px 14px 24px;}
+      .share-presets{grid-template-columns:repeat(2, 1fr);gap:6px;}
+      .share-preset-chip{padding:8px 8px;font-size:.71rem;}
+      .share-grid{grid-template-columns:repeat(4, 1fr);gap:10px 4px;}
+      .share-item-btn__icon{width:42px;height:42px;border-radius:14px;}
+      .share-item-btn__label{font-size:.62rem;}
     }
   </style>
-  <link rel="manifest" href="/manifest.json">
-  <meta name="theme-color" content="#FF5700">
-  <meta name="apple-mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-  <link rel="apple-touch-icon" href="/Logo/apple-touch-icon.png">
-  <script src="/js/pwa-register.js" defer></script>
-  <script src="/js/pwa-install-banner.js" defer></script>
-  <script src="/js/pwa-update-banner.js" defer></script>
 </head>
 <body>
 
-  <!-- ====================================================
-       NOUVEL ONBOARDING CHRONOS-SERVICES — navigation manuelle
-  ==================================================== -->
+  <!-- ONBOARDING -->
   <div id="csOb" role="dialog" aria-modal="true" aria-label="Présentation Chronos Services">
     <div class="ob-topbar"></div>
     <div class="ob-prog-wrap"><div class="ob-prog-fill" id="obProgFill"></div></div>
 
-    <!-- ══ SLIDE 0 : Bienvenue ══ -->
+    <!-- SLIDE 0 -->
     <div class="ob-slide s0 active">
       <div class="ob-illus">
         <svg viewBox="0 0 260 220" xmlns="http://www.w3.org/2000/svg">
           <ellipse cx="130" cy="205" rx="95" ry="9" fill="rgba(9,65,2,.06)"/>
-          <!-- dossier -->
           <rect x="55" y="98" width="130" height="90" rx="10" fill="#0d5203"/>
           <path d="M55 108 h40 l10 -12 h40 v12 z" fill="#0a4602"/>
           <rect x="62" y="112" width="116" height="70" rx="7" fill="#1a6b05"/>
-          <!-- feuilles qui s'envolent -->
-          <g>
-            <rect x="70" y="46" width="52" height="66" rx="6" fill="#ffffff" stroke="#e5e7eb" stroke-width="1.5" transform="rotate(-8 96 79)"/>
-            <line x1="80" y1="60" x2="112" y2="56" stroke="#dbe3d8" stroke-width="3" stroke-linecap="round" transform="rotate(-8 96 79)"/>
-            <line x1="80" y1="70" x2="106" y2="67" stroke="#eef1ec" stroke-width="3" stroke-linecap="round" transform="rotate(-8 96 79)"/>
-            <line x1="80" y1="80" x2="112" y2="76" stroke="#eef1ec" stroke-width="3" stroke-linecap="round" transform="rotate(-8 96 79)"/>
-            <line x1="80" y1="90" x2="98" y2="88" stroke="#eef1ec" stroke-width="3" stroke-linecap="round" transform="rotate(-8 96 79)"/>
-          </g>
-          <g>
-            <rect x="132" y="38" width="52" height="66" rx="6" fill="#ffffff" stroke="#e5e7eb" stroke-width="1.5" transform="rotate(9 158 71)"/>
-            <circle cx="146" cy="55" r="7" fill="#dbe3d8" transform="rotate(9 158 71)"/>
-            <line x1="140" y1="72" x2="172" y2="68" stroke="#eef1ec" stroke-width="3" stroke-linecap="round" transform="rotate(9 158 71)"/>
-            <line x1="140" y1="82" x2="166" y2="79" stroke="#eef1ec" stroke-width="3" stroke-linecap="round" transform="rotate(9 158 71)"/>
-            <line x1="140" y1="92" x2="172" y2="88" stroke="#eef1ec" stroke-width="3" stroke-linecap="round" transform="rotate(9 158 71)"/>
-          </g>
-          <!-- badge check flottant -->
+          <g><rect x="70" y="46" width="52" height="66" rx="6" fill="#ffffff" stroke="#e5e7eb" stroke-width="1.5" transform="rotate(-8 96 79)"/><line x1="80" y1="60" x2="112" y2="56" stroke="#dbe3d8" stroke-width="3" stroke-linecap="round" transform="rotate(-8 96 79)"/><line x1="80" y1="70" x2="106" y2="67" stroke="#eef1ec" stroke-width="3" stroke-linecap="round" transform="rotate(-8 96 79)"/></g>
+          <g><rect x="132" y="38" width="52" height="66" rx="6" fill="#ffffff" stroke="#e5e7eb" stroke-width="1.5" transform="rotate(9 158 71)"/><circle cx="146" cy="55" r="7" fill="#dbe3d8" transform="rotate(9 158 71)"/></g>
           <circle cx="196" cy="60" r="20" fill="#FF5700"/>
           <path d="M187 60 l6 6 12 -13" fill="none" stroke="#fff" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
-          <!-- petites étoiles -->
-          <circle cx="40" cy="70" r="3" fill="#FF5700" opacity=".55"/>
-          <circle cx="220" cy="130" r="3.5" fill="#0d5203" opacity=".4"/>
-          <circle cx="46" cy="150" r="2.5" fill="#0d5203" opacity=".5"/>
         </svg>
       </div>
       <div class="ob-bottom">
@@ -731,30 +633,16 @@
       </div>
     </div>
 
-    <!-- ══ SLIDE 1 : Formulaire ══ -->
+    <!-- SLIDE 1 -->
     <div class="ob-slide s1">
       <div class="ob-illus">
         <svg viewBox="0 0 260 220" xmlns="http://www.w3.org/2000/svg">
           <ellipse cx="130" cy="205" rx="95" ry="9" fill="rgba(9,65,2,.06)"/>
-          <!-- personnage simple qui remplit un formulaire -->
-          <ellipse cx="70" cy="120" rx="30" ry="34" fill="#c8864a"/>
-          <path d="M46 100 Q48 74 70 72 Q92 74 94 100 Q80 108 70 108 Q60 108 46 100Z" fill="#2d1a00"/>
           <rect x="30" y="150" width="80" height="55" rx="14" fill="#0d5203"/>
-          <rect x="55" y="128" width="30" height="26" rx="10" fill="#c8864a"/>
-          <!-- bras vers le formulaire -->
-          <path d="M96 158 Q125 150 140 140" stroke="#0d5203" stroke-width="14" stroke-linecap="round" fill="none"/>
-          <circle cx="143" cy="137" r="9" fill="#c8864a"/>
-          <!-- carte formulaire -->
           <rect x="140" y="60" width="100" height="132" rx="12" fill="#ffffff" stroke="#e5e7eb" stroke-width="1.5"/>
           <rect x="140" y="60" width="100" height="24" rx="12" fill="#0d5203"/>
-          <rect x="140" y="72" width="100" height="12" fill="#0d5203"/>
           <rect x="154" y="96" width="72" height="12" rx="6" fill="#eef1ec"/>
-          <rect x="154" y="114" width="72" height="12" rx="6" fill="#eef1ec"/>
-          <rect x="154" y="132" width="72" height="12" rx="6" fill="#eef1ec"/>
-          <rect x="154" y="150" width="42" height="6" rx="3" fill="#e5e7eb"/>
-          <rect x="154" y="150" width="24" height="6" rx="3" fill="#FF5700"/>
           <rect x="160" y="164" width="60" height="16" rx="8" fill="#FF5700"/>
-          <path d="M182 172 l6 6 12 -12" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
         </svg>
       </div>
       <div class="ob-bottom">
@@ -773,206 +661,23 @@
       </div>
     </div>
 
-    <!-- ══ SLIDE 2 : Scanner IA ══ -->
+    <!-- SLIDE 2 -->
     <div class="ob-slide s2">
       <div class="ob-illus">
         <svg viewBox="0 0 260 220" xmlns="http://www.w3.org/2000/svg">
           <ellipse cx="130" cy="205" rx="95" ry="9" fill="rgba(255,87,0,.06)"/>
-          <!-- téléphone -->
           <rect x="80" y="30" width="100" height="170" rx="18" fill="#1e2532"/>
           <rect x="88" y="42" width="84" height="146" rx="11" fill="#f0fdf4"/>
-          <rect x="118" y="34" width="24" height="5" rx="2.5" fill="#374151" opacity=".5"/>
-          <!-- document scanné dans l'écran -->
-          <rect x="98" y="56" width="64" height="80" rx="6" fill="#ffffff" stroke="#e5e7eb" stroke-width="1.5"/>
-          <rect x="106" y="68" width="48" height="6" rx="3" fill="#dbe3d8"/>
-          <rect x="106" y="80" width="40" height="4" rx="2" fill="#eef1ec"/>
-          <rect x="106" y="90" width="44" height="4" rx="2" fill="#eef1ec"/>
-          <rect x="106" y="100" width="36" height="4" rx="2" fill="#eef1ec"/>
-          <rect x="106" y="114" width="48" height="4" rx="2" fill="#eef1ec"/>
-          <rect x="106" y="124" width="30" height="4" rx="2" fill="#eef1ec"/>
-          <!-- ligne de scan -->
-          <rect x="98" y="94" width="64" height="4" fill="#FF5700" opacity=".85"/>
-          <!-- badge IA -->
           <circle cx="176" cy="150" r="24" fill="#FF5700"/>
           <text x="176" y="147" text-anchor="middle" font-family="Sora,sans-serif" font-size="15" font-weight="800" fill="#fff">IA</text>
-          <text x="176" y="161" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="8" fill="#fff">scan</text>
-          <!-- check flottant -->
-          <circle cx="60" cy="70" r="15" fill="#0d5203"/>
-          <path d="M53 70 l5 5 9 -10" fill="none" stroke="#fff" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round"/>
         </svg>
       </div>
       <div class="ob-bottom">
         <div class="ob-dots-row" id="obDots2"></div>
         <div class="ob-eyebrow">Nouveauté — Scanner IA</div>
         <div class="ob-title">Votre ancien CV importé en 1 clic</div>
-        <div class="ob-desc">Prenez votre CV en photo. Notre IA extrait toutes vos infos et <strong>remplit le formulaire automatiquement</strong> vous n'avez qu'à vérifier et envoyer.</div>
+        <div class="ob-desc">Prenez votre CV en photo. Notre IA extrait toutes vos infos et <strong>remplit le formulaire automatiquement</strong>.</div>
         <span class="ob-chip o">OCR intégré · Analyse rapide · 1 clic</span>
-      </div>
-      <div class="ob-nav">
-        <button class="ob-skip">Passer</button>
-        <div class="ob-nav-r">
-          <button class="ob-prev"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15,6 9,12 15,18"/></svg></button>
-          <button class="ob-next"><span class="ob-next__label">Suivant</span><span class="ob-next__icon"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="7,4 15,12 7,20"/><polyline points="13,4 21,12 13,20"/></svg></span></button>
-        </div>
-      </div>
-    </div>
-
-    <!-- ══ SLIDE 3 : Mise à jour ══ -->
-    <div class="ob-slide s3">
-      <div class="ob-illus">
-        <svg viewBox="0 0 260 220" xmlns="http://www.w3.org/2000/svg">
-          <ellipse cx="130" cy="205" rx="95" ry="9" fill="rgba(9,65,2,.06)"/>
-          <!-- ancien CV -->
-          <rect x="24" y="46" width="82" height="120" rx="9" fill="#ffffff" stroke="#e5e7eb" stroke-width="1.5"/>
-          <rect x="24" y="46" width="82" height="22" rx="9" fill="#fee2e2"/>
-          <rect x="24" y="60" width="82" height="8" fill="#fee2e2"/>
-          <rect x="36" y="80" width="58" height="5" rx="2.5" fill="#f3f4f6"/>
-          <rect x="36" y="90" width="46" height="4" rx="2" fill="#f3f4f6"/>
-          <rect x="36" y="99" width="52" height="4" rx="2" fill="#f3f4f6"/>
-          <rect x="34" y="132" width="52" height="14" rx="7" fill="#fee2e2"/>
-          <text x="60" y="142" text-anchor="middle" font-family="Sora,sans-serif" font-size="7.5" font-weight="700" fill="#dc2626">Dépassé</text>
-          <!-- flèche de synchronisation -->
-          <path d="M112 90 a30 30 0 1 1 -4 40" fill="none" stroke="#0d5203" stroke-width="7" stroke-linecap="round"/>
-          <polygon points="112,78 112,102 128,90" fill="#0d5203"/>
-          <!-- nouveau CV -->
-          <rect x="154" y="38" width="82" height="120" rx="9" fill="#ffffff" stroke="#0d5203" stroke-width="2"/>
-          <rect x="154" y="38" width="82" height="22" rx="9" fill="#e3f3df"/>
-          <rect x="154" y="52" width="82" height="8" fill="#e3f3df"/>
-          <rect x="166" y="72" width="58" height="5" rx="2.5" fill="#dbe3d8"/>
-          <rect x="166" y="86" width="58" height="13" rx="6.5" fill="#e3f3df"/>
-          <rect x="166" y="103" width="58" height="13" rx="6.5" fill="#e3f3df"/>
-          <circle cx="243" cy="46" r="16" fill="#FF5700"/>
-          <path d="M235 46 l5 5 10 -10" fill="none" stroke="#fff" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round"/>
-        </svg>
-      </div>
-      <div class="ob-bottom">
-        <div class="ob-dots-row" id="obDots3"></div>
-        <div class="ob-eyebrow">Déjà client ?</div>
-        <div class="ob-title">Mise à jour de votre CV existant</div>
-        <div class="ob-desc">Nouveau poste, formation, adresse ? Indiquez ce qui a changé <strong>même design conservé</strong>, livré en Word ou PowerPoint &amp; PDF sous 48h.</div>
-        <span class="ob-chip g">Modification rapide · Même design conservé</span>
-      </div>
-      <div class="ob-nav">
-        <button class="ob-skip">Passer</button>
-        <div class="ob-nav-r">
-          <button class="ob-prev"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15,6 9,12 15,18"/></svg></button>
-          <button class="ob-next"><span class="ob-next__label">Suivant</span><span class="ob-next__icon"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="7,4 15,12 7,20"/><polyline points="13,4 21,12 13,20"/></svg></span></button>
-        </div>
-      </div>
-    </div>
-
-    <!-- ══ SLIDE 4 : Lettre de motivation ══ -->
-    <div class="ob-slide s4">
-      <div class="ob-illus">
-        <svg viewBox="0 0 260 220" xmlns="http://www.w3.org/2000/svg">
-          <ellipse cx="130" cy="205" rx="95" ry="9" fill="rgba(255,87,0,.06)"/>
-          <!-- enveloppe -->
-          <rect x="40" y="70" width="180" height="120" rx="12" fill="#ffffff" stroke="#e5e7eb" stroke-width="1.5"/>
-          <path d="M40 78 L130 140 L220 78" fill="none" stroke="#dbe3d8" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
-          <rect x="60" y="150" width="60" height="14" rx="7" fill="#e3f3df"/>
-          <text x="90" y="160" text-anchor="middle" font-family="Sora,sans-serif" font-size="7.5" font-weight="700" fill="#0d5203">Leadership</text>
-          <rect x="128" y="150" width="72" height="14" rx="7" fill="#fff3ee"/>
-          <text x="164" y="160" text-anchor="middle" font-family="Sora,sans-serif" font-size="7.5" font-weight="700" fill="#FF5700">Motivation</text>
-          <!-- stylo -->
-          <g transform="rotate(38 205 60)">
-            <rect x="192" y="20" width="16" height="80" rx="8" fill="#FF5700"/>
-            <polygon points="192,100 208,100 200,116" fill="#0d5203"/>
-            <rect x="192" y="20" width="16" height="16" rx="8" fill="#0d5203"/>
-          </g>
-          <circle cx="46" cy="60" r="13" fill="#0d5203"/>
-          <path d="M40 60 l4 4 8 -9" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
-        </svg>
-      </div>
-      <div class="ob-bottom">
-        <div class="ob-dots-row" id="obDots4"></div>
-        <div class="ob-eyebrow">Lettre de motivation</div>
-        <div class="ob-title">Lettre rédigée sur mesure pour vous</div>
-        <div class="ob-desc">Nos experts rédigent une <strong>lettre personnalisée</strong> qui valorise votre profil. Candidature spontanée ou réponse à offre disponible.</div>
-        <span class="ob-chip o">⚡ Option Premium : livraison prioritaire</span>
-      </div>
-      <div class="ob-nav">
-        <button class="ob-skip">Passer</button>
-        <div class="ob-nav-r">
-          <button class="ob-prev"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15,6 9,12 15,18"/></svg></button>
-          <button class="ob-next"><span class="ob-next__label">Suivant</span><span class="ob-next__icon"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="7,4 15,12 7,20"/><polyline points="13,4 21,12 13,20"/></svg></span></button>
-        </div>
-      </div>
-    </div>
-
-    <!-- ══ SLIDE 5 : Catalogue ══ -->
-    <div class="ob-slide s5">
-      <div class="ob-illus">
-        <svg viewBox="0 0 260 220" xmlns="http://www.w3.org/2000/svg">
-          <ellipse cx="130" cy="205" rx="95" ry="9" fill="rgba(9,65,2,.06)"/>
-          <rect x="26" y="34" width="82" height="98" rx="8" fill="#ffffff" stroke="#e5e7eb" stroke-width="1.5"/>
-          <rect x="26" y="34" width="82" height="42" rx="8" fill="#eef1ec"/>
-          <rect x="26" y="68" width="82" height="8" fill="#eef1ec"/>
-          <circle cx="67" cy="55" r="11" fill="#dbe3d8"/>
-          <rect x="38" y="86" width="46" height="5" rx="2.5" fill="#e5e7eb"/>
-          <rect x="38" y="96" width="34" height="4" rx="2" fill="#f3f4f6"/>
-          <rect x="140" y="18" width="94" height="118" rx="10" fill="#ffffff" stroke="#FF5700" stroke-width="2.5"/>
-          <rect x="140" y="18" width="94" height="50" rx="10" fill="#fff3ee"/>
-          <rect x="140" y="60" width="94" height="8" fill="#fff3ee"/>
-          <circle cx="187" cy="44" r="14" fill="#fde0d0"/>
-          <rect x="156" y="80" width="62" height="5" rx="2.5" fill="#e5e7eb"/>
-          <rect x="156" y="90" width="48" height="4" rx="2" fill="#f3f4f6"/>
-          <rect x="150" y="106" width="76" height="20" rx="10" fill="#FF5700"/>
-          <text x="188" y="120" text-anchor="middle" font-family="Sora,sans-serif" font-size="9" font-weight="700" fill="#fff">⭐ Populaire</text>
-          <rect x="40" y="150" width="86" height="34" rx="8" fill="#ffffff" stroke="#e5e7eb" stroke-width="1.5"/>
-          <circle cx="60" cy="167" r="9" fill="#e3f3df"/>
-          <rect x="76" y="160" width="40" height="5" rx="2.5" fill="#e5e7eb"/>
-          <rect x="76" y="170" width="28" height="4" rx="2" fill="#f3f4f6"/>
-        </svg>
-      </div>
-      <div class="ob-bottom">
-        <div class="ob-dots-row" id="obDots5"></div>
-        <div class="ob-eyebrow">Catalogue de CV</div>
-        <div class="ob-title">Choisissez votre design favori</div>
-        <div class="ob-desc">43 modèles Word &amp; PowerPoint. Filtrez, zoomez, comparez. Notez le numéro dans votre formulaire <strong>nous l'utilisons pour réaliser votre CV</strong>.</div>
-        <span class="ob-chip g">Moderne · Classique · Créatif · Minimal</span>
-      </div>
-      <div class="ob-nav">
-        <button class="ob-skip">Passer</button>
-        <div class="ob-nav-r">
-          <button class="ob-prev"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15,6 9,12 15,18"/></svg></button>
-          <button class="ob-next"><span class="ob-next__label">Suivant</span><span class="ob-next__icon"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="7,4 15,12 7,20"/><polyline points="13,4 21,12 13,20"/></svg></span></button>
-        </div>
-      </div>
-    </div>
-
-    <!-- ══ SLIDE 6 : Paiement & Livraison ══ -->
-    <div class="ob-slide s6">
-      <div class="ob-illus">
-        <svg viewBox="0 0 260 220" xmlns="http://www.w3.org/2000/svg">
-          <ellipse cx="130" cy="205" rx="95" ry="9" fill="rgba(37,211,102,.08)"/>
-          <!-- téléphone avec cadenas -->
-          <rect x="80" y="26" width="100" height="172" rx="18" fill="#0d5203"/>
-          <rect x="88" y="38" width="84" height="148" rx="11" fill="#f0fdf4"/>
-          <rect x="118" y="30" width="24" height="5" rx="2.5" fill="#08340a" opacity=".6"/>
-          <rect x="100" y="58" width="60" height="46" rx="8" fill="#ffffff" stroke="#e5e7eb" stroke-width="1.5"/>
-          <rect x="112" y="70" width="36" height="5" rx="2.5" fill="#dbe3d8"/>
-          <rect x="112" y="82" width="28" height="4" rx="2" fill="#eef1ec"/>
-          <circle cx="130" cy="128" r="26" fill="#e3f3df"/>
-          <rect x="118" y="122" width="24" height="18" rx="4" fill="#0d5203"/>
-          <path d="M122 122 v-8 a8 8 0 0 1 16 0 v8" fill="none" stroke="#0d5203" stroke-width="5"/>
-          <circle cx="130" cy="130" r="3" fill="#fff"/>
-          <rect x="100" y="164" width="60" height="14" rx="7" fill="#25D366"/>
-          <text x="130" y="174" text-anchor="middle" font-family="Sora,sans-serif" font-size="7" font-weight="700" fill="#fff">Envoyé ✓</text>
-          <!-- badge WhatsApp -->
-          <circle cx="196" cy="150" r="22" fill="#25D366"/>
-          <path d="M196 138 a12 12 0 1 0 6 22 l7 2 -2 -7 a12 12 0 0 0 -11 -17Z" fill="#fff"/>
-          <!-- confettis -->
-          <rect x="40" y="60" width="7" height="7" rx="1.5" fill="#FF5700" transform="rotate(18 43 63)" opacity=".7"/>
-          <circle cx="46" cy="140" r="4" fill="#0d5203" opacity=".5"/>
-          <rect x="212" y="66" width="6" height="6" rx="1" fill="#25D366" transform="rotate(-15 215 69)" opacity=".7"/>
-        </svg>
-      </div>
-      <div class="ob-bottom">
-        <div class="ob-dots-row" id="obDots6"></div>
-        <div class="ob-eyebrow">Paiement &amp; Livraison</div>
-        <div class="ob-title">Simple, transparent et rapide</div>
-        <div class="ob-desc">Payez via Airtel Money ou Moov Money. <strong>Facture PDF générée automatiquement</strong>. Votre CV vous est livré en Word ou PowerPoint &amp; PDF via WhatsApp.</div>
-        <span class="ob-chip g">✓ Paiement mobile · Livraison rapide</span>
       </div>
       <div class="ob-nav">
         <button class="ob-skip">Passer</button>
@@ -982,10 +687,9 @@
         </div>
       </div>
     </div>
+  </div>
 
-  </div><!-- /#csOb -->
-
-  <!-- PAGE D'ACCUEIL -->
+  <!-- EN-TÊTE PRINCIPALE -->
   <header class="header">
     <div class="header__inner">
       <div class="header__title-wrap">
@@ -993,8 +697,15 @@
         <div class="header__slogan">Un client satisfait, c'est une publicité de plus pour nos services.</div>
       </div>
       <div class="header__actions">
-        <button class="header__btn" onclick="shareApp()" aria-label="Partager">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>
+        <!-- Bouton Partager Moderne & Pro -->
+        <button class="header__btn" onclick="openShareModal()" aria-label="Partager Chronos-Services" title="Partager sur les réseaux sociaux & applications">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="18" cy="5" r="3"/>
+            <circle cx="6" cy="12" r="3"/>
+            <circle cx="18" cy="19" r="3"/>
+            <line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/>
+            <line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/>
+          </svg>
         </button>
       </div>
     </div>
@@ -1005,9 +716,8 @@
     </div>
   </header>
 
+  <!-- CONTENU PRINCIPAL -->
   <main class="main">
-
-
     <div class="stats-row">
       <div class="stat-card"><div class="stat-card__value">562+</div><div class="stat-card__label">CV mis à jour</div></div>
       <div class="stat-card"><div class="stat-card__value">40+</div><div class="stat-card__label">Modèles CV</div></div>
@@ -1065,6 +775,7 @@
     </section>
   </main>
 
+  <!-- NAVIGATION DU BAS -->
   <nav class="bottom-nav" aria-label="Navigation principale">
     <div class="bottom-nav__inner">
       <a href="index.html" class="bottom-nav__item active"><div class="bottom-nav__icon-wrap"><svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9,22 9,12 15,12 15,22"/></svg></div><span class="bottom-nav__label">Accueil</span></a>
@@ -1079,7 +790,152 @@
     </div>
   </nav>
 
-  <!-- MENU "+" : bandeau qui remonte du bas -->
+  <!-- ====================================================
+       MODALE DE PARTAGE MODERNE, CLAIRE ET COMPLÈTE
+  ==================================================== -->
+  <div class="share-backdrop" id="shareModal" onclick="closeShareOnBackdrop(event)" role="dialog" aria-modal="true" aria-label="Partager cette application">
+    <div class="share-sheet" onclick="event.stopPropagation()">
+      <div class="share-handle"></div>
+
+      <!-- En-tête -->
+      <div class="share-header">
+        <div class="share-header__left">
+          <div class="share-header__icon">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/>
+              <line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/>
+            </svg>
+          </div>
+          <div>
+            <h3 class="share-header__title">Partager Chronos-Services</h3>
+            <div class="share-header__sub">Faites profiter vos proches et collègues</div>
+          </div>
+        </div>
+        <button class="share-header__close" onclick="closeShareModal()" aria-label="Fermer le partage">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
+          </svg>
+        </button>
+      </div>
+
+      <!-- Sélecteur de message d'accompagnement (Grid responsive 2x2, sans icônes) -->
+      <span class="share-presets-label">Message d'accompagnement :</span>
+      <div class="share-presets" role="tablist">
+        <button type="button" class="share-preset-chip active" onclick="setSharePreset('general', this)">Recommandation</button>
+        <button type="button" class="share-preset-chip" onclick="setSharePreset('cv', this)">Création CV Pro</button>
+        <button type="button" class="share-preset-chip" onclick="setSharePreset('maj', this)">Mise à jour CV</button>
+        <button type="button" class="share-preset-chip" onclick="setSharePreset('lettre', this)">Lettre motivation</button>
+      </div>
+
+      <!-- Grille des réseaux sociaux et applications -->
+      <div class="share-grid-label">
+        <span>Partager directement sur :</span>
+      </div>
+      <div class="share-grid">
+        <!-- WhatsApp -->
+        <button type="button" class="share-item-btn" onclick="executeShare('whatsapp')" aria-label="Partager sur WhatsApp">
+          <span class="share-item-btn__icon share-icon--wa">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor"><path d="M13.601 2.326A7.854 7.854 0 0 0 7.994 0C3.627 0 .068 3.558.064 7.926c0 1.399.366 2.76 1.057 3.965L0 16l4.204-1.102a7.933 7.933 0 0 0 3.79.965h.004c4.368 0 7.926-3.558 7.93-7.93A7.898 7.898 0 0 0 13.6 2.326zM7.994 14.521a6.573 6.573 0 0 1-3.356-.92l-.24-.144-2.494.654.666-2.433-.156-.251a6.56 6.56 0 0 1-1.007-3.505c0-3.626 2.957-6.584 6.591-6.584a6.56 6.56 0 0 1 4.66 1.931 6.557 6.557 0 0 1 1.928 4.66c-.004 3.639-2.961 6.592-6.592 6.592z"/></svg>
+          </span>
+          <span class="share-item-btn__label">WhatsApp</span>
+        </button>
+
+        <!-- Facebook -->
+        <button type="button" class="share-item-btn" onclick="executeShare('facebook')" aria-label="Partager sur Facebook">
+          <span class="share-item-btn__icon share-icon--fb">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
+          </span>
+          <span class="share-item-btn__label">Facebook</span>
+        </button>
+
+        <!-- LinkedIn -->
+        <button type="button" class="share-item-btn" onclick="executeShare('linkedin')" aria-label="Partager sur LinkedIn">
+          <span class="share-item-btn__icon share-icon--li">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor"><path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"/></svg>
+          </span>
+          <span class="share-item-btn__label">LinkedIn</span>
+        </button>
+
+        <!-- X (Twitter) -->
+        <button type="button" class="share-item-btn" onclick="executeShare('twitter')" aria-label="Partager sur X">
+          <span class="share-item-btn__icon share-icon--x">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+          </span>
+          <span class="share-item-btn__label">X (Twitter)</span>
+        </button>
+
+        <!-- Telegram -->
+        <button type="button" class="share-item-btn" onclick="executeShare('telegram')" aria-label="Partager sur Telegram">
+          <span class="share-item-btn__icon share-icon--tg">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.37 0 0 5.37 0 12s5.37 12 12 12 12-5.37 12-12S18.63 0 12 0zm5.56 8.16l-1.97 9.28c-.15.65-.53.81-1.08.51l-3-2.21-1.45 1.4c-.16.16-.3.3-.61.3l.22-3.05 5.56-5.02c.24-.22-.05-.34-.38-.13l-6.87 4.33-2.96-.92c-.64-.2-.66-.64.13-.95l11.58-4.46c.54-.2 1.01.13.83.92z"/></svg>
+          </span>
+          <span class="share-item-btn__label">Telegram</span>
+        </button>
+
+        <!-- Messenger -->
+        <button type="button" class="share-item-btn" onclick="executeShare('messenger')" aria-label="Partager sur Messenger">
+          <span class="share-item-btn__icon share-icon--ms">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.235 0 0 4.966 0 11.456c0 3.659 1.666 6.84 4.256 8.948V24l3.447-1.895c1.348.374 2.784.576 4.297.576 6.765 0 12-4.966 12-11.456C24 4.966 18.765 0 12 0zm1.192 15.357l-3.054-3.259-5.961 3.259 6.558-6.96 3.136 3.259 5.879-3.259-6.558 6.96z"/></svg>
+          </span>
+          <span class="share-item-btn__label">Messenger</span>
+        </button>
+
+        <!-- SMS -->
+        <button type="button" class="share-item-btn" onclick="executeShare('sms')" aria-label="Partager par SMS">
+          <span class="share-item-btn__icon share-icon--sms">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+              <circle cx="8" cy="10" r="1" fill="currentColor"/><circle cx="12" cy="10" r="1" fill="currentColor"/><circle cx="16" cy="10" r="1" fill="currentColor"/>
+            </svg>
+          </span>
+          <span class="share-item-btn__label">SMS</span>
+        </button>
+
+        <!-- Email -->
+        <button type="button" class="share-item-btn" onclick="executeShare('email')" aria-label="Partager par Email">
+          <span class="share-item-btn__icon share-icon--mail">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/>
+            </svg>
+          </span>
+          <span class="share-item-btn__label">Email</span>
+        </button>
+      </div>
+
+      <!-- Champ Copier le lien direct -->
+      <div class="share-copy-box">
+        <input type="text" class="share-copy-input" id="shareCopyUrl" readonly value="" />
+        <button type="button" class="share-copy-btn" id="shareCopyBtn" onclick="copyShareUrl()" aria-label="Copier le lien">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+          </svg>
+          <span id="shareCopyText">Copier</span>
+        </button>
+      </div>
+
+      <!-- Options supplémentaires : Partage Natif + QR Code -->
+      <div class="share-extra-row">
+        <button type="button" class="share-extra-btn" onclick="executeNativeShare()">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"/><polyline points="16 6 12 2 8 6"/><line x1="12" y1="2" x2="12" y2="15"/></svg>
+          <span>Plus d'options</span>
+        </button>
+
+        <button type="button" class="share-extra-btn" onclick="toggleShareQr()">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+          <span id="shareQrToggleLabel">Afficher QR Code</span>
+        </button>
+      </div>
+
+      <!-- Panneau QR Code -->
+      <div class="share-qr-panel" id="shareQrPanel">
+        <img src="" alt="QR Code Chronos-Services" class="share-qr-img" id="shareQrImg" loading="lazy" />
+        <div class="share-qr-tip">Faites scanner ce code pour ouvrir directement le site sur un smartphone.</div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- MENU BANDEAU BAS -->
   <div class="menu-backdrop" id="menuSheet" onclick="closeMenuOnBackdrop(event)">
     <div class="menu-sheet-wrap" onclick="event.stopPropagation()">
       <button class="menu-sheet__close" onclick="closeMenuSheet()" aria-label="Fermer le menu">
@@ -1089,9 +945,9 @@
       <div class="menu-sheet">
         <div class="menu-sheet__list">
           <a href="index.html" class="menu-sheet__item"><span class="menu-sheet__icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9,22 9,12 15,12 15,22"/></svg></span>Accueil</a>
+          <a href="#" onclick="closeMenuSheet();openShareModal();return false;" class="menu-sheet__item"><span class="menu-sheet__icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg></span>Partager l'application</a>
           <a href="#" onclick="closeMenuSheet();showToast('Affiches publicitaires — contactez-nous : 065.37.08.82');return false;" class="menu-sheet__item"><span class="menu-sheet__icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21,15 16,10 5,21"/></svg></span>Conception d'affiches</a>
           <a href="#" onclick="closeMenuSheet();showToast('Réseaux sociaux — contactez-nous : 065.37.08.82');return false;" class="menu-sheet__item"><span class="menu-sheet__icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 2H7a5 5 0 0 0-5 5v10a5 5 0 0 0 5 5h10a5 5 0 0 0 5-5V7a5 5 0 0 0-5-5z"/><circle cx="12" cy="12" r="3"/><circle cx="17.5" cy="6.5" r=".5" fill="currentColor"/></svg></span>Gestion des réseaux sociaux</a>
-          <a href="#" onclick="closeMenuSheet();showToast('Rédaction de documents — contactez-nous : 065.37.08.82');return false;" class="menu-sheet__item"><span class="menu-sheet__icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg></span>Rédaction de documents</a>
           <a href="#" onclick="closeMenuSheet();openModal('helpModal');return false;" class="menu-sheet__item"><span class="menu-sheet__icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 2-3 4"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg></span>Centre d'aide</a>
           <a href="https://wa.me/24165370882" target="_blank" class="menu-sheet__item"><span class="menu-sheet__icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg></span>Contactez-nous</a>
         </div>
@@ -1111,14 +967,12 @@
     </div>
   </div>
 
-  <!-- MODALE MISE À JOUR CV — Confirmation client existant -->
+  <!-- MODALE MISE À JOUR CV -->
   <div id="majModal" onclick="majModalBackdrop(event)">
     <div class="maj-sheet">
       <div class="maj-handle"></div>
       <div class="maj-title">Vous avez déjà un CV chez nous ?</div>
-      <div class="maj-desc">
-        Ce formulaire est réservé aux anciens clients qui souhaitent mettre à jour un CV déjà réalisé par Chronos-Services.
-      </div>
+      <div class="maj-desc">Ce formulaire est réservé aux anciens clients qui souhaitent mettre à jour un CV déjà réalisé par Chronos-Services.</div>
       <div class="maj-choices">
         <a href="formulaire-mise-a-jour-cv.html" class="maj-choice-card maj-choice-card--primary" onclick="event.stopPropagation()">
           <span class="maj-choice-icon">
@@ -1126,15 +980,10 @@
           </span>
           <span class="maj-choice-text">
             <span class="maj-choice-title">J'ai déjà un CV chez vous</span> <br>
-            <span class="maj-choice-desc">Je souhaite mettre à jour le CV en ajoutant ou en modifiant certaines informations</span>
-          </span>
-          <span class="maj-choice-chevron">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+            <span class="maj-choice-desc">Je souhaite mettre à jour le CV en ajoutant ou modifiant des informations</span>
           </span>
         </a>
-
         <div class="maj-or-divider"><span>ou</span></div>
-
         <a href="formulaire-cv-scanner.html" class="maj-choice-card maj-choice-card--neutral" onclick="event.stopPropagation()">
           <span class="maj-choice-icon">
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="12" y1="12" x2="12" y2="18"/><line x1="9" y1="15" x2="15" y2="15"/></svg>
@@ -1142,9 +991,6 @@
           <span class="maj-choice-text">
             <span class="maj-choice-title">Je n'ai pas encore de CV</span> <br>
             <span class="maj-choice-desc">Nos experts le rédigent de A à Z, livré en 48h</span>
-          </span>
-          <span class="maj-choice-chevron">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
           </span>
         </a>
       </div>
@@ -1158,29 +1004,16 @@
       <div class="modal-handle"></div>
       <h2 class="modal-title">Centre d'aide</h2>
       <p style="color:var(--text-muted);font-size:.88rem;margin-bottom:16px;line-height:1.5;">Bienvenue sur Chronos-Services ! Voici comment utiliser l'application.</p>
-      <div style="margin-bottom:14px;"><strong style="color:var(--orange);">1. Demande de CV</strong><p style="font-size:.85rem;color:var(--text-muted);margin-top:4px;line-height:1.4;">Appuyez sur "Demande CV" dans la navigation ou sur le bouton héros pour accéder au formulaire.</p></div>
-      <div style="margin-bottom:14px;"><strong style="color:var(--orange);">2. Mise à jour CV</strong><p style="font-size:.85rem;color:var(--text-muted);margin-top:4px;line-height:1.4;">Vous avez déjà un CV chez nous ? Utilisez le formulaire de mise à jour pour modifier uniquement ce qui a changé.</p></div>
-      <div style="margin-bottom:14px;"><strong style="color:var(--orange);">3. Lettre de motivation</strong><p style="font-size:.85rem;color:var(--text-muted);margin-top:4px;line-height:1.4;">Formulaire dédié pour une lettre personnalisée selon le poste visé.</p></div>
-      <div style="margin-bottom:20px;"><strong style="color:var(--orange);">4. Catalogue de CV</strong><p style="font-size:.85rem;color:var(--text-muted);margin-top:4px;line-height:1.4;">Plus de 40 modèles adaptés à tous les secteurs d'activité.</p></div>
+      <div style="margin-bottom:14px;"><strong style="color:var(--orange);">1. Demande de CV</strong><p style="font-size:.85rem;color:var(--text-muted);margin-top:4px;line-height:1.4;">Appuyez sur "Demande CV" dans la navigation pour accéder au formulaire.</p></div>
+      <div style="margin-bottom:14px;"><strong style="color:var(--orange);">2. Mise à jour CV</strong><p style="font-size:.85rem;color:var(--text-muted);margin-top:4px;line-height:1.4;">Vous avez déjà un CV chez nous ? Utilisez le formulaire de mise à jour.</p></div>
+      <div style="margin-bottom:14px;"><strong style="color:var(--orange);">3. Partage moderne</strong><p style="font-size:.85rem;color:var(--text-muted);margin-top:4px;line-height:1.4;">Le bouton en haut à droite permet de partager l'application sur WhatsApp, Facebook, LinkedIn, X, Telegram, SMS ou par QR Code.</p></div>
       <div style="background:var(--bg);border-radius:var(--radius-md);padding:14px;"><strong>Support</strong><p style="font-size:.82rem;color:var(--text-muted);margin-top:4px;">📧 <a href="mailto:chronosservices241@gmail.com">chronosservices241@gmail.com</a><br>📞 065.37.08.82</p></div>
       <button onclick="closeModal('helpModal')" style="width:100%;margin-top:16px;padding:14px;background:var(--grad);color:white;border-radius:var(--radius-md);font-family:'Sora',sans-serif;font-weight:700;font-size:.95rem;cursor:pointer;">Compris !</button>
     </div>
   </div>
 
-  <!-- MODAL CONTACT -->
-  <div class="modal-backdrop" id="contactModal" onclick="closeModalOnBackdrop(event,'contactModal')">
-    <div class="modal-sheet">
-      <div class="modal-handle"></div>
-      <h2 class="modal-title">Contactez-nous</h2>
-      <div class="contact-row"><div class="contact-row__icon"><svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg></div><div><div class="contact-row__label">Téléphone</div><div class="contact-row__value">065.37.08.82</div></div></div>
-      <div class="contact-row"><div class="contact-row__icon"><svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="5" width="18" height="14" rx="2"/><polyline points="3,7 12,13 21,7"/></svg></div><div><div class="contact-row__label">Email</div><div class="contact-row__value"><a href="mailto:chronosservices241@gmail.com">chronosservices241@gmail.com</a></div></div></div>
-      <div class="contact-row"><div class="contact-row__icon" style="background:#1877F2;"><svg width="16" height="16" viewBox="0 0 24 24" fill="white"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg></div><div><div class="contact-row__label">Facebook</div><div class="contact-row__value"><a href="https://web.facebook.com/Chronos.Services/" target="_blank" style="color:var(--green-dark);">Chronos Services</a></div></div></div>
-      <a href="https://wa.me/24165370882" target="_blank" style="display:flex;align-items:center;justify-content:center;gap:8px;margin-top:8px;padding:14px;background:#25D366;color:white;border-radius:var(--radius-md);font-family:'Sora',sans-serif;font-weight:700;font-size:.95rem;"><svg width="18" height="18" fill="currentColor"><path d="M13.601 2.326A7.854 7.854 0 0 0 7.994 0C3.627 0 .068 3.558.064 7.926c0 1.399.366 2.76 1.057 3.965L0 16l4.204-1.102a7.933 7.933 0 0 0 3.79.965h.004c4.368 0 7.926-3.558 7.93-7.93A7.898 7.898 0 0 0 13.6 2.326zM7.994 14.521a6.573 6.573 0 0 1-3.356-.92l-.24-.144-2.494.654.666-2.433-.156-.251a6.56 6.56 0 0 1-1.007-3.505c0-3.626 2.957-6.584 6.591-6.584a6.56 6.56 0 0 1 4.66 1.931 6.557 6.557 0 0 1 1.928 4.66c-.004 3.639-2.961 6.592-6.592 6.592z"/></svg>Écrire sur WhatsApp</a>
-    </div>
-  </div>
-
   <script>
-    /* ─── MOTEUR DE SONS UI (synthétisés, sans fichier audio) ─── */
+    /* ─── MOTEUR DE SONS UI SYNTHÉTISÉS ─── */
     const SoundFX = (function () {
       let ctx = null;
       function getCtx() {
@@ -1211,8 +1044,6 @@
           osc.stop(t0 + duration + 0.02);
         } catch (e) {}
       }
-      /* "Whoosh" : bruit filtré dont la fréquence balaie de fromFreq à toFreq —
-         donne un vrai mouvement dynamique à l'apparition/disparition d'une fenêtre */
       function whoosh(fromFreq, toFreq, duration, peakGain, delay) {
         const c = getCtx();
         if (!c) return;
@@ -1249,8 +1080,6 @@
       };
     })();
 
-    /* Feedback sonore générique au clic (boutons, liens, cartes, chips…),
-       en évitant les doublons avec les sons dédiés open/close/toggle */
     document.addEventListener('click', function (e) {
       const t = e.target.closest('button, a, [onclick], .service-chip, .quick-item, .tile');
       if (!t) return;
@@ -1258,18 +1087,18 @@
       if (/toggleMenuSheet/.test(oc)) {
         const sheet = document.getElementById('menuSheet');
         (sheet && sheet.classList.contains('open')) ? SoundFX.close() : SoundFX.open();
-      } else if (/openMenuSheet|openMajModal|openModal/.test(oc)) {
+      } else if (/openMenuSheet|openMajModal|openModal|openShareModal/.test(oc)) {
         SoundFX.open();
-      } else if (/closeMenuSheet|closeMajModal|closeModal|majModalBackdrop|closeMenuOnBackdrop/.test(oc)) {
+      } else if (/closeMenuSheet|closeMajModal|closeModal|closeShareModal/.test(oc)) {
         SoundFX.close();
       } else {
         SoundFX.click();
       }
     }, true);
 
-    /* ─── NOUVEL ONBOARDING — navigation 100% manuelle (Passer / ← / Suivant) ─── */
+    /* ─── ONBOARDING ─── */
     (function () {
-      var TOTAL = 7;
+      var TOTAL = 3;
       var cur = 0, busy = false;
       var wrap = document.getElementById('csOb');
       if (!wrap) return;
@@ -1327,9 +1156,6 @@
         setTimeout(function() {
           if (wrap.parentNode) wrap.parentNode.removeChild(wrap);
           document.body.style.overflow = '';
-          setTimeout(function() {
-            if (typeof showWelcomeToast === 'function') showWelcomeToast();
-          }, 200);
         }, 380);
       }
 
@@ -1341,46 +1167,23 @@
       });
       wrap.querySelectorAll('.ob-skip').forEach(function(b) { b.addEventListener('click', closeOb); });
 
-      /* Balayage tactile — navigation manuelle uniquement, pas de défilement auto */
-      var tsX = 0;
-      wrap.addEventListener('touchstart', function(e) { tsX = e.touches[0].clientX; }, { passive: true });
-      wrap.addEventListener('touchend', function(e) {
-        var dx = e.changedTouches[0].clientX - tsX;
-        if (Math.abs(dx) > 44) { dx < 0 ? goTo(Math.min(cur + 1, TOTAL - 1)) : goTo(Math.max(cur - 1, 0)); }
-      }, { passive: true });
-
-      document.addEventListener('keydown', function(e) {
-        if (!document.getElementById('csOb')) return;
-        if (e.key === 'ArrowRight' || e.key === 'ArrowDown') goTo(cur + 1);
-        if (e.key === 'ArrowLeft'  || e.key === 'ArrowUp')   goTo(cur - 1);
-        if (e.key === 'Escape') closeOb();
-      });
-
       document.body.style.overflow = 'hidden';
       updateNav();
       updateDots();
     })();
 
-    /* ─── PAGE D'ACCUEIL ─────────────────────────────────── */
+    /* ─── RECHERCHE ─── */
     const searchData = [
-      { title: 'Demande de CV',           desc: 'Créer un CV professionnel',            href: 'formulaire-cv-scanner.html' },
-      { title: 'Mise à jour CV',          desc: 'Modifier votre CV existant chez nous', href: 'formulaire-mise-a-jour-cv.html' },
-      { title: 'Modifier mon CV',         desc: 'Mettre à jour votre CV existant',      href: 'formulaire-mise-a-jour-cv.html' },
-      { title: 'Mettre à jour mon CV',    desc: 'Formulaire clients existants',         href: 'formulaire-mise-a-jour-cv.html' },
-      { title: 'Lettre de motivation',    desc: 'Rédiger une lettre sur mesure',        href: 'formulaire-lettre.html' },
-      { title: 'Catalogue de CV',         desc: 'Parcourir nos 40+ modèles',           href: 'catalogue de CV.html' },
-      { title: 'Rédaction de documents',  desc: 'Documents professionnels',            href: null, action: () => showToast('Contactez-nous pour ce service : 065.37.08.82') },
-      { title: 'Affiches publicitaires',  desc: 'Conception graphique',                href: null, action: () => showToast('Contactez-nous pour ce service : 065.37.08.82') },
-      { title: 'Gestion réseaux sociaux', desc: 'Community management',                href: null, action: () => showToast('Contactez-nous pour ce service : 065.37.08.82') },
-      { title: 'Contact',                 desc: 'Nous joindre',                        href: null, action: () => openModal('contactModal') },
-      { title: 'Aide',                    desc: "Centre d'aide et support",            href: null, action: () => openModal('helpModal') },
-      { title: 'Facebook',                desc: 'Notre page Facebook',                 href: 'https://web.facebook.com/Chronos.Services/' },
-      { title: 'WhatsApp',                desc: 'Nous écrire sur WhatsApp',            href: 'https://wa.me/24165370882' },
-      { title: 'ATS',                     desc: 'CV optimisé pour recruteurs',         href: 'formulaire-cv-scanner.html' },
-      { title: 'Format Word',             desc: 'CV au format Word',                   href: 'formulaire-cv-scanner.html' },
+      { title: 'Demande de CV', desc: 'Créer un CV professionnel', href: 'formulaire-cv-scanner.html' },
+      { title: 'Mise à jour CV', desc: 'Modifier votre CV existant chez nous', href: 'formulaire-mise-a-jour-cv.html' },
+      { title: 'Partager l\'application', desc: 'Recommander Chronos-Services', href: null, action: () => openShareModal() },
+      { title: 'Lettre de motivation', desc: 'Rédiger une lettre sur mesure', href: 'formulaire-lettre.html' },
+      { title: 'Catalogue de CV', desc: 'Parcourir nos 40+ modèles', href: 'catalogue de CV.html' },
+      { title: 'Aide', desc: "Centre d'aide et support", href: null, action: () => openModal('helpModal') },
+      { title: 'WhatsApp', desc: 'Nous écrire sur WhatsApp', href: 'https://wa.me/24165370882' }
     ];
 
-    const searchInput   = document.getElementById('searchInput');
+    const searchInput = document.getElementById('searchInput');
     const searchResults = document.getElementById('searchResults');
 
     searchInput.addEventListener('input', function () {
@@ -1404,23 +1207,20 @@
     }
 
     document.addEventListener('click', e => { if (!e.target.closest('.search-wrap')) searchResults.style.display = 'none'; });
-    searchInput.addEventListener('keydown', e => { if (e.key === 'Enter') { const first = searchResults.querySelector('.search-result-item'); if (first) first.click(); } });
 
+    /* ─── MODALES GÉNÉRALES ─── */
     function openModal(id)  { document.getElementById(id).classList.add('open'); }
     function closeModal(id) { document.getElementById(id).classList.remove('open'); }
     function closeModalOnBackdrop(e, id) { if (e.target === document.getElementById(id)) closeModal(id); }
 
-    /* ── Menu "+" (bandeau du bas) ── */
     function openMenuSheet() {
       document.getElementById('menuSheet').classList.add('open');
       document.getElementById('menuFab').classList.add('open');
-      document.getElementById('menuFab').setAttribute('aria-expanded', 'true');
       document.body.style.overflow = 'hidden';
     }
     function closeMenuSheet() {
       document.getElementById('menuSheet').classList.remove('open');
       document.getElementById('menuFab').classList.remove('open');
-      document.getElementById('menuFab').setAttribute('aria-expanded', 'false');
       document.body.style.overflow = '';
     }
     function toggleMenuSheet() {
@@ -1428,13 +1228,10 @@
       if (sheet.classList.contains('open')) closeMenuSheet();
       else openMenuSheet();
     }
-    function closeMenuOnBackdrop(e) {
-      if (e.target.id === 'menuSheet') closeMenuSheet();
-    }
+    function closeMenuOnBackdrop(e) { if (e.target.id === 'menuSheet') closeMenuSheet(); }
 
-    /* ── Modale Mise à jour CV ── */
     function openMajModal(e) {
-      e.preventDefault();
+      if (e) e.preventDefault();
       document.getElementById('majModal').classList.add('open');
       document.body.style.overflow = 'hidden';
     }
@@ -1442,9 +1239,7 @@
       document.getElementById('majModal').classList.remove('open');
       document.body.style.overflow = '';
     }
-    function majModalBackdrop(e) {
-      if (e.target === document.getElementById('majModal')) closeMajModal();
-    }
+    function majModalBackdrop(e) { if (e.target === document.getElementById('majModal')) closeMajModal(); }
 
     function showToast(msg) {
       SoundFX.notify();
@@ -1454,43 +1249,248 @@
       el.className = 'toast';
       el.innerHTML = `<svg width="18" height="18" fill="none" stroke="white" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg><span>${msg}</span>`;
       document.body.appendChild(el);
-      setTimeout(() => { if (el.parentNode) el.remove(); }, 5000);
+      setTimeout(() => { if (el.parentNode) el.remove(); }, 4000);
     }
 
-    function showWelcomeToast() {
-      SoundFX.notify();
-      const existing = document.querySelector('.toast');
-      if (existing) existing.remove();
-      const el = document.createElement('div');
-      el.className = 'toast toast--welcome';
-      el.innerHTML = `<span class="toast__icon">👋</span><span class="toast__text"><strong>Bienvenue sur Chronos-Services !</strong><span>On est là pour vous aider.</span></span>`;
-      document.body.appendChild(el);
-      setTimeout(() => { if (el.parentNode) el.remove(); }, 5000);
+    /* ====================================================
+       GESTIONNAIRE DE PARTAGE MODERNE & PROFESSIONNEL
+    ==================================================== */
+    // Domaine officiel propre de l'application Chronos-Services
+    const OFFICIAL_SITE_DOMAIN = 'https://chronos-services.netlify.app';
+
+    const sharePresets = {
+      general: {
+        title: 'Chronos-Services — CV & Documents Professionnels',
+        desc: 'CV professionnels, lettres de motivation & modèles premium rédigés en 48h.',
+        message: 'Découvrez Chronos-Services : vos CV et lettres de motivation rédigés par des professionnels, livrés en 48h !'
+      },
+      cv: {
+        title: 'Commander un nouveau CV — Chronos-Services',
+        desc: 'Un CV percutant rédigé de A à Z par nos experts pour décrocher des entretiens.',
+        message: 'Besoin d\'un CV moderne et percutant qui décroche des entretiens ? Commandez-le sur Chronos-Services en 48h chrono !'
+      },
+      maj: {
+        title: 'Mise à jour de CV existant — Chronos-Services',
+        desc: 'Mise à jour rapide de votre CV tout en conservant votre design d\'origine.',
+        message: 'Vous avez déjà un CV chez Chronos-Services ? Mettez-le à jour facilement en quelques clics !'
+      },
+      lettre: {
+        title: 'Lettre de motivation personnalisée — Chronos-Services',
+        desc: 'Rédigée sur-mesure pour valoriser votre profil auprès des recruteurs.',
+        message: 'Une lettre de motivation sur-mesure pour booster vos candidatures avec Chronos-Services !'
+      }
+    };
+
+    let activePreset = 'general';
+
+    // Récupère l'URL officielle du site (évite les adresses brutes de conteneurs ou previews)
+    function getBaseSiteUrl() {
+      const hostname = window.location.hostname || '';
+      if (
+        hostname.includes('run.app') ||
+        hostname.includes('localhost') ||
+        hostname.includes('127.0.0.1') ||
+        hostname.includes('aistudio') ||
+        hostname.includes('webcontainer') ||
+        hostname.includes('cloudfunctions.net') ||
+        !hostname
+      ) {
+        return OFFICIAL_SITE_DOMAIN;
+      }
+
+      // Si le site tourne directement sur son domaine de production
+      return window.location.origin || OFFICIAL_SITE_DOMAIN;
     }
 
-    function shareApp() {
-      const shareData = {
-        title: 'Chronos-Services',
-        text: 'Chronos-Services — CV professionnels, lettres de motivation et modèles premium, livrés rapidement.',
-        url: window.location.href
-      };
-      if (navigator.share) {
-        navigator.share(shareData).catch(() => {});
-      } else if (navigator.clipboard) {
-        navigator.clipboard.writeText(shareData.url)
-          .then(() => showToast('Lien copié ! Partagez-le avec vos proches.'))
-          .catch(() => showToast('Partagez ce lien : ' + shareData.url));
-      } else {
-        showToast('Partagez ce lien : ' + shareData.url);
+    function getShareUrl(presetKey) {
+      const key = presetKey || activePreset || 'general';
+      const base = getBaseSiteUrl();
+      if (key === 'general') return base;
+      return `${base}?ref=${key}`;
+    }
+
+    function updateShareUi() {
+      const url = getShareUrl();
+      const copyInput = document.getElementById('shareCopyUrl');
+      if (copyInput) copyInput.value = url;
+
+      // Mettre à jour le QR code avec l'adresse propre
+      const qrImg = document.getElementById('shareQrImg');
+      if (qrImg) {
+        qrImg.src = 'https://api.qrserver.com/v1/create-qr-code/?size=220x220&data=' + encodeURIComponent(url) + '&color=094102&bgcolor=ffffff&margin=1';
       }
     }
 
-    ['svcTrack'].forEach(function (id) {
-      var el = document.getElementById(id);
-      if (!el) return;
-      el.addEventListener('touchstart', function () { el.style.animationPlayState = 'paused'; }, { passive: true });
-      el.addEventListener('touchend',   function () { el.style.animationPlayState = 'running'; });
+    function openShareModal() {
+      SoundFX.open();
+      updateShareUi();
+      document.getElementById('shareModal').classList.add('open');
+      document.body.style.overflow = 'hidden';
+    }
+
+    function closeShareModal() {
+      SoundFX.close();
+      document.getElementById('shareModal').classList.remove('open');
+      document.body.style.overflow = '';
+      const qrPanel = document.getElementById('shareQrPanel');
+      if (qrPanel) qrPanel.classList.remove('open');
+      const qrLabel = document.getElementById('shareQrToggleLabel');
+      if (qrLabel) qrLabel.textContent = "Afficher QR Code";
+    }
+
+    function closeShareOnBackdrop(e) {
+      if (e.target.id === 'shareModal') closeShareModal();
+    }
+
+    // Touche Echap pour fermer les modales
+    document.addEventListener('keydown', function (e) {
+      if (e.key === 'Escape') {
+        closeShareModal();
+        closeMajModal();
+        closeMenuSheet();
+        closeModal('helpModal');
+      }
     });
+
+    function setSharePreset(presetKey, btnEl) {
+      SoundFX.click();
+      activePreset = presetKey;
+      document.querySelectorAll('.share-preset-chip').forEach(c => c.classList.remove('active'));
+      if (btnEl) btnEl.classList.add('active');
+
+      updateShareUi();
+    }
+
+    function executeShare(channel) {
+      SoundFX.click();
+      const url = getShareUrl();
+      const preset = sharePresets[activePreset] || sharePresets.general;
+      const text = preset.message;
+      const encodedUrl = encodeURIComponent(url);
+      const encodedText = encodeURIComponent(text);
+
+      let shareLink = '';
+
+      switch (channel) {
+        case 'whatsapp':
+          shareLink = `https://api.whatsapp.com/send?text=${encodedText}%0A%0A${encodedUrl}`;
+          window.open(shareLink, '_blank');
+          break;
+
+        case 'facebook':
+          shareLink = `https://www.facebook.com/sharer/sharer.php?u=${encodedUrl}`;
+          window.open(shareLink, '_blank', 'width=600,height=480');
+          break;
+
+        case 'linkedin':
+          shareLink = `https://www.linkedin.com/sharing/share-offsite/?url=${encodedUrl}`;
+          window.open(shareLink, '_blank', 'width=600,height=520');
+          break;
+
+        case 'twitter':
+          shareLink = `https://twitter.com/intent/tweet?text=${encodedText}&url=${encodedUrl}`;
+          window.open(shareLink, '_blank', 'width=600,height=420');
+          break;
+
+        case 'telegram':
+          shareLink = `https://t.me/share/url?url=${encodedUrl}&text=${encodedText}`;
+          window.open(shareLink, '_blank');
+          break;
+
+        case 'messenger':
+          // Redirection Messenger / Web Facebook dialog
+          shareLink = `https://www.facebook.com/dialog/send?link=${encodedUrl}&app_id=291494419107518&redirect_uri=${encodedUrl}`;
+          window.open(shareLink, '_blank', 'width=600,height=500');
+          break;
+
+        case 'sms':
+          window.location.href = `sms:?body=${encodeURIComponent(text + ' ' + url)}`;
+          break;
+
+        case 'email':
+          const subject = encodeURIComponent("Recommandation : " + preset.title);
+          const body = encodeURIComponent(`${text}\n\nAccédez à l'application ici : ${url}\n\n— Chronos-Services`);
+          window.location.href = `mailto:?subject=${subject}&body=${body}`;
+          break;
+
+        default:
+          copyShareUrl();
+          break;
+      }
+    }
+
+    function executeNativeShare() {
+      SoundFX.click();
+      const url = getShareUrl();
+      const preset = sharePresets[activePreset] || sharePresets.general;
+
+      if (navigator.share) {
+        navigator.share({
+          title: preset.title,
+          text: preset.message,
+          url: url
+        }).then(() => {
+          showToast('Partage réussi !');
+        }).catch((err) => {
+          if (err.name !== 'AbortError') {
+            copyShareUrl();
+          }
+        });
+      } else {
+        copyShareUrl();
+      }
+    }
+
+    function copyShareUrl() {
+      const url = getShareUrl();
+      const btn = document.getElementById('shareCopyBtn');
+      const textSpan = document.getElementById('shareCopyText');
+
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(url).then(onCopySuccess).catch(fallbackCopy);
+      } else {
+        fallbackCopy();
+      }
+
+      function onCopySuccess() {
+        SoundFX.notify();
+        if (btn) btn.classList.add('copied');
+        if (textSpan) textSpan.textContent = 'Copié !';
+        showToast('Lien copié dans le presse-papiers !');
+        setTimeout(() => {
+          if (btn) btn.classList.remove('copied');
+          if (textSpan) textSpan.textContent = 'Copier';
+        }, 2200);
+      }
+
+      function fallbackCopy() {
+        const input = document.getElementById('shareCopyUrl');
+        if (input) {
+          input.focus();
+          input.select();
+          try {
+            document.execCommand('copy');
+            onCopySuccess();
+          } catch (e) {
+            showToast('Lien : ' + url);
+          }
+        }
+      }
+    }
+
+    function toggleShareQr() {
+      SoundFX.toggle();
+      const panel = document.getElementById('shareQrPanel');
+      const label = document.getElementById('shareQrToggleLabel');
+      if (!panel) return;
+      const isOpen = panel.classList.toggle('open');
+      if (label) label.textContent = isOpen ? 'Masquer QR Code' : 'Afficher QR Code';
+    }
+
+    // Compatibilité rétroactive avec shareApp()
+    function shareApp() {
+      openShareModal();
+    }
   </script>
 </body>
 </html>
