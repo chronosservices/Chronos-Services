@@ -238,7 +238,7 @@
         .cv-empty { font-size: clamp(0.66rem, 1.7vw, 0.72rem); color: #bbb; font-style: italic; }
 
         /* CONFIRMATION BANNER */
-        .confirm-banner { text-align:center; padding:6px 4px 20px; margin-bottom:18px; border-bottom:1px solid #eee; }
+        .confirm-banner { text-align:center; padding:6px 4px 4px; margin-bottom:6px; }
         .cb-check { width:64px; height:64px; display:block; margin:0 auto 12px; overflow:visible; }
         .cb-ring { fill:#e9f6e8; stroke:#0A7303; stroke-width:2; stroke-dasharray:151; stroke-dashoffset:151; animation:cbDraw .6s ease forwards; }
         .cb-tick { fill:none; stroke:#094102; stroke-width:4; stroke-linecap:round; stroke-linejoin:round; stroke-dasharray:40; stroke-dashoffset:40; animation:cbDraw .4s .45s ease forwards; }
@@ -255,6 +255,10 @@
         .cb-steps li:nth-child(3)::before { background:linear-gradient(135deg,#094102,#FF5700); }
         .cb-steps li:not(:last-child)::after { content:''; position:absolute; left:12px; top:28px; bottom:2px; width:2px; background:#e3e8e2; }
         .cb-steps li:last-child { padding-bottom:0; }
+        .cb-pay { display:flex; justify-content:space-between; align-items:center; margin-top:6px; padding:7px 12px; background:#f6f8f6; border-radius:8px; font-size:12.5px; color:#094102; font-weight:600; }
+        .cb-pay em { font-style:normal; color:#FF5700; font-weight:700; }
+        .cb-benef { display:block; margin-top:6px; font-size:12px; color:#777; }
+        .cb-amount { color:#FF5700; }
         @media (prefers-reduced-motion:reduce) { .cb-ring,.cb-tick { animation:none; stroke-dashoffset:0; } }
 
         
@@ -460,7 +464,7 @@
         <div class="prefill-banner-fields" id="prefillTagsContainer"></div>
     </div>
 
-    <form action="https://formspree.io/f/mrbgraoo" method="POST" id="mainForm">
+    <form action="https://formspree.io/f/mrbgraoo" method="POST" id="mainForm" novalidate>
 
         <!-- STEP 1 -->
         <div class="step-content active" data-step="1">
@@ -481,7 +485,7 @@
                 <input type="email" name="email" id="f_email" placeholder="Ex : mavoungouj@email.com" required>
                 <div class="field-msg" id="msg_email">
                     <svg viewBox="0 0 20 20" fill="#C53030"><circle cx="10" cy="10" r="9"/><rect x="9" y="5" width="2" height="6" fill="#fff"/><rect x="9" y="13" width="2" height="2" fill="#fff"/></svg>
-                    Ce champ est obligatoire pour continuer
+                    <span class="msg-text">Ce champ est obligatoire pour continuer</span>
                 </div>
             </label>
 
@@ -732,12 +736,16 @@
             <p>Nous l'avons bien reçue. Il ne reste que le paiement pour lancer la rédaction.</p>
             <button type="button" class="cb-ref" onclick="copyInvoiceRef(this)" title="Copier la référence">Réf. <b id="confirmInvoice"></b><span>Copier</span></button>
             <ol class="cb-steps">
-                <li><b>Payez</b>par Airtel Money ou Moov Money (ci-dessous)</li>
+                <li><b>Payez <span id="cbAmount" class="cb-amount">2 050 FCFA</span></b>
+                    <span class="cb-pay">Airtel Money <em>077 101 378</em></span>
+                    <span class="cb-pay">Moov Money <em>065 370 882</em></span>
+                    <span class="cb-benef">Bénéficiaire : Nel MANKOU</span></li>
                 <li><b>Envoyez la capture du paiement</b>sur WhatsApp au +241 65 37 08 82 avec votre référence</li>
-                <li><b>Recevez votre CV</b>dans le délai choisi</li>
+                <li><b>Recevez votre CV</b>en Word / PowerPoint et PDF selon votre modèle, dans le délai choisi</li>
             </ol>
         </div>
 
+        <div id="invoiceData" hidden>
         <div class="invoice-header">
             <div class="invoice-title">Facture de Service</div>
             <div class="invoice-number" id="invoiceNumber">Facture N° CV-001</div>
@@ -765,7 +773,8 @@
             <strong>Bénéficiaire: Nel MANKOU</strong><br>
             <small>Vous recevrez le document Word / PowerPoint et PDF selon le modèle choisi, une fois la rédaction terminée.</small>
         </div>
-        <button class="pdf-btn" onclick="downloadInvoicePDF()" type="button">⬇ Télécharger la Facture (PDF)</button>
+        </div>
+        <button class="pdf-btn" onclick="downloadInvoicePDF()" type="button" style="margin-top:14px;">⬇ Télécharger la Facture (PDF)</button>
     </div>
 </div>
 
@@ -1028,7 +1037,12 @@ function validateStep(step) {
         var el = document.getElementById(f.id);
         if (!el) return;
         var val = el.value ? el.value.trim() : '';
-        if (!val) {
+        var bad = !val || (f.id === 'f_email' && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(val));
+        if (f.id === 'f_email') {
+            var mt = document.querySelector('#msg_email .msg-text');
+            if (mt) mt.textContent = val ? 'Adresse email invalide (ex : nom@email.com)' : 'Ce champ est obligatoire pour continuer';
+        }
+        if (bad) {
             showFieldError(f.id, f.msgId);
             if (!firstError) firstError = el;
             hasError = true;
@@ -1284,7 +1298,12 @@ function structureMessage() {
 
 function handleFormSubmit(e) {
     e.preventDefault();
-    if (!validateStep(currentStep)) return;
+    for (var s = 1; s <= totalSteps; s++) {
+        if (!validateStep(s)) {
+            if (s !== currentStep) { currentStep = s; showStep(s); validateStep(s); window.scrollTo({ top: 0, behavior: 'smooth' }); }
+            return;
+        }
+    }
     structureMessage();
     latestInvoiceNumber = generateInvoiceNumber();
     document.getElementById('invoiceNumberHidden').value = latestInvoiceNumber;
@@ -1322,6 +1341,7 @@ function showPaymentModal(fd) {
     var isPrem = (fd.get('niveau_urgence') || '').includes('Premium');
     document.getElementById('premiumCharge').style.display = isPrem ? 'flex' : 'none';
     document.getElementById('totalAmount').textContent = isPrem ? '3 050 FCFA' : '2 050 FCFA';
+    document.getElementById('cbAmount').textContent = document.getElementById('totalAmount').textContent;
     modal.classList.add('show');
     document.body.style.overflow = 'hidden';
 }
