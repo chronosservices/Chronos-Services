@@ -237,7 +237,28 @@
         .cv-price-pill { display: inline-block; background: linear-gradient(90deg, var(--green-dark), var(--green-mid)); border: none; border-radius: 20px; padding: 5px 14px; font-size: clamp(0.72rem, 1.9vw, 0.8rem); font-weight: 700; color: #fff; margin-top: 4px; }
         .cv-empty { font-size: clamp(0.66rem, 1.7vw, 0.72rem); color: #bbb; font-style: italic; }
 
-        /* PAYMENT MODAL */
+        /* CONFIRMATION BANNER */
+        .confirm-banner { text-align:center; padding:6px 4px 20px; margin-bottom:18px; border-bottom:1px solid #eee; }
+        .cb-check { width:64px; height:64px; display:block; margin:0 auto 12px; overflow:visible; }
+        .cb-ring { fill:#e9f6e8; stroke:#0A7303; stroke-width:2; stroke-dasharray:151; stroke-dashoffset:151; animation:cbDraw .6s ease forwards; }
+        .cb-tick { fill:none; stroke:#094102; stroke-width:4; stroke-linecap:round; stroke-linejoin:round; stroke-dasharray:40; stroke-dashoffset:40; animation:cbDraw .4s .45s ease forwards; }
+        @keyframes cbDraw { to { stroke-dashoffset:0; } }
+        .confirm-banner h3 { font-size:1.25rem; font-weight:700; color:#094102; margin-bottom:4px; }
+        .confirm-banner p { font-size:13px; color:#555; line-height:1.55; max-width:320px; margin:0 auto; }
+        .cb-ref { display:inline-flex; align-items:center; gap:8px; margin:14px 0 4px; padding:7px 8px 7px 14px; border:1px dashed #b9c9b7; background:#fafcfa; border-radius:999px; font:500 12px 'Poppins',sans-serif; color:#555; cursor:pointer; }
+        .cb-ref b { color:#094102; font-weight:600; letter-spacing:.02em; }
+        .cb-ref span { background:#094102; color:#fff; border-radius:999px; padding:3px 10px; font-size:11px; font-weight:600; }
+        .cb-steps { list-style:none; text-align:left; margin:16px 0 0; padding:0; counter-reset:cb; }
+        .cb-steps li { position:relative; padding:0 0 14px 38px; font-size:13px; color:#555; line-height:1.45; counter-increment:cb; }
+        .cb-steps li b { display:block; color:#222; font-weight:600; }
+        .cb-steps li::before { content:counter(cb); position:absolute; left:0; top:0; width:26px; height:26px; border-radius:50%; background:#094102; color:#fff; font-size:12px; font-weight:600; display:flex; align-items:center; justify-content:center; }
+        .cb-steps li:nth-child(3)::before { background:linear-gradient(135deg,#094102,#FF5700); }
+        .cb-steps li:not(:last-child)::after { content:''; position:absolute; left:12px; top:28px; bottom:2px; width:2px; background:#e3e8e2; }
+        .cb-steps li:last-child { padding-bottom:0; }
+        @media (prefers-reduced-motion:reduce) { .cb-ring,.cb-tick { animation:none; stroke-dashoffset:0; } }
+
+        
+/* PAYMENT MODAL */
         .payment-modal { display: none; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0,0,0,0.5); z-index: 2000; justify-content: center; align-items: center; padding: 20px; overflow-y: auto; }
         .payment-modal.show { display: flex; }
         .payment-content { background: white; border-radius: 16px; padding: 28px 20px; max-width: 480px; width: 100%; max-height: calc(100vh - 40px); overflow-y: auto; position: relative; animation: slideInModal 0.3s ease; margin: auto; }
@@ -642,7 +663,6 @@
             <div style="display:flex;gap:12px;justify-content:center;margin-top:20px;flex-wrap:wrap;">
                 <button type="button" id="resetFormBtn" style="background:#fff;color:#d94c00;border:2px solid #d94c00;border-radius:8px;padding:10px 22px;font-weight:600;cursor:pointer;font-family:'Poppins',sans-serif;">Réinitialiser le formulaire</button>
             </div>
-            <div id="form-message"></div>
         </div>
 
         <!-- STEP 6 -->
@@ -684,6 +704,7 @@
                     </div>
                 </div>
             </div>
+            <div id="form-message"></div>
         </div>
 
         <!-- Navigation -->
@@ -705,6 +726,18 @@
 <div class="payment-modal" id="paymentModal">
     <div class="payment-content">
         <button class="close-modal" onclick="closePaymentModal()" type="button">&times;</button>
+        <div class="confirm-banner" role="status">
+            <svg class="cb-check" viewBox="0 0 52 52" aria-hidden="true"><circle class="cb-ring" cx="26" cy="26" r="24"/><path class="cb-tick" d="M15 27l8 8 14-16"/></svg>
+            <h3>Demande envoyée</h3>
+            <p>Nous l'avons bien reçue. Il ne reste que le paiement pour lancer la rédaction.</p>
+            <button type="button" class="cb-ref" onclick="copyInvoiceRef(this)" title="Copier la référence">Réf. <b id="confirmInvoice"></b><span>Copier</span></button>
+            <ol class="cb-steps">
+                <li><b>Payez</b>par Airtel Money ou Moov Money (ci-dessous)</li>
+                <li><b>Envoyez la capture du paiement</b>sur WhatsApp au +241 65 37 08 82 avec votre référence</li>
+                <li><b>Recevez votre CV</b>dans le délai choisi</li>
+            </ol>
+        </div>
+
         <div class="invoice-header">
             <div class="invoice-title">Facture de Service</div>
             <div class="invoice-number" id="invoiceNumber">Facture N° CV-001</div>
@@ -1275,7 +1308,7 @@ function handleFormSubmit(e) {
             SoundFX.error();
             console.error(err);
         })
-        .finally(function() { btn.disabled = false; });
+        .finally(function() { if (!msgEl.classList.contains('success')) btn.disabled = false; });
 }
 
 function showPaymentModal(fd) {
@@ -1285,6 +1318,7 @@ function showPaymentModal(fd) {
     document.getElementById('clientContact').textContent = fd.get('telephone') || '-';
     document.getElementById('clientEmail').textContent = fd.get('email') || '-';
     document.getElementById('invoiceNumber').textContent = 'Facture N° ' + (latestInvoiceNumber || generateInvoiceNumber());
+    document.getElementById('confirmInvoice').textContent = latestInvoiceNumber || '';
     var isPrem = (fd.get('niveau_urgence') || '').includes('Premium');
     document.getElementById('premiumCharge').style.display = isPrem ? 'flex' : 'none';
     document.getElementById('totalAmount').textContent = isPrem ? '3 050 FCFA' : '2 050 FCFA';
@@ -1292,7 +1326,14 @@ function showPaymentModal(fd) {
     document.body.style.overflow = 'hidden';
 }
 
+function copyInvoiceRef(btn) {
+    var ref = document.getElementById('confirmInvoice').textContent, lab = btn.querySelector('span');
+    function done() { lab.textContent = 'Copié ✓'; setTimeout(function() { lab.textContent = 'Copier'; }, 1800); }
+    if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(ref).then(done, done); else done();
+}
+
 function closePaymentModal() {
+
     document.getElementById('paymentModal').classList.remove('show');
     document.body.style.overflow = 'auto';
     setTimeout(clearFormAndLocalStorage, 300);
@@ -1311,6 +1352,7 @@ function clearFormAndLocalStorage() {
     if (msg) { msg.textContent = ''; msg.className = ''; }
     document.getElementById('priceDisplay').style.display = 'none';
     document.getElementById('urgenceInfo').style.display = 'none';
+    document.getElementById('submitBtn').disabled = false;
     var pb = document.getElementById('prefillBanner'); if(pb) pb.classList.remove('show');
 }
 
