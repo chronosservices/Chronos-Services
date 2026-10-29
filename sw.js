@@ -9,7 +9,7 @@
  *    confirmé la mise à jour (voir js/pwa-update-banner.js)
  */
 
-const CACHE_VERSION = "v2";
+const CACHE_VERSION = "v3";
 const CACHE_NAME = `chronos-cv-cache-${CACHE_VERSION}`;
 
 // Coquille minimale pré-cachée à l'install (pages + manifest + icônes + scripts PWA)

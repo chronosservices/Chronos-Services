@@ -13,7 +13,7 @@
   var AUTO_DELAY = 500;
   // true = la visite s'affiche à CHAQUE ouverture de la page (même si déjà terminée/passée).
   // false = une seule fois, puis uniquement via le bouton « ? » / le menu.
-  var ALWAYS_AUTO = { home: true, cv: true, maj: true };
+  var ALWAYS_AUTO = { home: true, cv: true, maj: true, catalogue: true };
 
   // Sur les formulaires : pas de relance quand l'utilisateur REVIENT du catalogue (choix du modèle).
   var CATALOGUE_FLAG = 'chronos-tour-from-catalogue';
@@ -185,7 +185,108 @@
     }
   ];
 
-  var STEPS = { home: HOME_STEPS, cv: CV_STEPS, maj: MAJ_STEPS }[TOUR_NAME] || HOME_STEPS;
+  // `ui` = état de l'interface requis pour l'étape : 'list' (défaut), 'preview' (aperçu ouvert), 'share' (partage ouvert).
+  // La visite ouvre / ferme elle-même ces fenêtres en changeant d'étape.
+  var CATALOGUE_STEPS = [
+    {
+      element: '.controls .search', radius: 16,
+      popover: {
+        title: 'Trouvez un modèle',
+        description: 'Tapez le <strong>nom</strong> ou le <strong>numéro</strong> d’un modèle pour le retrouver tout de suite.',
+        side: 'bottom', align: 'center'
+      }
+    },
+    {
+      element: '#filters', radius: 16,
+      popover: {
+        title: 'Affinez votre recherche',
+        description: 'Filtrez par <strong>format</strong> (Word, PowerPoint) ou par <strong>style</strong> (moderne, classique, créatif, minimal), ou affichez vos favoris.',
+        side: 'bottom', align: 'center'
+      }
+    },
+    {
+      element: '#grid .card .card-body', radius: 14,
+      popover: {
+        title: 'Aperçu ou choix',
+        description: '<strong>Aperçu</strong> ouvre le modèle en grand (le cœur l’ajoute à vos favoris). <strong>Choisir</strong> vous ramène au formulaire, numéro déjà rempli. Voyons l’aperçu…',
+        side: 'top', align: 'center'
+      }
+    },
+    {
+      ui: 'preview', element: '#nextBtn', radius: 40,
+      popover: {
+        title: 'Passez d’un modèle à l’autre',
+        description: 'Les <strong>flèches</strong> (ou les touches ← →) font défiler les modèles. En bas, « Vous aimerez aussi » propose des modèles proches.',
+        side: 'top', align: 'end'
+      }
+    },
+    {
+      ui: 'preview', element: '.preview-pane .zoom', radius: 30,
+      popover: {
+        title: 'Zoomez sur les détails',
+        description: 'Utilisez <strong>+</strong> et <strong>−</strong> pour agrandir le CV, puis faites-le glisser pour le déplacer. Un clic sur le pourcentage remet la taille normale.',
+        side: 'top', align: 'center'
+      }
+    },
+    {
+      ui: 'preview', element: '#selectBtn', radius: 16,
+      popover: {
+        title: 'Choisir ce modèle',
+        description: 'Le modèle plaît ? Un clic et vous retournez au formulaire avec son <strong>numéro déjà rempli</strong>.',
+        side: 'top', align: 'center'
+      }
+    },
+    {
+      ui: 'preview', element: '#shareBtn', radius: 16,
+      popover: {
+        title: 'Partager ce modèle',
+        description: 'Envoyez-le à un proche pour avoir son avis. Voyons les options de partage…',
+        side: 'top', align: 'center'
+      }
+    },
+    {
+      ui: 'share', element: '.share-viral-actions', radius: 14,
+      popover: {
+        title: 'Avis d’un proche et téléchargement',
+        description: 'Demandez l’avis de quelqu’un sur <strong>WhatsApp</strong>, ou <strong>téléchargez l’image du modèle</strong> en haute définition (PNG).',
+        side: 'bottom', align: 'center'
+      }
+    },
+    {
+      ui: 'share', element: '.share-link-row', radius: 14,
+      popover: {
+        title: 'Lien et réseaux sociaux',
+        description: '<strong>Copiez le lien</strong> du modèle, ou partagez-le directement sur WhatsApp, Facebook et vos autres applications juste en dessous.',
+        side: 'top', align: 'center'
+      }
+    },
+    {
+      ui: 'share', element: '.share-qr-section', radius: 14,
+      popover: {
+        title: 'QR Code',
+        description: 'Scannez-le avec un autre appareil pour ouvrir ce modèle directement. Vous pouvez aussi <strong>télécharger le QR</strong>.',
+        side: 'top', align: 'center'
+      }
+    },
+    {
+      ui: 'preview', element: '#fullscreenBtn', radius: 16,
+      popover: {
+        title: 'Plein écran',
+        description: 'Affichez le CV sur tout l’écran pour le voir comme sur une feuille, sans rien autour.',
+        side: 'top', align: 'center'
+      }
+    },
+    {
+      element: '#compareBtn', radius: 100,
+      popover: {
+        title: 'Hésitez entre plusieurs ?',
+        description: 'Utilisez <strong>Comparer</strong> pour mettre jusqu’à 3 modèles côte à côte.',
+        side: 'bottom', align: 'end'
+      }
+    }
+  ];
+
+  var STEPS = { home: HOME_STEPS, cv: CV_STEPS, maj: MAJ_STEPS, catalogue: CATALOGUE_STEPS }[TOUR_NAME] || HOME_STEPS;
 
   function isVisible(el) {
     if (!el) return false;
@@ -198,7 +299,8 @@
   function anyOverlayOpen() {
     if (document.querySelector('#csOb')) return true;
     var sels = ['.share-backdrop.open', '.menu-backdrop.open', '.modal-backdrop.open', '#majModal.open',
-                '#scannerOverlay', '#micOverlay', '.payment-modal', '.modal-overlay'];
+                '#scannerOverlay', '#micOverlay', '.payment-modal', '.modal-overlay',
+                '#previewBackdrop', '#shareBackdrop', '#compareBackdrop'];
     return sels.some(function (q) {
       var el = document.querySelector(q);
       if (!el) return false;
@@ -214,7 +316,10 @@
     if (!lib) return false; // librairie non chargée : on n'affiche rien plutôt que casser la page
     if (!opts.force && ((!ALWAYS_AUTO[TOUR_NAME] && readState()) || anyOverlayOpen())) return false;
 
-    var steps = STEPS.filter(function (s) { return isVisible(document.querySelector(s.element)); });
+    var steps = STEPS.filter(function (s) {
+      var el = document.querySelector(s.element);
+      return (s.ui && s.ui !== 'list') ? !!el : isVisible(el);
+    });
     if (!steps.length) return false;
 
     var reduceMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -223,12 +328,59 @@
     var drv;
     var closed = false;
 
+    // ── Fenêtres du catalogue (aperçu / partage) ouvertes et fermées par la visite ──
+    function isOpen(id) { var e = document.getElementById(id); return !!e && e.classList.contains('open'); }
+    function setUI(target, done) {
+      target = target || 'list';
+      var delay = 0;
+      try {
+        if (target === 'list') {
+          if (isOpen('shareBackdrop') && window.closeShare) { window.closeShare(); delay = 250; }
+          if (isOpen('previewBackdrop') && window.closePreview) { window.closePreview(); delay = 250; }
+        } else {
+          if (!isOpen('previewBackdrop') && window.previewModel) {
+            var card = document.querySelector('#grid .card[data-id]');
+            if (card) { window.previewModel(card.getAttribute('data-id')); delay = 450; }
+          }
+          if (target === 'preview' && isOpen('shareBackdrop') && window.closeShare) { window.closeShare(); delay = 250; }
+          if (target === 'share' && !isOpen('shareBackdrop')) {
+            var sb = document.getElementById('shareBtn');
+            if (sb) { sb.click(); delay = Math.max(delay, 450); }
+          }
+        }
+      } catch (e) { /* une fenêtre qui ne s'ouvre pas ne doit jamais bloquer la visite */ }
+      if (done) setTimeout(done, delay);
+    }
+    var moving = false;
+    function go(dir) {
+      if (moving || closed) return;
+      var idx = drv.getActiveIndex();
+      var cur = steps[idx], tgt = steps[idx + dir];
+      if (dir > 0 && !tgt) { finished = true; finish(); setUI('list'); drv.destroy(); return; }
+      if (!tgt) return;
+      var move = function () { moving = false; if (closed) return; if (dir > 0) drv.moveNext(); else drv.movePrevious(); };
+      if ((tgt.ui || 'list') === (cur.ui || 'list')) { move(); return; }
+      moving = true;
+      setUI(tgt.ui, move);
+    }
+
+    // Les flèches ← → pilotent la visite, et non le carrousel de l'aperçu situé derrière
+    function onKey(e) {
+      if (closed || (e.key !== 'ArrowRight' && e.key !== 'ArrowLeft')) return;
+      if (!document.querySelector('.driver-popover')) return;
+      e.preventDefault(); e.stopImmediatePropagation();
+      go(e.key === 'ArrowRight' ? 1 : -1);
+    }
+    document.addEventListener('keydown', onKey, true);
+
     // Nettoyage idempotent : appelé quelle que soit la façon de quitter (Terminer, ×, Échap, « Passer »)
     function finish() {
       if (closed) return;
       closed = true;
       document.body.classList.remove('cs-tour-on');
       active = null;
+      document.removeEventListener('keydown', onKey, true);
+      setUI('list'); // referme l'aperçu / le partage ouverts par la visite
       writeState(finished ? 'done' : 'skipped');
     }
 
@@ -281,10 +433,8 @@
           popover.footer.appendChild(skip);
         }
       },
-      onNextClick: function (el, step, o) {
-        if (o.driver.isLastStep()) { finished = true; finish(); o.driver.destroy(); }
-        else o.driver.moveNext();
-      },
+      onNextClick: function () { go(1); },
+      onPrevClick: function () { go(-1); },
       onDestroyStarted: function (el, step, o) { finish(); o.driver.destroy(); },
       onDestroyed: finish
     });
@@ -299,7 +449,7 @@
   function stop() { if (active) active.destroy(); }
 
   function maybeAutoStart() {
-    if (TOUR_NAME !== 'home' && returningFromCatalogue()) return;
+    if ((TOUR_NAME === 'cv' || TOUR_NAME === 'maj') && returningFromCatalogue()) return;
     setTimeout(function () { start(); }, AUTO_DELAY);
   }
 

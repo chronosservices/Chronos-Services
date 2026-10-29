@@ -97,3 +97,6 @@ body.cs-tour-on .tile { animation: none !important; }
 .cs-tour-help:active { transform: scale(.94); }
 .cs-tour-help:focus-visible { outline: 3px solid rgba(255, 87, 0, .6); outline-offset: 3px; }
 body.cs-tour-on .cs-tour-help { display: none; }
+
+/* Catalogue : le tiroir « récents » occupe le bas-gauche → bouton d'aide à droite */
+body[data-cs-tour="catalogue"] .cs-tour-help { left: auto; right: 16px; bottom: 20px; }

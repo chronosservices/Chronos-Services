@@ -479,8 +479,10 @@ body.dark .btn-icon-pill { background: rgba(168, 232, 144, 0.12); color: #a8e890
   .grid.list .btn { height: 28px; padding: 0 8px; font-size: 9.5px; }
 }
 </style>
+  <link rel="stylesheet" href="css/driver.css" />
+  <link rel="stylesheet" href="css/chronos-tour.css" />
 </head>
-<body>
+<body data-cs-tour="catalogue">
 <header class="topbar">
   <a class="back" href="index.html"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3"><path d="M19 12H5M12 5l-7 7 7 7"/></svg>Retour à l'accueil</a>
   <button class="theme" id="themeBtn"><span id="themeText">Mode sombre</span><span class="switch"></span></button>
@@ -1547,5 +1549,7 @@ applyFilters();
 updateStats();
 checkSharedModelOnLoad();
 </script>
+  <script src="js/vendor/driver.js.iife.js" defer></script>
+  <script src="js/chronos-tour.js" defer></script>
 </body>
 </html>
