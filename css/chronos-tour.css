@@ -1,0 +1,99 @@
+/* Visite guidée Chronos-Services — thème Driver.js aux couleurs de l'app
+   (vert #094102 / orange #FF5700, Sora + DM Sans, coins arrondis) */
+
+body.cs-tour-on .tile { animation: none !important; }
+
+.driver-popover.cs-tour {
+  --cs-green: #094102;
+  --cs-orange: #FF5700;
+  min-width: 0;
+  width: min(320px, calc(100vw - 28px));
+  max-width: none;
+  padding: 20px 18px 16px;
+  border-radius: 20px;
+  background: #fff;
+  color: #1a1a1a;
+  font-family: 'DM Sans', system-ui, sans-serif;
+  box-shadow: 0 18px 48px rgba(9, 65, 2, .32), 0 0 0 1px rgba(9, 65, 2, .06);
+}
+.driver-popover.cs-tour::before {
+  content: '';
+  position: absolute; top: 0; left: 18px; right: 18px; height: 4px;
+  border-radius: 0 0 6px 6px;
+  background: linear-gradient(90deg, var(--cs-green), var(--cs-orange));
+}
+.cs-tour .driver-popover-title {
+  font-family: 'Sora', system-ui, sans-serif;
+  font-weight: 800; font-size: 1.02rem; line-height: 1.3;
+  color: var(--cs-green);
+  padding-right: 30px;
+}
+.cs-tour .driver-popover-description {
+  font-size: .86rem; line-height: 1.5; color: #4b5563; margin-top: 6px;
+}
+.cs-tour .driver-popover-description strong { color: var(--cs-green); }
+.cs-tour .driver-popover-close-btn {
+  top: -4px; right: -6px; width: 36px; height: 36px;
+  display: flex; align-items: center; justify-content: center;
+  color: #6b7280; font-size: 22px; border-radius: 50%;
+}
+.cs-tour .driver-popover-close-btn:hover,
+.cs-tour .driver-popover-close-btn:focus-visible { color: var(--cs-green); background: #f3f4f6; }
+
+.cs-tour .driver-popover-footer { margin-top: 16px; flex-wrap: wrap; gap: 10px 8px; }
+.cs-tour .driver-popover-progress-text {
+  font-size: .72rem; font-weight: 700; letter-spacing: .02em; color: #6b7280;
+}
+.cs-tour .driver-popover-navigation-btns { gap: 8px; flex-grow: 0; }
+.cs-tour .driver-popover-navigation-btns button + button { margin-left: 0; }
+.cs-tour .driver-popover-footer-btn {
+  font-family: inherit; font-weight: 700; font-size: .8rem;
+  min-height: 40px; padding: 0 16px; border-radius: 100px;
+  display: inline-flex; align-items: center; justify-content: center;
+  border: 1.5px solid #d1d5db; background: #fff; color: #374151;
+  text-shadow: none; transition: background .15s, transform .15s, box-shadow .15s;
+}
+.cs-tour .driver-popover-footer-btn:hover { background: #f3f4f6; }
+.cs-tour .driver-popover-footer-btn:active { transform: scale(.96); }
+.cs-tour .driver-popover-next-btn {
+  border: none; color: #fff;
+  background: linear-gradient(135deg, var(--cs-orange), #ff7a35);
+  box-shadow: 0 6px 16px rgba(255, 87, 0, .38);
+}
+.cs-tour .driver-popover-next-btn:hover { background: linear-gradient(135deg, #e84e00, #ff7a35); }
+.cs-tour .driver-popover-footer-btn:focus-visible,
+.cs-tour .cs-tour-skip:focus-visible,
+.cs-tour .driver-popover-close-btn:focus-visible {
+  outline: 3px solid rgba(9, 65, 2, .45); outline-offset: 2px;
+}
+.cs-tour .cs-tour-skip {
+  all: unset; box-sizing: border-box; cursor: pointer;
+  flex-basis: 100%; text-align: center; margin-top: 2px;
+  font-size: .74rem; font-weight: 600; color: #6b7280;
+  text-decoration: underline; text-underline-offset: 3px; padding: 6px;
+}
+.cs-tour .cs-tour-skip:hover { color: var(--cs-green); }
+
+.cs-tour .driver-popover-arrow-side-top.driver-popover-arrow    { border-top-color: #fff; }
+.cs-tour .driver-popover-arrow-side-bottom.driver-popover-arrow { border-bottom-color: #fff; }
+.cs-tour .driver-popover-arrow-side-left.driver-popover-arrow   { border-left-color: #fff; }
+.cs-tour .driver-popover-arrow-side-right.driver-popover-arrow  { border-right-color: #fff; }
+
+@media (prefers-reduced-motion: reduce) {
+  .cs-tour, .driver-fade .driver-overlay, .driver-fade .driver-popover { animation: none !important; transition: none !important; }
+}
+
+/* Bouton d'aide flottant (formulaires) */
+.cs-tour-help {
+  position: fixed; left: 16px; bottom: 28px; z-index: 1400;
+  width: 44px; height: 44px; border-radius: 50%; border: none; cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  background: #fff; color: #094102;
+  font-family: 'Sora', system-ui, sans-serif; font-weight: 800; font-size: 1.15rem;
+  box-shadow: 0 6px 18px rgba(9, 65, 2, .28), 0 0 0 2px #094102;
+  -webkit-tap-highlight-color: transparent; transition: transform .15s;
+}
+.cs-tour-help:hover { transform: scale(1.06); }
+.cs-tour-help:active { transform: scale(.94); }
+.cs-tour-help:focus-visible { outline: 3px solid rgba(255, 87, 0, .6); outline-offset: 3px; }
+body.cs-tour-on .cs-tour-help { display: none; }

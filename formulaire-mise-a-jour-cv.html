@@ -930,8 +930,10 @@ textarea { resize: vertical; min-height: 78px; line-height: 1.6; }
 #toast { display: none; position: fixed; top: 20px; left: 50%; transform: translateX(-50%); z-index: 9000; background: var(--green); color: #fff; padding: 12px 18px; border-radius: 6px; font-size: 0.82rem; font-weight: 500; text-align: center; max-width: calc(100vw - 32px); box-shadow: 0 6px 20px rgba(0,0,0,0.25); }
 #toast.show { display: block; }
 </style>
+  <link rel="stylesheet" href="css/driver.css" />
+  <link rel="stylesheet" href="css/chronos-tour.css" />
 </head>
-<body>
+<body data-cs-tour="maj">
 
 <div class="header">
   <div class="header-logo">Chronos<span>.</span>Services</div>
@@ -2429,5 +2431,7 @@ document.addEventListener('DOMContentLoaded', function() {
   }
 });
 </script>
+  <script src="js/vendor/driver.js.iife.js" defer></script>
+  <script src="js/chronos-tour.js" defer></script>
 </body>
 </html>
