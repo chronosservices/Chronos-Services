@@ -1962,7 +1962,7 @@ function downloadPDF() {
 function openScanner()  { var s = document.getElementById('scannerOverlay'); if (s) s.classList.add('show'); document.body.style.overflow = 'hidden'; }
 function closeScanner() { var s = document.getElementById('scannerOverlay'); if (s) s.classList.remove('show'); document.body.style.overflow = ''; }
 
-var GROQ_MODEL     = 'qwen/qwen3.6-27b';
+var GROQ_MODEL     = 'openai/gpt-oss-120b';
 var GROQ_PROXY_URL = '/.netlify/functions/groq-proxy';
 var selectedFile = null, extractedData = null;
 
@@ -2045,7 +2045,7 @@ async function callGroq(text) {
     competences: 'Tu es un assistant expert. Extrais uniquement les compétences de ce document. Réponds UNIQUEMENT en JSON valide sans texte ni balises markdown. Structure EXACTE :\n{"type_document":"competences","experiences":[],"formations":[],"langues":"","logiciels":"","domaines":"","nom_prenom":"","telephone":"","adresse":"","email":"","infos_comp":""}\nNe jamais inventer.',
     infos: 'Tu es un assistant expert. Extrais uniquement les informations personnelles de contact. Réponds UNIQUEMENT en JSON valide sans texte ni balises markdown. Structure EXACTE :\n{"type_document":"infos","experiences":[],"formations":[],"langues":"","logiciels":"","domaines":"","nom_prenom":"","telephone":"","adresse":"","email":"","infos_comp":""}\nNe jamais inventer.'
   };
-  var payload = { model: GROQ_MODEL, messages: [{ role: 'system', content: prompts[instruct] || prompts.auto }, { role: 'user', content: 'Texte du document :\n\n' + text.slice(0, 8000) }], temperature: 0.1, max_tokens: 4096, reasoning_effort: 'none', response_format: { type: 'json_object' } };
+  var payload = { model: GROQ_MODEL, messages: [{ role: 'system', content: prompts[instruct] || prompts.auto }, { role: 'user', content: 'Texte du document :\n\n' + text.slice(0, 8000) }], temperature: 0.1, max_tokens: 4096, reasoning_effort: 'low', response_format: { type: 'json_object' } };
   var r = await fetch(GROQ_PROXY_URL, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) });
   if (!r.ok) {
     var ed = await r.json().catch(function(){return{};});
